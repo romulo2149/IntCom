@@ -52,19 +52,19 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.Editor = new System.Windows.Forms.RichTextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.Consola = new System.Windows.Forms.RichTextBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.Datos = new System.Windows.Forms.RichTextBox();
-            this.Consola = new System.Windows.Forms.RichTextBox();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            this.tabPage2.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -141,6 +141,7 @@
             this.códigoToolStripMenuItem.Name = "códigoToolStripMenuItem";
             this.códigoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.códigoToolStripMenuItem.Text = "Código";
+            this.códigoToolStripMenuItem.Click += new System.EventHandler(this.códigoToolStripMenuItem_Click);
             // 
             // lenguajeToolStripMenuItem2
             // 
@@ -203,7 +204,7 @@
             // ejecutarConAutómataToolStripMenuItem
             // 
             this.ejecutarConAutómataToolStripMenuItem.Name = "ejecutarConAutómataToolStripMenuItem";
-            this.ejecutarConAutómataToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.ejecutarConAutómataToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.ejecutarConAutómataToolStripMenuItem.Text = "Analizar Cadena";
             this.ejecutarConAutómataToolStripMenuItem.Click += new System.EventHandler(this.ejecutarConAutómataToolStripMenuItem_Click);
             // 
@@ -256,6 +257,29 @@
             this.tabControl1.Size = new System.Drawing.Size(1076, 243);
             this.tabControl1.TabIndex = 2;
             // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.Consola);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(1068, 217);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Consola";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // Consola
+            // 
+            this.Consola.BackColor = System.Drawing.SystemColors.MenuText;
+            this.Consola.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Consola.ForeColor = System.Drawing.SystemColors.Info;
+            this.Consola.Location = new System.Drawing.Point(0, 0);
+            this.Consola.Name = "Consola";
+            this.Consola.ReadOnly = true;
+            this.Consola.Size = new System.Drawing.Size(1068, 217);
+            this.Consola.TabIndex = 0;
+            this.Consola.Text = "";
+            // 
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.dataGridView1);
@@ -289,17 +313,6 @@
             this.tabPage3.Text = "Errores";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.Consola);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1068, 217);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Consola";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.Datos);
@@ -318,18 +331,6 @@
             this.Datos.TabIndex = 0;
             this.Datos.Text = "";
             // 
-            // Consola
-            // 
-            this.Consola.BackColor = System.Drawing.SystemColors.MenuText;
-            this.Consola.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Consola.ForeColor = System.Drawing.SystemColors.Info;
-            this.Consola.Location = new System.Drawing.Point(0, 0);
-            this.Consola.Name = "Consola";
-            this.Consola.ReadOnly = true;
-            this.Consola.Size = new System.Drawing.Size(1068, 217);
-            this.Consola.TabIndex = 0;
-            this.Consola.Text = "";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -347,9 +348,9 @@
             this.menuStrip1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            this.tabPage2.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

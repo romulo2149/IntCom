@@ -47,12 +47,12 @@ namespace IntCompiladores
 
             if (Editor.Text == "")
             {
-                Consola.Text += "consola> No hay nada que analizar \n";
+                Consola.Text += "consola> No hay código que analizar \n";
 
             }
             else if (DATA == null)
             {
-                Consola.Text += "consola> No hay nada que analizar \n";
+                Consola.Text += "consola> No hay un lenguaje cargado \n";
 
             }
             else
@@ -436,7 +436,7 @@ namespace IntCompiladores
 
             if (DATA == null)
             {
-                Consola.Text += "consola> No hay nada que analizar  \n";
+                Consola.Text += "consola> No se ha cargado un autómata  \n";
 
             }
             else
@@ -495,6 +495,33 @@ namespace IntCompiladores
                 {
                     Consola.Text += "consola> El automata no es determinista \n";
                 }
+            }
+        }
+
+        private void códigoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Stream Flujo;
+            OpenFileDialog DialogoAbrirArchivo = new OpenFileDialog();
+            DialogoAbrirArchivo.Filter = "(*.txt)|*.txt";
+            if (DialogoAbrirArchivo.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                if ((Flujo = DialogoAbrirArchivo.OpenFile()) != null)
+                {
+                    rutaArchivo = DialogoAbrirArchivo.FileName;
+                    nombre = DialogoAbrirArchivo.SafeFileName;
+                    String textoArchivo = File.ReadAllText(rutaArchivo);
+                    Editor.Text = textoArchivo;
+                    Form1.ActiveForm.Text = nombre + " - " + nombreInterprete;
+                    Flujo.Close();
+                }
+                else
+                {
+                    Consola.Text += "consola> Error al abrir archivo \n";
+                }
+            }
+            else
+            {
+                Consola.Text += "consola> Error al abrir archivo \n"; 
             }
         }
     }

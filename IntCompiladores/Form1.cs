@@ -101,25 +101,19 @@ namespace IntCompiladores
                     }
                     String aux = EstadoInicial[0] + "";
                     Console.Out.WriteLine(aux);
-                    var MEFD = new AnalizadorLexico(Q, Alfabeto, Transiciones, aux, EstadoFinal, Nombres, PalabrasR);
-                    Respuesta res = new Respuesta();
-                    res = MEFD.Analizar(Editor.Text);
-
-                    dataGridView1.ColumnCount = 4;
-                    dataGridView1.Columns[0].Name = "Token";
-                    dataGridView1.Columns[1].Name = "Lexema";
-                    dataGridView1.Columns[2].Name = "Linea";
-                    dataGridView1.Columns[3].Name = "Error";
-                    dataGridView1.Columns[0].Width = 110;
-                    dataGridView1.Columns[1].Width = 150;
-                    dataGridView1.Columns[2].Width = 50;
-                    dataGridView1.Columns[3].Width = 550;
-                    for (int j = 0; j < res.ListaSalida.Count; j++)
-                    {
-
-                        dataGridView1.Rows.Add(res.ListaSalida[j].Token, res.ListaSalida[j].Lexema, res.ListaSalida[j].Linea, res.ListaSalida[j].Error);
+                    var MEFD = new Lexico(Q, Alfabeto, Transiciones, aux, EstadoFinal, Nombres, PalabrasR, Editor.Text);
+                    RespuestaLexico res;
+                    Error err = new Error();
+                    int ap = 0;
+                    while(ap < Editor.Text.Length)
+                    { 
+                        res = MEFD.Analiza();
+                        ap = res.Apuntador;
+                        Consola.Text += "consola> " + res.Token.Lexema + " >> " + res.Token.Linea + " >> "
+                                                    + res.Token.Tipo + " >> " + err.DevuelveError(res.Token.Error) + "\n";
                     }
-                    Consola.Text += "consola> Analisis completo...";
+
+                    Consola.Text += "consola> Analisis completo...\n";
                 }
                 else
                 {

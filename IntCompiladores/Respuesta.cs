@@ -10,7 +10,6 @@ namespace IntCompiladores
     {
         private Boolean estado;
         private string mensaje;
-        private List<SalidaALexico> listaSalida;
 
         public Respuesta()
         {
@@ -19,6 +18,5 @@ namespace IntCompiladores
 
         public bool Estado { get => estado; set => estado = value; }
         public string Mensaje { get => mensaje; set => mensaje = value; }
-        internal List<SalidaALexico> ListaSalida { get => listaSalida; set => listaSalida = value; }
     }
 }

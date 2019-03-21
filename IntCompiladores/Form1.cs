@@ -101,16 +101,24 @@ namespace IntCompiladores
                     }
                     String aux = EstadoInicial[0] + "";
                     Console.Out.WriteLine(aux);
-                    var MEFD = new Lexico(Q, Alfabeto, Transiciones, aux, EstadoFinal, Nombres, PalabrasR, Editor.Text);
+                    var MEFD = new Lexico(Q, Alfabeto, Transiciones, aux, EstadoFinal, Nombres, PalabrasR, Editor.Text.TrimEnd());
                     RespuestaLexico res;
                     Error err = new Error();
                     int ap = 0;
-                    while(ap < Editor.Text.Length)
+                    /*while(ap < Editor.Text.TrimEnd().Length)
                     { 
-                        res = MEFD.Analiza();
+                        res = MEFD.AnalizaRecursivo();
                         ap = res.Apuntador;
                         Consola.Text += "consola> " + res.Token.Lexema + " >> " + res.Token.Linea + " >> "
                                                     + res.Token.Tipo + " >> " + err.DevuelveError(res.Token.Error) + "\n";
+                    }*/
+
+                    SintacticoAritmetica sa = new SintacticoAritmetica(MEFD);
+                    sa.E();
+
+                    for(int i = 0; i < sa.Errores.Count; i++)
+                    {
+                        Consola.Text += "consola> "+ sa.Errores[i] + "\n";
                     }
 
                     Consola.Text += "consola> Analisis completo...\n";

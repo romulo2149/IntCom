@@ -1,0 +1,184 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace IntCompiladores
+{
+    class SintacticoAritmetica
+    {
+        private Lexico lex;
+        private List<string> errores;
+        string preanalisis;
+        Token toke;
+        string lexema;
+
+        public List<string> Errores { get => errores; set => errores = value; }
+
+        public SintacticoAritmetica(Lexico lex)
+        {
+            this.lex = lex;
+            errores = new List<string>();
+            toke = lex.AnalizaRecursivo().Token;
+            preanalisis = toke.Tipo;
+            lexema = toke.Lexema;
+        }
+        public void E()
+        {
+            System.Console.Out.WriteLine("dentro de e() el lexema es:" + lexema);
+            System.Console.Out.WriteLine("dentro de e() el preanalisis es:" + preanalisis);
+            if (preanalisis == "id" || preanalisis == "num" || preanalisis == "pA")
+            {
+                System.Console.Out.WriteLine("entro aca");
+                T();
+                Ep();
+            }
+            else
+            {
+                errores.Add("error en " + preanalisis);
+            }
+        }
+   
+        public void T()
+        {
+            System.Console.Out.WriteLine("dentro de t() el lexema es:" + lexema);
+            System.Console.Out.WriteLine("dentro de t() el preanalisis es:" + preanalisis);
+            if (preanalisis == "id" || preanalisis == "num" || preanalisis == "pA")
+            {
+                System.Console.Out.WriteLine("entro a t(if)");
+                F();
+                Tp();
+            }
+            else
+            {
+                errores.Add("error en " + preanalisis);
+            }
+        }
+
+        public void Ep()
+        {
+            switch(preanalisis)
+            {
+                case "mas":
+                    System.Console.Out.WriteLine("entro a Ep(mas)");
+                    Emparejar("mas");
+                    T();
+                    Ep();
+                    break;
+                case "menos":
+                    System.Console.Out.WriteLine("entro a Ep(menos)");
+                    Emparejar("menos");
+                    T();
+                    Ep();
+                    break;
+                case "pC":
+                    System.Console.Out.WriteLine("entro a Ep(pC)");
+                    Emparejar("pC");
+                    break;
+                case "$":
+                    break;
+                default:
+                    System.Console.Out.WriteLine("entro a Ep(default)");
+                    errores.Add("error en " + preanalisis);
+                    break;
+            }
+        }
+
+        public void Tp()
+        {
+            switch (preanalisis)
+            {
+                case "por":
+                    System.Console.Out.WriteLine("entro a Tp(por)");
+                    Emparejar("por");
+                    F();
+                    Tp();
+                    break;
+                case "entre":
+                    System.Console.Out.WriteLine("entro a Tp(entre)");
+                    Emparejar("entre");
+                    F();
+                    Tp();
+                    break;
+                case "mas":
+                    System.Console.Out.WriteLine("entro a Tp(mas)");
+                    Emparejar("mas");
+                    F();
+                    Tp();
+                    break;
+                case "menos":
+                    System.Console.Out.WriteLine("entro a Tp(menos)");
+                    Emparejar("menos");
+                    F();
+                    Tp();
+                    break;
+                case "pC":
+                    System.Console.Out.WriteLine("entro a Tp(pC)");
+                    Emparejar("pC");
+                    break;
+                case "$":
+                    break;
+                default:
+                    System.Console.Out.WriteLine("entro a Tp(default)");
+                    errores.Add("error en " + preanalisis);
+                    break;
+            }
+        }
+
+        public void F()
+        {
+            System.Console.Out.WriteLine("entro a F()");
+            switch (preanalisis)
+            {
+                case "id":
+                    System.Console.Out.WriteLine("entro a F(id)");
+                    Emparejar("id");
+                    break;
+                case "num":
+                    System.Console.Out.WriteLine("entro a F(num)");
+                    Emparejar("num");
+                    break;
+                case "pA":
+                    System.Console.Out.WriteLine("entro a F(pA)");
+                    Emparejar("pA");
+                    E();
+                    break;
+                default:
+                    System.Console.Out.WriteLine("entro a F(default)");
+                    errores.Add("error en " + preanalisis);
+                    break;
+            }
+        }
+
+        public void Emparejar(String token)
+        {
+            if(token == preanalisis)
+            {
+                if (toke.Apuntador+1 > lex.Input.Length)
+                {
+                    preanalisis = "$";
+                    lexema = "$" ;
+                    System.Console.Out.WriteLine("dentro de emparejar el nuevo lexema es:" + lexema);
+                    System.Console.Out.WriteLine("dentro de emparejar el nuevo preanalisis es:" + preanalisis);
+                    System.Console.Out.WriteLine("dentro de emparejar el ap es:" + toke.Apuntador);
+                    errores.Add("codigo analizado, no se encontraron errores");
+                }
+                else
+                {
+                    toke = lex.AnalizaRecursivo().Token;
+                    preanalisis = toke.Tipo;
+                    lexema = toke.Lexema;
+                    System.Console.Out.WriteLine("dentro de emparejar el nuevo lexema es:" + lexema);
+                    System.Console.Out.WriteLine("dentro de emparejar el nuevo preanalisis es:" + preanalisis);
+                    System.Console.Out.WriteLine("dentro de emparejar el ap es:" + toke.Apuntador);
+                }
+            }
+            else
+            {
+                errores.Add("error en " + preanalisis);
+            }
+        }
+
+    }
+}

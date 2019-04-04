@@ -83,7 +83,14 @@ namespace IntCompiladores
                     {
                         if(PalabrasReservadas.Contains(lexema))
                         {
-                            tipo = "Palabra Reservada";
+                            if (lexema == "MOD")
+                            {
+                                tipo = "OP_MODULO";
+                            }
+                            else
+                            {
+                                tipo = "PALABRA_R";
+                            }
                         }
                         else
                         {
@@ -99,7 +106,14 @@ namespace IntCompiladores
                                             && t.Simbolo == 'o');
                         if (PalabrasReservadas.Contains(lexema))
                         {
-                            tipo = "Palabra Reservada";
+                            if (lexema == "MOD")
+                            {
+                                tipo = "OP_MODULO";
+                            }
+                            else
+                            {
+                                tipo = "PALABRA_R";
+                            }
 
                         }
                         else
@@ -119,7 +133,14 @@ namespace IntCompiladores
                 {
                     if (PalabrasReservadas.Contains(lexema))
                     {
-                        tipo = "Palabra Reservada";
+                        if (lexema == "MOD")
+                        {
+                            tipo = "OP_MODULO";
+                        }
+                        else
+                        {
+                            tipo = "PALABRA_R";
+                        }
 
                     }
                     else
@@ -179,7 +200,14 @@ namespace IntCompiladores
                     {
                         if (PalabrasReservadas.Contains(lexema))
                         {
-                            tipo = "Palabra Reservada";
+                            if (lexema == "MOD")
+                            {
+                                tipo = "OP_MODULO";
+                            }
+                            else
+                            {
+                                tipo = "PALABRA_R";
+                            }
                         }
                         else
                         {
@@ -195,7 +223,14 @@ namespace IntCompiladores
                                             && t.Simbolo == 'o');
                         if (PalabrasReservadas.Contains(lexema))
                         {
-                            tipo = "Palabra Reservada";
+                            if (lexema == "MOD")
+                            {
+                                tipo = "OP_MODULO";
+                            }
+                            else
+                            {
+                                tipo = "PALABRA_R";
+                            }
                         }
                         else
                         {
@@ -217,7 +252,14 @@ namespace IntCompiladores
                 {
                     if (PalabrasReservadas.Contains(lexema))
                     {
-                        tipo = "Palabra Reservada";
+                        if (lexema == "MOD")
+                        {
+                            tipo = "OP_MODULO";
+                        }
+                        else
+                        {
+                            tipo = "PALABRA_R";
+                        }
                     }
                     else
                     {

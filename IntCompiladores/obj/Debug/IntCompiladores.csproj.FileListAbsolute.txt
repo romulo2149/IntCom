@@ -8,3 +8,13 @@ C:\Users\Rómulo\source\repos\IntCompiladores\IntCompiladores\obj\Debug\IntCompi
 C:\Users\Rómulo\source\repos\IntCompiladores\IntCompiladores\obj\Debug\IntCompiladores.csproj.CoreCompileInputs.cache
 C:\Users\Rómulo\source\repos\IntCompiladores\IntCompiladores\obj\Debug\IntCompiladores.exe
 C:\Users\Rómulo\source\repos\IntCompiladores\IntCompiladores\obj\Debug\IntCompiladores.pdb
+C:\Users\romulo\source\repos\IntCompiladores\IntCompiladores\bin\Debug\IntCompiladores.exe.config
+C:\Users\romulo\source\repos\IntCompiladores\IntCompiladores\bin\Debug\IntCompiladores.exe
+C:\Users\romulo\source\repos\IntCompiladores\IntCompiladores\bin\Debug\IntCompiladores.pdb
+C:\Users\romulo\source\repos\IntCompiladores\IntCompiladores\obj\Debug\IntCompiladores.csprojAssemblyReference.cache
+C:\Users\romulo\source\repos\IntCompiladores\IntCompiladores\obj\Debug\IntCompiladores.Form1.resources
+C:\Users\romulo\source\repos\IntCompiladores\IntCompiladores\obj\Debug\IntCompiladores.Properties.Resources.resources
+C:\Users\romulo\source\repos\IntCompiladores\IntCompiladores\obj\Debug\IntCompiladores.csproj.GenerateResource.cache
+C:\Users\romulo\source\repos\IntCompiladores\IntCompiladores\obj\Debug\IntCompiladores.csproj.CoreCompileInputs.cache
+C:\Users\romulo\source\repos\IntCompiladores\IntCompiladores\obj\Debug\IntCompiladores.exe
+C:\Users\romulo\source\repos\IntCompiladores\IntCompiladores\obj\Debug\IntCompiladores.pdb

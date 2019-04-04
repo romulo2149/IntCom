@@ -10,7 +10,7 @@ namespace IntCompiladores
     {
         private Lexico lex;
         private List<string> errores;
-        string preanalisis;
+        public string preanalisis;
         Token toke;
         string lexema;
 
@@ -74,9 +74,9 @@ namespace IntCompiladores
                     break;
                 case "pC":
                     System.Console.Out.WriteLine("entro a Ep(pC)");
-                    Emparejar("pC");
                     break;
                 case "$":
+                    System.Console.Out.WriteLine("entro a Ep($)");
                     break;
                 default:
                     System.Console.Out.WriteLine("entro a Ep(default)");
@@ -115,9 +115,9 @@ namespace IntCompiladores
                     break;
                 case "pC":
                     System.Console.Out.WriteLine("entro a Tp(pC)");
-                    Emparejar("pC");
                     break;
                 case "$":
+                    System.Console.Out.WriteLine("entro a Tp($)");
                     break;
                 default:
                     System.Console.Out.WriteLine("entro a Tp(default)");
@@ -143,6 +143,7 @@ namespace IntCompiladores
                     System.Console.Out.WriteLine("entro a F(pA)");
                     Emparejar("pA");
                     E();
+                    Emparejar("pC");
                     break;
                 default:
                     System.Console.Out.WriteLine("entro a F(default)");

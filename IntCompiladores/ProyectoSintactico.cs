@@ -33,6 +33,7 @@ namespace IntCompiladores
             CONSTANTES();
             ESTRUCTURAS();
             Emparejar("PR_INICIO");
+            INSTRUCCIONES();
             Emparejar("PR_FIN");
             form1.Consola1.Text += "consola> No se encontraron errores \n";
         }
@@ -425,8 +426,275 @@ namespace IntCompiladores
         }
 
         public void INSTRUCCIONES()
+        /*
+         * INSTRUCCIONES -> ε { PR_FIN, PR_SINO }
+         * INSTRUCCIONES -> INSTRUCCION() INSTRUCCIONES() { ID, PR_SI, PR_MIENTRAS, PR_ESCRIBE, PR_LEE }
+         */
         {
-            Emparejar("PR_INSTRUCCIONES");
+            if(preanalisis == "PR_SI" || preanalisis == "PR_MIENTRAS" || preanalisis == "PR_ESCRIBE" 
+                || preanalisis == "PR_LEE" || preanalisis == "ID")
+            {
+                INSTRUCCION();
+                INSTRUCCIONES();
+            }
+            else if(preanalisis == "PR_FIN" || preanalisis == "PR_SINO")
+            {
+
+            }
+        }
+
+        public void INSTRUCCION()
+        /*
+         * INSTRUCCION -> SI() { PR_SI }
+         * INSTRUCCION -> MIENTRAS() { PR_MIENTRAS }
+         * INSTRUCCION -> ESCRIBE() { PR_ESCRIBE }
+         * INSTRUCCION -> LEE() { PR_LEE }
+         * INSTRUCCION -> EXPRESION() { ID }
+         */
+        {
+            switch (preanalisis)
+            {
+                case "PR_SI":
+                    SI();
+                    break;
+
+                case "PR_MIENTRAS":
+                    MIENTRAS();
+                    break;
+
+                case "PR_ESCRIBE":
+                    ESCRIBE();
+                    break;
+
+                case "PR_LEE":
+                    LEE();
+                    break;
+
+                case "ID":
+                    EXPRESION();
+                    break;
+            }
+        }
+
+        public void SI()
+        /*
+         *  SI -> SIP1 SIP2 PR_FIN { PR_SI }
+         */
+        {
+            if(preanalisis == "PR_SI")
+            {
+                SIP1();
+                SIP2();
+                Emparejar("PR_FIN");
+            }
+        }
+
+        public void SIP1()
+        /*
+         * SIP1 -> PR_SI PA_IZQ CONDICION() PA_DER PR_ENTONCES INSTRUCCIONES()
+         */
+        {
+            if(preanalisis == "PR_SI")
+            {
+                Emparejar("PR_SI");
+                Emparejar("PA_IZQ");
+                CONDICION();
+                Emparejar("PA_DER");
+                Emparejar("PR_ENTONCES");
+                INSTRUCCIONES();
+            }
+        }
+
+        public void SIP2()
+        /*
+         * SIP2 -> ε { PR_FIN }
+         * SIP2 -> PR_SINO INSTRUCCIONES() { PR_SINO }
+         */
+        {
+            if(preanalisis == "PR_SINO")
+            {
+                Emparejar("PR_SINO");
+                INSTRUCCIONES();
+            }
+            else if(preanalisis == "PR_FIN")
+            {
+
+            }
+        }
+
+        public void CONDICION()
+        /*
+         * CONDICION -> OPERANDO OPERADOR_CONDICION OPERADOR { ID, ENTERO, S_COMILLA }
+         */
+        {
+            if(preanalisis == "ID" || preanalisis == "ENTERO" || preanalisis == "S_COMILLA")
+            {
+                OPERANDO();
+                OPERADOR_CONDICION();
+                OPERANDO();
+            }
+        }
+
+
+        public void OPERADOR()
+        /*
+         * OPERADOR -> OP_SUMA { OP_SUMA }
+         * OPERADOR -> OP-RESTA { OP_RESTA }
+         * OPERADOR -> OP_MULTIPLICACION { OP_MULTIPLICACION }
+         * OPERADOR -> OP_DIVISION { OP_DIVISION }
+         * OPERADOR -> PR_MOD { OP_MODULO }
+         */
+        {
+            switch(preanalisis)
+            {
+                case "OP_SUMA":
+                    Emparejar("OP_SUMA");
+                    break;
+
+                case "OP_RESTA":
+                    Emparejar("OP_RESTA");
+                    break;
+
+                case "OP_MULTIPLICACION":
+                    Emparejar("OP_MULTIPLICACION");
+                    break;
+
+                case "OP_DIVISION":
+                    Emparejar("OP_DIVISION");
+                    break;
+
+                case "OP_MODULO":
+                    Emparejar("OP_MODULO");
+                    break;
+            }
+        }
+
+
+        public void OPERADOR_CONDICION()
+        /*
+         * OPERADOR_CONDICION -> OP_MENOR { OP_MENOR }
+         * OPERADOR_CONDICION -> OP_MAYOR { OP_MAYOR }
+         * OPERADOR_CONDICION -> OP_MENORIGUAL { OP_MENORIGUAL }
+         * OPERADOR_CONDICION -> OP_MAYORIGUAL { OP_MAYORIGUAL }
+         * OPERADOR_CONDICION -> OP_IGUAL { OP_IGUAL }
+         * OPERADOR_CONDICION -> OP_DIFERENTE { OP_DIFERENTE }
+         */
+        {
+            switch(preanalisis)
+            {
+                case "OP_MENOR":
+                    Emparejar("OP_MENOR");
+                    break;
+
+                case "OP_MAYOR":
+                    Emparejar("OP_MAYOR");
+                    break;
+
+                case "OP_MENORIGUAL":
+                    Emparejar("OP_MENORIGUAL");
+                    break;
+
+                case "OP_MAYORIGUAL":
+                    Emparejar("OP_MAYORIGUAL");
+                    break;
+
+                case "OP_IGUAL":
+                    Emparejar("OP_IGUAL");
+                    break;
+
+                case "OP_DIFERENTE":
+                    Emparejar("OP_DIFERENTE");
+                    break;
+            }
+        }
+
+
+        public void OPERANDO()
+        /*
+         * OPERANDO -> ENTERO { ENTERO }
+         * OPERANDO -> ID { ID }
+         * OPERANDO -> S_COMILLA ID S_COMILLA { S_COMILLA }
+         */
+        {
+            switch(preanalisis)
+            {
+                case "ENTERO":
+                    Emparejar("ENTERO");
+                    break;
+
+                case "ID":
+                    Emparejar("ID");
+                    break;
+
+                case "S_COMILLA":
+                    Emparejar("S_COMILLA");
+                    Emparejar("ID");
+                    Emparejar("S_COMILLA");
+                    break;
+            }
+
+        }
+
+
+        public void MIENTRAS()
+        {
+
+        }
+
+        public void LEE()
+        {
+
+        }
+
+        public void ESCRIBE()
+        {
+
+        }
+
+        public void EXPRESION()
+        /*
+         * EXPRESION -> ID OP_ASIGNACION O1() O2() S_PUNTOCOMA { ID }
+         */
+        {
+            if(preanalisis == "ID")
+            {
+                Emparejar("ID");
+                Emparejar("OP_ASIGNACION");
+                O1();
+                O2();
+                Emparejar("S_PUNTOCOMA");
+            }
+        }
+
+
+        public void O1()
+        /*
+         * O1 -> OPERANDO()
+         */
+        {
+            if (preanalisis == "ENTERO" || preanalisis == "S_COMILLA" || preanalisis == "ID")
+            {
+                OPERANDO();
+            }
+        }
+
+
+        public void O2()
+        /*
+         * O2 -> OPERADOR() OPERANDO() { OP_SUMA, OP_RESTA, OP_MULTIPLICACION, OP_DIVISION, PR_MOD }
+         * O2 -> ε { S_PUNTOCOMA }
+         */
+        {
+            if (preanalisis == "OP_SUMA" || preanalisis == "OP_RESTA" || preanalisis == "OP_MULTIPLICACION"
+                || preanalisis == "OP_DIVISION" || preanalisis == "OP_MODULO")
+            {
+                OPERADOR();
+                OPERANDO();
+            }
+            else if (preanalisis == "S_PUNTOCOMA")
+            {
+
+            }
         }
 
         public void Emparejar(string token)

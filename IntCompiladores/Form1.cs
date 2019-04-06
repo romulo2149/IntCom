@@ -105,6 +105,7 @@ namespace IntCompiladores
                     RespuestaLexico res;
                     Error err = new Error();
                     int ap = 0;
+                    /*
                     while(ap < Editor.Text.TrimEnd().Length)
                     { 
                         res = MEFD.AnalizaRecursivo();
@@ -112,17 +113,21 @@ namespace IntCompiladores
                         Consola.Text += "consola> " + res.Token.Lexema + " >> " + res.Token.Linea + " >> "
                                                     + res.Token.Tipo + " >> " + err.DevuelveError(res.Token.Error) + "\n";
                     }
+                    /*
 
-                    /*SintacticoAritmetica sa = new SintacticoAritmetica(MEFD);
+                    SintacticoAritmetica sa = new SintacticoAritmetica(MEFD, this);
                     sa.E();
                     if(sa.preanalisis != "$")
                     {
                         Consola.Text += "consola> Error en fin de fichero \n";
                     }
-                    for(int i = 0; i < sa.Errores.Count; i++)
-                    {
-                        Consola.Text += "consola> "+ sa.Errores[i] + "\n";
-                    }*/
+                     
+                    */
+
+                    ProyectoSintactico ps = new ProyectoSintactico(MEFD, this);
+                    ps.PROGRAMA();
+
+
 
                     Consola.Text += "consola> Analisis completo...\n";
                 }

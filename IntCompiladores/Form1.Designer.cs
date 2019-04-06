@@ -1,4 +1,6 @@
-﻿namespace IntCompiladores
+﻿using System.Windows.Forms;
+
+namespace IntCompiladores
 {
     partial class Form1
     {
@@ -390,6 +392,8 @@
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.RichTextBox Consola;
+
+        public RichTextBox Consola1 { get => Consola; set => Consola = value; }
     }
 }
 

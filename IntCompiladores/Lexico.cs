@@ -89,7 +89,7 @@ namespace IntCompiladores
                             }
                             else
                             {
-                                tipo = "PALABRA_R";
+                                tipo = "PR_" + lexema;
                             }
                         }
                         else
@@ -112,7 +112,7 @@ namespace IntCompiladores
                             }
                             else
                             {
-                                tipo = "PALABRA_R";
+                                tipo = "PR_"+lexema;
                             }
 
                         }
@@ -139,7 +139,7 @@ namespace IntCompiladores
                         }
                         else
                         {
-                            tipo = "PALABRA_R";
+                            tipo = "PR_" + lexema;
                         }
 
                     }
@@ -206,7 +206,7 @@ namespace IntCompiladores
                             }
                             else
                             {
-                                tipo = "PALABRA_R";
+                                tipo = "PR_" + lexema;
                             }
                         }
                         else
@@ -229,7 +229,7 @@ namespace IntCompiladores
                             }
                             else
                             {
-                                tipo = "PALABRA_R";
+                                tipo = "PR_" + lexema;
                             }
                         }
                         else
@@ -258,7 +258,7 @@ namespace IntCompiladores
                         }
                         else
                         {
-                            tipo = "PALABRA_R";
+                            tipo = "PR_" + lexema;
                         }
                     }
                     else

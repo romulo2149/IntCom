@@ -13,19 +13,22 @@ namespace IntCompiladores
         public string preanalisis;
         Token toke;
         string lexema;
+        Form1 form1;
 
         public List<string> Errores { get => errores; set => errores = value; }
 
-        public SintacticoAritmetica(Lexico lex)
+        public SintacticoAritmetica(Lexico lex, Form1 f)
         {
             this.lex = lex;
             errores = new List<string>();
             toke = lex.AnalizaRecursivo().Token;
             preanalisis = toke.Tipo;
             lexema = toke.Lexema;
+            form1 = f;
         }
         public void E()
         {
+            form1.Consola1.Text += "consola> Si funciona\n";
             System.Console.Out.WriteLine("dentro de e() el lexema es:" + lexema);
             System.Console.Out.WriteLine("dentro de e() el preanalisis es:" + preanalisis);
             if (preanalisis == "id" || preanalisis == "num" || preanalisis == "pA")

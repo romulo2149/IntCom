@@ -752,12 +752,12 @@ namespace IntCompiladores
 
         public void O1()
         /*
-         * O1 -> OPERANDO()
+         * O1 -> OPERANDON()
          */
         {
-            if (preanalisis == "ENTERO" || preanalisis == "S_COMILLA" || preanalisis == "ID")
+            if (preanalisis == "ENTERO" || preanalisis == "S_COMILLA" || preanalisis == "ID" || preanalisis == "PR_NULL")
             {
-                OPERANDO();
+                OPERANDON();
             }
         }
 
@@ -807,7 +807,7 @@ namespace IntCompiladores
         public void OPERANDON()
         /*
          * OPERANDON -> ENTERO { ENTERO }
-         * OPERANDON -> ID { ID }
+         * OPERANDON -> TEXTO() { ID }
          * OPERANDON -> S_COMILLA ID S_COMILLA { S_COMILLA }
          * OPERANDON -> PR_NULL { PR_NULL }
          */
@@ -819,7 +819,7 @@ namespace IntCompiladores
                     break;
 
                 case "ID":
-                    Emparejar("ID");
+                    TEXTO();
                     break;
 
                 case "S_COMILLA":

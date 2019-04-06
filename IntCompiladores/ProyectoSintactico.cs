@@ -542,7 +542,7 @@ namespace IntCompiladores
          * OPERADOR -> OP-RESTA { OP_RESTA }
          * OPERADOR -> OP_MULTIPLICACION { OP_MULTIPLICACION }
          * OPERADOR -> OP_DIVISION { OP_DIVISION }
-         * OPERADOR -> PR_MOD { OP_MODULO }
+         * OPERADOR -> OP_MODULO { OP_MODULO }
          */
         {
             switch(preanalisis)
@@ -631,38 +631,121 @@ namespace IntCompiladores
                     Emparejar("ID");
                     Emparejar("S_COMILLA");
                     break;
+
+                case "PR_NULL":
+                    Emparejar("PR_NULL");
+                    break;
             }
 
         }
 
 
         public void MIENTRAS()
+        /*
+         * MIENTRAS -> PR_MIENTRAS PA_IZQ CONDICION() PA_DER PR_HACER INSTRUCCIONES() PR_FIN { PR_MIENTRAS }
+         */
         {
-
+            if(preanalisis == "PR_MIENTRAS")
+            {
+                Emparejar("PR_MIENTRAS");
+                Emparejar("PA_IZQ");
+                CONDICION();
+                Emparejar("PA_DER");
+                Emparejar("PR_HACER");
+                INSTRUCCIONES();
+                Emparejar("PR_FIN");
+            }
         }
 
         public void LEE()
-        {
-
-        }
-
-        public void ESCRIBE()
-        {
-
-        }
-
-        public void EXPRESION()
         /*
-         * EXPRESION -> ID OP_ASIGNACION O1() O2() S_PUNTOCOMA { ID }
+         * LEE -> PR_LEE PA_IZQ TEXTO() PA_DER S_PUNTOCOMA { PR_LEE }
+         */
+        {
+            if (preanalisis == "PR_LEE")
+            {
+                Emparejar("PR_LEE");
+                Emparejar("PA_IZQ");
+                TEXTO();
+                Emparejar("PA_DER");
+                Emparejar("S_PUNTOCOMA");
+            }
+        }
+
+        public void TEXTO()
+        /*
+         * TEXTO -> ID TEXTSTR() { ID }
          */
         {
             if(preanalisis == "ID")
             {
                 Emparejar("ID");
-                Emparejar("OP_ASIGNACION");
-                O1();
-                O2();
+                TEXTSTR();
+            }
+        }
+
+        public void TEXTSTR()
+        /*
+         * TEXTSTR -> ε { PA_DER}
+         * TEXTSTR -> S_PUNTO ID { S_PUNTO }
+         */
+        {
+            if(preanalisis == "S_PUNTO")
+            {
+                Emparejar("S_PUNTO");
+                Emparejar("ID");
+            }
+            else if(preanalisis == "PA_DER")
+            {
+
+            }
+        }
+
+        public void ESCRIBE()
+        /*
+         *  ESCRIBE -> PR_ESCRIBE PA_IZQ CADENA() PA_DER S_PUNTOCOMA { PR_ESCRIBE }
+         */
+        {
+            if(preanalisis == "PR_ESCRIBE")
+            {
+                Emparejar("PR_ESCRIBE");
+                Emparejar("PA_IZQ");
+                CADENA();
+                Emparejar("PA_DER");
                 Emparejar("S_PUNTOCOMA");
+            }
+        }
+
+        public void CADENA()
+        /*
+         * CADENA -> S_COMILLA CADENA S_COMILLA { S_COMILLA }
+         * CADENA -> ID { ID }
+         */
+        {
+            if (preanalisis == "S_COMILLA")
+            {
+                Emparejar("S_COMILLA");
+                while(preanalisis != "S_COMILLA")
+                {
+                    EmparejarCadena();
+                }
+                Emparejar("S_COMILLA");
+            }
+            else if (preanalisis == "ID")
+            {
+                Emparejar("ID");
+            }
+        }
+
+        public void EXPRESION()
+        /*
+         * EXPRESION -> ID TEXTSTR2() { ID }
+         */
+        {
+            if(preanalisis == "ID")
+            {
+                Emparejar("ID");
+                TEXTSTR2();
             }
         }
 
@@ -697,6 +780,77 @@ namespace IntCompiladores
             }
         }
 
+        public void TEXTSTR2()
+        /*
+         * TEXTSTR2 -> S_PUNTO ID OP_ASIGNACION OPERANDON() S_PUNTOCOMA { S_PUNTO }
+         * TEXTSTR2 -> OP_ASIGNACION O1() O2() S_PUNTOCOMA { OP_ASIGNACION }
+         */
+        {
+            switch (preanalisis)
+            {
+                case "S_PUNTO":
+                    Emparejar("S_PUNTO");
+                    Emparejar("ID");
+                    Emparejar("OP_ASIGNACION");
+                    OPERANDON();
+                    Emparejar("S_PUNTOCOMA");
+                    break;
+
+                case "OP_ASIGNACION":
+                    Emparejar("OP_ASIGNACION");
+                    O1();
+                    O2();
+                    Emparejar("S_PUNTOCOMA");
+                    break;
+            }
+        }
+        public void OPERANDON()
+        /*
+         * OPERANDON -> ENTERO { ENTERO }
+         * OPERANDON -> ID { ID }
+         * OPERANDON -> S_COMILLA ID S_COMILLA { S_COMILLA }
+         * OPERANDON -> PR_NULL { PR_NULL }
+         */
+        {
+            switch (preanalisis)
+            {
+                case "ENTERO":
+                    Emparejar("ENTERO");
+                    break;
+
+                case "ID":
+                    Emparejar("ID");
+                    break;
+
+                case "S_COMILLA":
+                    Emparejar("S_COMILLA");
+                    Emparejar("ID");
+                    Emparejar("S_COMILLA");
+                    break;
+
+                case "PR_NULL":
+                    Emparejar("PR_NULL");
+                    break;
+            }
+
+        }
+
+        public void DP()
+        /*
+         * DP -> ε { S_COMILLA }
+         * DP -> S_DOSPUNTOS { S_DOSPUNTOS }
+         */
+        {
+            if(preanalisis == "S_COMILLA")
+            {
+
+            }
+            else if (preanalisis == "S_DOSPUNTOS")
+            {
+                Emparejar("S_DOSPUNTOS");
+            }
+        }
+
         public void Emparejar(string token)
         {
             System.Console.Out.WriteLine("dentro de emparejar el token esperado es:" + token);
@@ -726,6 +880,13 @@ namespace IntCompiladores
                 System.Console.Out.WriteLine("hubo error en:" + lexema);
                 form1.Consola1.Text += "consola> Error sintactico EN "+ lexema +" \n";
             }
+        }
+
+        public void EmparejarCadena()
+        {
+            toke = lex.AnalizaRecursivo().Token;
+            preanalisis = toke.Tipo;
+            lexema = toke.Lexema;
         }
 
 

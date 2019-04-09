@@ -106,11 +106,14 @@ namespace IntCompiladores
 
                     ProyectoSintactico ps = new ProyectoSintactico(MEFD, this);
                     ps.PROGRAMA();
-                    for (int i = 0; i < ps.sim.Count; i++)
-                    {
 
-                        Consola.Text += "consola> ident: " + ps.sim[i].Id + " | valor: " + ps.sim[i].Valor 
-                            +  " | tipo: " + ps.sim[i].Tipo +  " | alcance: " + ps.sim[i].Alcance   +  "\n";
+                    Consola.Text += "consola> Tabla de Símbolos: \n";
+
+                    foreach (KeyValuePair < string, Simbolo> fila in ps.ps.TablaSimbolos)
+                    {
+                        Consola.Text += "consola> Nombre: " + fila.Value.Nombre + " | Tipo: " + fila.Value.Tipo +
+                            " | Valor: " + fila.Value.Valor + " | Alcance: " + fila.Value.Alcance +
+                            " | Línea: " + fila.Value.Linea + " \n";
                     }
 
 

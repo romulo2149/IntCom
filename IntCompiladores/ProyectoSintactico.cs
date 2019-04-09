@@ -14,8 +14,9 @@ namespace IntCompiladores
         string lexema;
         Form1 form1;
         Error error = new Error();
-        string valor, tipo, id, alcance;
+        string valor, tipo, id, alcance, cadena = "";
         public List<Simbolo> sim = new List<Simbolo>();
+        public ProyectoSemantico ps;
         Simbolo s;
 
         public ProyectoSintactico(Lexico lex, Form1 f)
@@ -25,6 +26,7 @@ namespace IntCompiladores
             preanalisis = toke.Tipo;
             lexema = toke.Lexema;
             form1 = f;
+            ps = new ProyectoSemantico(f);
         }
 
         public void PROGRAMA() 
@@ -109,10 +111,10 @@ namespace IntCompiladores
             }
             else if(preanalisis == "ID")
             {
-                id = lexema;
+                string id2 = lexema;
                 Emparejar("ID");
                 Emparejar("OP_ASIGNACION");
-                VALCONS(id);
+                VALCONS(id2);
                 CONSTANTE();
             }
             else
@@ -121,33 +123,22 @@ namespace IntCompiladores
             }
         }
 
-        public void VALCONS(string id)
+        public void VALCONS(string id2)
         /*
          * VALCONS -> ENTERO { ENTERO }
          * VALCONS -> COMILLA ID COMILLA { S_COMILLA }
          */
         {
-            s = new Simbolo();
             switch (preanalisis)
             {
                 case "ENTERO":
-                    valor = lexema;
-                    s.Id = id;
-                    s.Valor = valor;
-                    s.Tipo = preanalisis;
-                    s.Alcance = "PR_CONSTANTES";
-                    sim.Add(s);
+                    ps.nuevoSimbolo(id2, preanalisis, valor, "CONSTANTES", id2.Length, toke.Linea);
                     Emparejar("ENTERO");
                     break;
 
                 case "S_COMILLA":
                     Emparejar("S_COMILLA");
-                    valor = lexema;
-                    s.Id = id;
-                    s.Valor = "'" + valor + "'";
-                    s.Tipo = "CARACTER";
-                    s.Alcance = "PR_CONSTANTES";
-                    sim.Add(s);
+                    ps.nuevoSimbolo(id2, preanalisis, lexema, "CONSTANTES", id2.Length, toke.Linea);
                     Emparejar("ID");
                     Emparejar("S_COMILLA");
                     break;
@@ -164,18 +155,13 @@ namespace IntCompiladores
          * ESTRUCTURAS -> PR_ESTRUCTURAS ID OP_ASIGNACION LLAVE_IZQ CAMPOS() LLAVE_DER ESTRUCTURASII() { PR_ESTRUCTURAS }
          */
         {
-            s = new Simbolo();
             switch(preanalisis)
             {
                 case "PR_ESTRUCTURAS":
                     Emparejar("PR_ESTRUCTURAS");
                     if(preanalisis == "ID")
                     {
-                        alcance = lexema;
-                        s.Id = lexema;
-                        s.Valor = "";
-                        s.Tipo = "ESTRUCTURA";
-                        sim.Add(s);
+                        ps.nuevoSimbolo(lexema, "ESTRUCTURA", "", lexema, lexema.Length, toke.Linea);
                     }
                     Emparejar("ID");
                     Emparejar("OP_ASIGNACION");
@@ -199,17 +185,12 @@ namespace IntCompiladores
          * CAMPOS -> TIPO() ID SEP() { PR_ENTERO, PR_CHAR, PR_APUNTADOR }
          */
         {
-            s = new Simbolo();
             if(preanalisis == "PR_ENTERO" || preanalisis == "PR_CHAR" || preanalisis == "PR_APUNTADOR")
             {
                 TIPO();
                 if(preanalisis == "ID")
                 {
-                    s.Id = lexema;
-                    s.Valor = "";
-                    s.Tipo = tipo;
-                    s.Alcance = alcance;
-                    sim.Add(s);
+                    ps.nuevoSimbolo(lexema, tipo, "", alcance, lexema.Length, toke.Linea);
                 }
                 Emparejar("ID");
                 SEP(tipo);
@@ -256,7 +237,6 @@ namespace IntCompiladores
          * SEP -> S_COMA ID SEP2() { S_COMA } 
          */
         {
-            s = new Simbolo();
             switch(preanalisis)
             {
                 case "S_PUNTOCOMA":
@@ -268,11 +248,7 @@ namespace IntCompiladores
                     Emparejar("S_COMA");
                     if(preanalisis == "ID")
                     {
-                        s.Id = lexema;
-                        s.Valor = "";
-                        s.Tipo = tipoSEP;
-                        s.Alcance = alcance;
-                        sim.Add(s);
+                        ps.nuevoSimbolo(lexema, tipoSEP, "", alcance, lexema.Length, toke.Linea);
                     }
                     Emparejar("ID");
                     SEP2(tipoSEP);
@@ -290,17 +266,12 @@ namespace IntCompiladores
          * CAMPO2 -> TIPO() ID SEP3() { PR_ENTERO, PR_CHAR, PR_APUNTADOR }
          */
         {
-            s = new Simbolo();
             if (preanalisis == "PR_ENTERO" || preanalisis == "PR_CHAR" || preanalisis == "PR_APUNTADOR")
             {
                 TIPO();
                 if(preanalisis == "ID")
                 {
-                    s.Id = lexema;
-                    s.Valor = "";
-                    s.Tipo = tipo;
-                    s.Alcance = alcance;
-                    sim.Add(s);
+                    ps.nuevoSimbolo(lexema, tipo, "", alcance, lexema.Length, toke.Linea);
                 }
                 Emparejar("ID");
                 SEP3(tipo);
@@ -321,7 +292,6 @@ namespace IntCompiladores
          * SEP2 -> S_COMA ID S_PUNTOCOMA { S_COMA }
          */
         {
-            s = new Simbolo();
             switch (preanalisis)
             {
                 case "S_PUNTOCOMA":
@@ -333,11 +303,7 @@ namespace IntCompiladores
                     Emparejar("S_COMA");
                     if (preanalisis == "ID")
                     {
-                        s.Id = lexema;
-                        s.Valor = "";
-                        s.Tipo = tipoSEP2;
-                        s.Alcance = alcance;
-                        sim.Add(s);
+                        ps.nuevoSimbolo(lexema, tipoSEP2, "", alcance, lexema.Length, toke.Linea);
                     }
                     Emparejar("ID");
                     Emparejar("S_PUNTOCOMA");
@@ -355,7 +321,6 @@ namespace IntCompiladores
          * SEP3 -> S_COMA ID S_PUNTOCOMA { S_COMA }
          */
         {
-            s = new Simbolo();
             switch (preanalisis)
             {
                 case "S_PUNTOCOMA":
@@ -367,11 +332,7 @@ namespace IntCompiladores
                     Emparejar("S_COMA");
                     if (preanalisis == "ID")
                     {
-                        s.Id = lexema;
-                        s.Valor = "";
-                        s.Tipo = tipoSEP3;
-                        s.Alcance = alcance;
-                        sim.Add(s);
+                        ps.nuevoSimbolo(lexema, tipoSEP3, "", alcance, lexema.Length, toke.Linea);
                     }
                     Emparejar("ID");
                     Emparejar("S_PUNTOCOMA");
@@ -389,17 +350,12 @@ namespace IntCompiladores
          * CAMPO3 -> TIPO() ID S_PUNTOCOMA { PR_ENTERO, PR_CHAR, PR_APUNTADOR }
          */
         {
-            s = new Simbolo();
             if (preanalisis == "PR_ENTERO" || preanalisis == "PR_CHAR" || preanalisis == "PR_APUNTADOR")
             {
                 TIPO();
                 if(preanalisis == "ID")
                 {
-                    s.Id = lexema;
-                    s.Valor = "";
-                    s.Tipo = tipo;
-                    s.Alcance = alcance;
-                    sim.Add(s);
+                    ps.nuevoSimbolo(lexema, tipo, "", alcance, lexema.Length, toke.Linea);
                 }
                 Emparejar("ID");
                 Emparejar("S_PUNTOCOMA");
@@ -459,24 +415,17 @@ namespace IntCompiladores
          * VARSTR -> OP_ASIGNACION LLAVE_IZQ CAMPOS() LLAVE_DER VARC() { OP_ASIGNACION }
          */
         {
-            s = new Simbolo();
             switch(preanalisis)
             {
                 case "ID":
-                    s.Id = lexema;
-                    s.Valor = "";
-                    s.Tipo = str;
-                    sim.Add(s);
+                    ps.nuevoSimbolo(lexema, str, "", "VAR_ESTRUCTURA", lexema.Length, toke.Linea);
                     Emparejar("ID");
                     VARF(str);
                     break;
 
                 case "OP_ASIGNACION":
                     valor = "";
-                    s.Id = id;
-                    s.Valor = valor;
-                    s.Tipo = "ESTRUCTURA";
-                    sim.Add(s);
+                    ps.nuevoSimbolo(id, "ESTRUCTURA", valor, "", id.Length, toke.Linea);
                     Emparejar("OP_ASIGNACION");
                     Emparejar("LLAVE_IZQ");
                     CAMPOS();
@@ -495,15 +444,11 @@ namespace IntCompiladores
          * VARC -> ID ID VAR()
          */
         {
-            s = new Simbolo();
             if (preanalisis == "ID")
             {
                 tipo = lexema;
                 Emparejar("ID");
-                s.Id = lexema;
-                s.Valor = "";
-                s.Tipo = tipo;
-                sim.Add(s);
+                ps.nuevoSimbolo(lexema, tipo, "", "VAR_ESTRUCTURA", lexema.Length, toke.Linea);
                 Emparejar("ID");
                 VARF(tipo);
             }
@@ -518,7 +463,6 @@ namespace IntCompiladores
          * VAR -> VAR2() S_PUNTOCOMA VAR3() { S_PUNTOCOMA, S_COMA }
          */
         {
-            s = new Simbolo();
             if (preanalisis == "S_PUNTOCOMA" || preanalisis == "S_COMA")
             {
                 switch(preanalisis)
@@ -551,18 +495,13 @@ namespace IntCompiladores
          * VAR2 -> ε { S_PUNTOCOMA }
          */
         {
-            s = new Simbolo();
             switch (preanalisis)
             {
                 case "S_COMA":
                     Emparejar("S_COMA");
                     if (preanalisis == "ID")
                     {
-                        s.Id = lexema;
-                        s.Valor = "";
-                        s.Tipo = str;
-                        s.Alcance = "";
-                        sim.Add(s);
+                        ps.nuevoSimbolo(lexema, str, "", "VAR_ESTRUCTURA", lexema.Length, toke.Linea);
                     }
                     Emparejar("ID");
                     VAR2(str);
@@ -591,11 +530,7 @@ namespace IntCompiladores
                     Emparejar("ID");
                     if (preanalisis == "ID")
                     {
-                        s.Id = lexema;
-                        s.Valor = "";
-                        s.Tipo = tipo;
-                        s.Alcance = "";
-                        sim.Add(s);
+                        ps.nuevoSimbolo(lexema, tipo, "", "VAR_ESTRUCTURA", lexema.Length, toke.Linea);
                     }
                     Emparejar("ID");
                     VAR2(tipo);
@@ -915,7 +850,12 @@ namespace IntCompiladores
                 Emparejar("PA_IZQ");
                 CADENA();
                 Emparejar("PA_DER");
+                if(preanalisis == "S_PUNTOCOMA")
+                {
+                    form1.Consola1.Text += "consola> " + cadena + "\n";
+                }
                 Emparejar("S_PUNTOCOMA");
+                cadena = "";
             }
         }
 
@@ -930,7 +870,14 @@ namespace IntCompiladores
                 Emparejar("S_COMILLA");
                 while(preanalisis != "S_COMILLA")
                 {
+                    System.Console.Out.WriteLine("Espacios: " + lex.cuentaEspacios);
+                    cadena = cadena + lexema;
+                    for (int i = 0; i < lex.cuentaEspacios; i++)
+                    {
+                        cadena = cadena + " ";
+                    }
                     EmparejarCadena();
+                    lex.cuentaEspacios = 0;
                 }
                 Emparejar("S_COMILLA");
             }
@@ -1061,6 +1008,7 @@ namespace IntCompiladores
             System.Console.Out.WriteLine("dentro de emparejar el preanalisis es:" + preanalisis);
             if (token == preanalisis)
             {
+                lex.cuentaEspacios = 0;
                 if (toke.Apuntador + 1 > lex.Input.Length)
                 {
                     preanalisis = "$";
@@ -1091,6 +1039,8 @@ namespace IntCompiladores
             toke = lex.AnalizaRecursivo().Token;
             preanalisis = toke.Tipo;
             lexema = toke.Lexema;
+            System.Console.Out.WriteLine("dentro de emparejar el nuevo lexema es:" + lexema);
+            System.Console.Out.WriteLine("dentro de emparejar el nuevo preanalisis es:" + preanalisis);
         }
 
 

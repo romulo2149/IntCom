@@ -57,6 +57,7 @@
     <Compile Include="Lexico.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProyectoSemantico.cs" />
     <Compile Include="ProyectoSintactico.cs" />
     <Compile Include="Respuesta.cs" />
     <Compile Include="RespuestaLexico.cs" />

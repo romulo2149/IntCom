@@ -30,6 +30,7 @@ namespace IntCompiladores
         public string estadoActual;
         public string lexema2;
         public int apuntador2;
+        public int cuentaEspacios = 0;
 
         public Lexico(List<string> conjuntoEstados, List<char> alfabeto, List<Transicion> transiciones, string estadoInicial, List<string> estadosFinales, List<string> nombresTokens, List<string> palabrasReservadas, string input)
         {
@@ -185,6 +186,10 @@ namespace IntCompiladores
         {
             if (apuntador < input.Length)
             {
+                if (input[apuntador] == ' ')
+                {
+                    cuentaEspacios++;
+                }
                 Transicion normal = Transiciones.Find(t => t.EstadoInicial == estadoActual
                                                 && t.Simbolo == getCaracter(input[apuntador]));  // busca si existe una transicion con el estado actual y el simbolo
                 Transicion retroceso = Transiciones.Find(t => t.EstadoInicial == estadoActual

@@ -60,6 +60,7 @@
     <Compile Include="ProyectoSintactico.cs" />
     <Compile Include="Respuesta.cs" />
     <Compile Include="RespuestaLexico.cs" />
+    <Compile Include="Simbolo.cs" />
     <Compile Include="SintacticoAritmetica.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="Transicion.cs" />

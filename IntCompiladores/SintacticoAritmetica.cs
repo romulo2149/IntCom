@@ -28,7 +28,6 @@ namespace IntCompiladores
         }
         public void E()
         {
-            form1.Consola1.Text += "consola> Si funciona\n";
             System.Console.Out.WriteLine("dentro de e() el lexema es:" + lexema);
             System.Console.Out.WriteLine("dentro de e() el preanalisis es:" + preanalisis);
             if (preanalisis == "id" || preanalisis == "num" || preanalisis == "pA")
@@ -166,7 +165,6 @@ namespace IntCompiladores
                     System.Console.Out.WriteLine("dentro de emparejar el nuevo lexema es:" + lexema);
                     System.Console.Out.WriteLine("dentro de emparejar el nuevo preanalisis es:" + preanalisis);
                     System.Console.Out.WriteLine("dentro de emparejar el ap es:" + toke.Apuntador);
-                    errores.Add("codigo analizado, no se encontraron errores");
                 }
                 else
                 {

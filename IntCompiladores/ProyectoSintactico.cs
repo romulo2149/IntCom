@@ -13,6 +13,10 @@ namespace IntCompiladores
         Token toke;
         string lexema;
         Form1 form1;
+        Error error = new Error();
+        string valor, tipo, id, alcance;
+        public List<Simbolo> sim = new List<Simbolo>();
+        Simbolo s;
 
         public ProyectoSintactico(Lexico lex, Form1 f)
         {
@@ -28,14 +32,22 @@ namespace IntCompiladores
          * PROGRAMA -> PR_PROGRAMA ID CONSTANTES() ESTRUCTURAS() PR_INICIO INSTRUCCIONES() PR_FIN { PR_PROGRAMA }
          */
         {
-            Emparejar("PR_PROGRAMA");
-            Emparejar("ID");
-            CONSTANTES();
-            ESTRUCTURAS();
-            Emparejar("PR_INICIO");
-            INSTRUCCIONES();
-            Emparejar("PR_FIN");
-            form1.Consola1.Text += "consola> No se encontraron errores \n";
+            if(preanalisis == "PR_PROGRAMA")
+            {
+                Emparejar("PR_PROGRAMA");
+                Emparejar("ID");
+                CONSTANTES();
+                ESTRUCTURAS();
+                Emparejar("PR_INICIO");
+                INSTRUCCIONES();
+                Emparejar("PR_FIN");
+                form1.Consola1.Text += "consola> No se encontraron errores \n";
+            }
+            else
+            {
+                error.NuevoError(lexema, toke.Linea, "PROGRAMA", form1);
+            }
+            form1.Consola1.Text += "consola> Analisis terminado \n";
         }
 
         public void CONSTANTES()
@@ -62,14 +74,15 @@ namespace IntCompiladores
            else if(preanalisis == "PR_CONSTANTES")
             {
                 Emparejar("PR_CONSTANTES");
+                id = lexema;
                 Emparejar("ID");
                 Emparejar("OP_ASIGNACION");
-                VALCONS();
+                VALCONS(id);
                 CONSTANTE();
             }
            else
             {
-                form1.Consola1.Text += "consola> Error Sintáctico \n";
+                error.NuevoError(lexema, toke.Linea, "CONSTANTES, ESTRUCTURAS ó INICIO", form1);
             }
         }
 
@@ -96,37 +109,51 @@ namespace IntCompiladores
             }
             else if(preanalisis == "ID")
             {
+                id = lexema;
                 Emparejar("ID");
                 Emparejar("OP_ASIGNACION");
-                VALCONS();
+                VALCONS(id);
                 CONSTANTE();
             }
             else
             {
-                form1.Consola1.Text += "consola> Error Sintáctico \n";
+                error.NuevoError(lexema, toke.Linea, "INICIO, ESTRUCTURAS, ID", form1);
             }
         }
 
-        public void VALCONS()
+        public void VALCONS(string id)
         /*
          * VALCONS -> ENTERO { ENTERO }
          * VALCONS -> COMILLA ID COMILLA { S_COMILLA }
          */
         {
+            s = new Simbolo();
             switch (preanalisis)
             {
                 case "ENTERO":
+                    valor = lexema;
+                    s.Id = id;
+                    s.Valor = valor;
+                    s.Tipo = preanalisis;
+                    s.Alcance = "PR_CONSTANTES";
+                    sim.Add(s);
                     Emparejar("ENTERO");
                     break;
 
                 case "S_COMILLA":
                     Emparejar("S_COMILLA");
+                    valor = lexema;
+                    s.Id = id;
+                    s.Valor = "'" + valor + "'";
+                    s.Tipo = "CARACTER";
+                    s.Alcance = "PR_CONSTANTES";
+                    sim.Add(s);
                     Emparejar("ID");
                     Emparejar("S_COMILLA");
                     break;
 
                 default:
-                    form1.Consola1.Text += "consola> Error Sintáctico \n";
+                    error.NuevoError(lexema, toke.Linea, "ENTERO ó CARACTER", form1);
                     break;
             }
         }
@@ -137,10 +164,19 @@ namespace IntCompiladores
          * ESTRUCTURAS -> PR_ESTRUCTURAS ID OP_ASIGNACION LLAVE_IZQ CAMPOS() LLAVE_DER ESTRUCTURASII() { PR_ESTRUCTURAS }
          */
         {
+            s = new Simbolo();
             switch(preanalisis)
             {
                 case "PR_ESTRUCTURAS":
                     Emparejar("PR_ESTRUCTURAS");
+                    if(preanalisis == "ID")
+                    {
+                        alcance = lexema;
+                        s.Id = lexema;
+                        s.Valor = "";
+                        s.Tipo = "ESTRUCTURA";
+                        sim.Add(s);
+                    }
                     Emparejar("ID");
                     Emparejar("OP_ASIGNACION");
                     Emparejar("LLAVE_IZQ");
@@ -151,6 +187,10 @@ namespace IntCompiladores
 
                 case "PR_INICIO":
                     break;
+
+                default:
+                    error.NuevoError(lexema, toke.Linea, "ESTRUCTURAS ó INICIO", form1);
+                    break;
             }
         }
 
@@ -159,11 +199,24 @@ namespace IntCompiladores
          * CAMPOS -> TIPO() ID SEP() { PR_ENTERO, PR_CHAR, PR_APUNTADOR }
          */
         {
+            s = new Simbolo();
             if(preanalisis == "PR_ENTERO" || preanalisis == "PR_CHAR" || preanalisis == "PR_APUNTADOR")
             {
                 TIPO();
+                if(preanalisis == "ID")
+                {
+                    s.Id = lexema;
+                    s.Valor = "";
+                    s.Tipo = tipo;
+                    s.Alcance = alcance;
+                    sim.Add(s);
+                }
                 Emparejar("ID");
-                SEP();
+                SEP(tipo);
+            }
+            else
+            {
+                error.NuevoError(lexema, toke.Linea, "palabra reservada ENTERO, CHAR o APUNTADOR", form1);
             }
         }
 
@@ -177,25 +230,33 @@ namespace IntCompiladores
             switch (preanalisis)
             {
                 case "PR_ENTERO":
+                    tipo = lexema;
                     Emparejar("PR_ENTERO");
                     break;
 
                 case "PR_CHAR":
+                    tipo = lexema;
                     Emparejar("PR_CHAR");
                     break;
 
                 case "PR_APUNTADOR":
+                    tipo = lexema;
                     Emparejar("PR_APUNTADOR");
+                    break;
+
+                default:
+                    error.NuevoError(lexema, toke.Linea, "palabra reservada ENTERO, CHAR o APUNTADOR", form1);
                     break;
             }
         }
 
-        public void SEP()
+        public void SEP(string tipoSEP)
         /*
          * SEP -> S_PUNTOCOMA CAMPO2() { S_PUNTOCOMA }
          * SEP -> S_COMA ID SEP2() { S_COMA } 
          */
         {
+            s = new Simbolo();
             switch(preanalisis)
             {
                 case "S_PUNTOCOMA":
@@ -205,8 +266,20 @@ namespace IntCompiladores
 
                 case "S_COMA":
                     Emparejar("S_COMA");
+                    if(preanalisis == "ID")
+                    {
+                        s.Id = lexema;
+                        s.Valor = "";
+                        s.Tipo = tipoSEP;
+                        s.Alcance = alcance;
+                        sim.Add(s);
+                    }
                     Emparejar("ID");
-                    SEP2();
+                    SEP2(tipoSEP);
+                    break;
+
+                default:
+                    error.NuevoError(lexema, toke.Linea, "COMA ó PUNTO y COMA", form1);
                     break;
             }
         }
@@ -217,45 +290,38 @@ namespace IntCompiladores
          * CAMPO2 -> TIPO() ID SEP3() { PR_ENTERO, PR_CHAR, PR_APUNTADOR }
          */
         {
+            s = new Simbolo();
             if (preanalisis == "PR_ENTERO" || preanalisis == "PR_CHAR" || preanalisis == "PR_APUNTADOR")
             {
                 TIPO();
+                if(preanalisis == "ID")
+                {
+                    s.Id = lexema;
+                    s.Valor = "";
+                    s.Tipo = tipo;
+                    s.Alcance = alcance;
+                    sim.Add(s);
+                }
                 Emparejar("ID");
-                SEP3();
+                SEP3(tipo);
             }
             else if(preanalisis == "LLAVE_DER")
             {
 
             }
+            else
+            {
+                error.NuevoError(lexema, toke.Linea, "palabra reservada ENTERO, CHAR, APUNTADOR o un símbolo }", form1);
+            }
         }
 
-        public void SEP2()
+        public void SEP2(string tipoSEP2)
         /*
          * SEP2 -> S_PUNTOCOMA CAMPO3() { S_PUNTOCOMA }
          * SEP2 -> S_COMA ID S_PUNTOCOMA { S_COMA }
          */
         {
-            switch(preanalisis)
-            {
-                case "S_PUNTOCOMA":
-                    Emparejar("S_PUNTOCOMA");
-                    CAMPO3();
-                    break;
-
-                case "S_COMA":
-                    Emparejar("S_COMA");
-                    Emparejar("ID");
-                    Emparejar("S_PUNTOCOMA");
-                    break;
-            }
-        }
-
-        public void SEP3()
-        /*
-         * SEP3 -> S_PUNTOCOMA CAMPO3() { S_PUNTOCOMA }
-         * SEP3 -> S_COMA ID S_PUNTOCOMA { S_COMA }
-         */
-        {
+            s = new Simbolo();
             switch (preanalisis)
             {
                 case "S_PUNTOCOMA":
@@ -265,8 +331,54 @@ namespace IntCompiladores
 
                 case "S_COMA":
                     Emparejar("S_COMA");
+                    if (preanalisis == "ID")
+                    {
+                        s.Id = lexema;
+                        s.Valor = "";
+                        s.Tipo = tipoSEP2;
+                        s.Alcance = alcance;
+                        sim.Add(s);
+                    }
                     Emparejar("ID");
                     Emparejar("S_PUNTOCOMA");
+                    break;
+
+                default:
+                    error.NuevoError(lexema, toke.Linea, "COMA ó PUNTO y COMA", form1);
+                    break;
+            }
+        }
+
+        public void SEP3(string tipoSEP3)
+        /*
+         * SEP3 -> S_PUNTOCOMA CAMPO3() { S_PUNTOCOMA }
+         * SEP3 -> S_COMA ID S_PUNTOCOMA { S_COMA }
+         */
+        {
+            s = new Simbolo();
+            switch (preanalisis)
+            {
+                case "S_PUNTOCOMA":
+                    Emparejar("S_PUNTOCOMA");
+                    CAMPO3();
+                    break;
+
+                case "S_COMA":
+                    Emparejar("S_COMA");
+                    if (preanalisis == "ID")
+                    {
+                        s.Id = lexema;
+                        s.Valor = "";
+                        s.Tipo = tipoSEP3;
+                        s.Alcance = alcance;
+                        sim.Add(s);
+                    }
+                    Emparejar("ID");
+                    Emparejar("S_PUNTOCOMA");
+                    break;
+
+                default:
+                    error.NuevoError(lexema, toke.Linea, "COMA ó PUNTO y COMA", form1);
                     break;
             }
         }
@@ -277,15 +389,28 @@ namespace IntCompiladores
          * CAMPO3 -> TIPO() ID S_PUNTOCOMA { PR_ENTERO, PR_CHAR, PR_APUNTADOR }
          */
         {
+            s = new Simbolo();
             if (preanalisis == "PR_ENTERO" || preanalisis == "PR_CHAR" || preanalisis == "PR_APUNTADOR")
             {
                 TIPO();
+                if(preanalisis == "ID")
+                {
+                    s.Id = lexema;
+                    s.Valor = "";
+                    s.Tipo = tipo;
+                    s.Alcance = alcance;
+                    sim.Add(s);
+                }
                 Emparejar("ID");
                 Emparejar("S_PUNTOCOMA");
             }
             else if (preanalisis == "LLAVE_DER")
             {
 
+            }
+            else
+            {
+                error.NuevoError(lexema, toke.Linea, "palabra reservada ENTERO, CHAR, APUNTADOR o el símbolo }", form1);
             }
         }
 
@@ -305,7 +430,7 @@ namespace IntCompiladores
                     break;
 
                 default:
-                    form1.Consola1.Text += "consola> Error Sintáctico \n";
+                    error.NuevoError(lexema, toke.Linea, "INICIO o un ID", form1);
                     break;
             }
         }
@@ -317,30 +442,50 @@ namespace IntCompiladores
         {
             if (preanalisis == "ID")
             {
+                id = lexema;
+                alcance = lexema;
                 Emparejar("ID");
-                VARSTR();
+                VARSTR(id);
+            }
+            else
+            {
+                error.NuevoError(lexema, toke.Linea, "ID", form1);
             }
         }
 
-        public void VARSTR()
+        public void VARSTR(string str)
         /*
          * VARSTR -> ID VAR() { ID }
          * VARSTR -> OP_ASIGNACION LLAVE_IZQ CAMPOS() LLAVE_DER VARC() { OP_ASIGNACION }
          */
         {
+            s = new Simbolo();
             switch(preanalisis)
             {
                 case "ID":
+                    s.Id = lexema;
+                    s.Valor = "";
+                    s.Tipo = str;
+                    sim.Add(s);
                     Emparejar("ID");
-                    VARF();
+                    VARF(str);
                     break;
 
                 case "OP_ASIGNACION":
+                    valor = "";
+                    s.Id = id;
+                    s.Valor = valor;
+                    s.Tipo = "ESTRUCTURA";
+                    sim.Add(s);
                     Emparejar("OP_ASIGNACION");
                     Emparejar("LLAVE_IZQ");
                     CAMPOS();
                     Emparejar("LLAVE_DER");
                     VARC();
+                    break;
+
+                default:
+                    error.NuevoError(lexema, toke.Linea, "ID ó el operador =", form1);
                     break;
             }
         }
@@ -350,61 +495,90 @@ namespace IntCompiladores
          * VARC -> ID ID VAR()
          */
         {
-            if(preanalisis == "ID")
+            s = new Simbolo();
+            if (preanalisis == "ID")
             {
+                tipo = lexema;
                 Emparejar("ID");
+                s.Id = lexema;
+                s.Valor = "";
+                s.Tipo = tipo;
+                sim.Add(s);
                 Emparejar("ID");
-                VARF();
+                VARF(tipo);
+            }
+            else
+            {
+                error.NuevoError(lexema, toke.Linea, "ID", form1);
             }
         }
 
-        public void VARF()
+        public void VARF(string str)
         /*
          * VAR -> VAR2() S_PUNTOCOMA VAR3() { S_PUNTOCOMA, S_COMA }
          */
         {
-            if(preanalisis == "S_PUNTOCOMA" || preanalisis == "S_COMA")
+            s = new Simbolo();
+            if (preanalisis == "S_PUNTOCOMA" || preanalisis == "S_COMA")
             {
                 switch(preanalisis)
                 {
                     case "S_PUNTOCOMA":
                         System.Console.Out.WriteLine("detecto el punto y coma" );
-                        VAR2();
+                        VAR2(str);
                         Emparejar("S_PUNTOCOMA");
-                        VAR3();
+                        VAR3(str);
                         break;
                     case "S_COMA":
-                        VAR2();
+                        VAR2(str);
                         Emparejar("S_PUNTOCOMA");
-                        VAR3();
+                        VAR3(str);
                         break;
                     default:
+                        error.NuevoError(lexema, toke.Linea, "COMA ó PUNTO y COMA", form1);
                         break;
                 }
             }
+            else
+            {
+                error.NuevoError(lexema, toke.Linea, "COMA ó PUNTO y COMA", form1);
+            }
         }
 
-        public void VAR2()
+        public void VAR2(string str)
         /*
          * VAR2 -> S_COMA ID VAR2() { S_COMA }
          * VAR2 -> ε { S_PUNTOCOMA }
          */
         {
-            switch(preanalisis)
+            s = new Simbolo();
+            switch (preanalisis)
             {
                 case "S_COMA":
                     Emparejar("S_COMA");
+                    if (preanalisis == "ID")
+                    {
+                        s.Id = lexema;
+                        s.Valor = "";
+                        s.Tipo = str;
+                        s.Alcance = "";
+                        sim.Add(s);
+                    }
                     Emparejar("ID");
-                    VAR2();
+                    VAR2(str);
                     break;
 
                 case "S_PUNTOCOMA":
+                    break;
+
+                default:
+                    error.NuevoError(lexema, toke.Linea, "COMA ó PUNTO y COMA", form1);
                     break;
             }
         }
 
 
-        public void VAR3()
+        public void VAR3(string str)
         /*
          * VAR3 -> ID ID VAR2() S_PUNTOCOMA VAR3() { ID }
          * VAR3 -> ε { INICIO }
@@ -413,14 +587,27 @@ namespace IntCompiladores
             switch(preanalisis)
             {
                 case "ID":
+                    tipo = lexema;
                     Emparejar("ID");
+                    if (preanalisis == "ID")
+                    {
+                        s.Id = lexema;
+                        s.Valor = "";
+                        s.Tipo = tipo;
+                        s.Alcance = "";
+                        sim.Add(s);
+                    }
                     Emparejar("ID");
-                    VAR2();
+                    VAR2(tipo);
                     Emparejar("S_PUNTOCOMA"); //duda
-                    VAR3();
+                    VAR3(tipo);
                     break;
 
                 case "PR_INICIO":
+                    break;
+
+                default:
+                    error.NuevoError(lexema, toke.Linea, "palabra reservada INICIO o un ID", form1);
                     break;
             }
         }
@@ -440,6 +627,10 @@ namespace IntCompiladores
             else if(preanalisis == "PR_FIN" || preanalisis == "PR_SINO")
             {
 
+            }
+            else
+            {
+                error.NuevoError(lexema, toke.Linea, "una instrucción o una expresión, palabra reservada FIN o SINO", form1);
             }
         }
 
@@ -473,6 +664,10 @@ namespace IntCompiladores
                 case "ID":
                     EXPRESION();
                     break;
+
+                default:
+                    error.NuevoError(lexema, toke.Linea, "una instrucción o una expresión", form1);
+                    break;
             }
         }
 
@@ -486,6 +681,10 @@ namespace IntCompiladores
                 SIP1();
                 SIP2();
                 Emparejar("PR_FIN");
+            }
+            else
+            {
+                error.NuevoError(lexema, toke.Linea, "la condición SI", form1);
             }
         }
 
@@ -502,6 +701,10 @@ namespace IntCompiladores
                 Emparejar("PA_DER");
                 Emparejar("PR_ENTONCES");
                 INSTRUCCIONES();
+            }
+            else
+            {
+                error.NuevoError(lexema, toke.Linea, "palabra reservada SI", form1);
             }
         }
 
@@ -853,6 +1056,7 @@ namespace IntCompiladores
 
         public void Emparejar(string token)
         {
+            
             System.Console.Out.WriteLine("dentro de emparejar el token esperado es:" + token);
             System.Console.Out.WriteLine("dentro de emparejar el preanalisis es:" + preanalisis);
             if (token == preanalisis)
@@ -878,7 +1082,7 @@ namespace IntCompiladores
             else
             {
                 System.Console.Out.WriteLine("hubo error en:" + lexema);
-                form1.Consola1.Text += "consola> Error sintactico EN "+ lexema +" \n";
+                form1.Consola1.Text += "consola> Error sintáctico en "+ lexema +" se esperaba " + token + "\n";
             }
         }
 

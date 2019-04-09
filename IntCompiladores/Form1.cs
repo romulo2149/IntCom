@@ -102,34 +102,18 @@ namespace IntCompiladores
                     String aux = EstadoInicial[0] + "";
                     Console.Out.WriteLine(aux);
                     var MEFD = new Lexico(Q, Alfabeto, Transiciones, aux, EstadoFinal, Nombres, PalabrasR, Editor.Text.TrimEnd());
-                    RespuestaLexico res;
-                    Error err = new Error();
-                    int ap = 0;
-                    /*
-                    while(ap < Editor.Text.TrimEnd().Length)
-                    { 
-                        res = MEFD.AnalizaRecursivo();
-                        ap = res.Apuntador;
-                        Consola.Text += "consola> " + res.Token.Lexema + " >> " + res.Token.Linea + " >> "
-                                                    + res.Token.Tipo + " >> " + err.DevuelveError(res.Token.Error) + "\n";
-                    }
-                    /*
 
-                    SintacticoAritmetica sa = new SintacticoAritmetica(MEFD, this);
-                    sa.E();
-                    if(sa.preanalisis != "$")
-                    {
-                        Consola.Text += "consola> Error en fin de fichero \n";
-                    }
-                     
-                    */
 
                     ProyectoSintactico ps = new ProyectoSintactico(MEFD, this);
                     ps.PROGRAMA();
+                    for (int i = 0; i < ps.sim.Count; i++)
+                    {
+
+                        Consola.Text += "consola> ident: " + ps.sim[i].Id + " | valor: " + ps.sim[i].Valor 
+                            +  " | tipo: " + ps.sim[i].Tipo +  " | alcance: " + ps.sim[i].Alcance   +  "\n";
+                    }
 
 
-
-                    Consola.Text += "consola> Analisis completo...\n";
                 }
                 else
                 {
@@ -137,6 +121,20 @@ namespace IntCompiladores
                 }
             }
         }
+
+
+        /*
+         * 
+         * presentacion
+         * integrantes
+         * indice
+         * introduccion que entregamos
+         * analisis que usamos, arquitectura del sistema, como funciona, que lenguaje
+         * desarrollo, diseño, diagrama de clases, entradas salidas, pruebas
+         * conclusiones, alcances, limitaciones (codigo, gui)
+         * referencias
+         * 
+         * */
 
         private void lenguajeToolStripMenuItem2_Click(object sender, EventArgs e)
         {

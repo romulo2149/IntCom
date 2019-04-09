@@ -9,6 +9,7 @@ namespace IntCompiladores
     public class Error
     {
         private String error;
+        public Form1 f1;
         public String DevuelveError(int erro)
         {
             switch(erro)
@@ -25,6 +26,12 @@ namespace IntCompiladores
             }
 
             return this.error;
+        }
+
+        public void NuevoError(string lexema, int linea, string esperado, Form1 form1)
+        {
+            form1.Consola1.Text += "consola> Error sintáctico encontrado en " + lexema +
+                ", en la línea: " + linea + ", se esperaba " + esperado + ". \n";
         }
     }
 }

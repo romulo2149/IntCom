@@ -38,7 +38,7 @@ namespace IntCompiladores
             }
             else
             {
-                errores.Add("error en " + preanalisis);
+                form1.Consola1.Text += "consola> Error en " + preanalisis + " en línea " + toke.Linea + ", Se esperaba un id, entero o ( \n";
             }
         }
    
@@ -54,7 +54,7 @@ namespace IntCompiladores
             }
             else
             {
-                errores.Add("error en " + preanalisis);
+                form1.Consola1.Text += "consola> Error en " + preanalisis + " en línea " + toke.Linea + ", Se esperaba un id, entero o ( \n";
             }
         }
 
@@ -82,7 +82,7 @@ namespace IntCompiladores
                     break;
                 default:
                     System.Console.Out.WriteLine("entro a Ep(default)");
-                    errores.Add("error en " + preanalisis);
+                    form1.Consola1.Text += "consola> Error en " + preanalisis + " en línea " + toke.Linea + ", Se esperaba un +, -, ) o FINFICHERO \n";
                     break;
             }
         }
@@ -123,7 +123,7 @@ namespace IntCompiladores
                     break;
                 default:
                     System.Console.Out.WriteLine("entro a Tp(default)");
-                    errores.Add("error en " + preanalisis);
+                    form1.Consola1.Text += "consola> Error en " + preanalisis + " en línea " + toke.Linea + ", Se esperaba un *, /, +, -, ) o FINFICHERO \n";
                     break;
             }
         }
@@ -149,7 +149,7 @@ namespace IntCompiladores
                     break;
                 default:
                     System.Console.Out.WriteLine("entro a F(default)");
-                    errores.Add("error en " + preanalisis);
+                    form1.Consola1.Text += "consola> Error en " + preanalisis + " en línea " + toke.Linea + ", Se esperaba un id, entero o ( \n";
                     break;
             }
         }
@@ -178,7 +178,7 @@ namespace IntCompiladores
             }
             else
             {
-                errores.Add("error en " + preanalisis);
+                form1.Consola1.Text += "consola> Error en " + preanalisis + " en línea " + toke.Linea + ", Se esperaba un " +token + "\n";
             }
         }
 

@@ -14,6 +14,11 @@ namespace IntCompiladores
         private string alcance;
         private int linea;
 
+        public Simbolo(string nombre)
+        {
+            this.nombre = nombre;
+        }
+
         public Simbolo(string tipo, string nombre, string valor, string alcance, int linea)
         {
             this.Tipo = tipo;

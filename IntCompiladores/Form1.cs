@@ -42,6 +42,7 @@ namespace IntCompiladores
 
         private void ejecutarAnalizadorToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Consola.Text = "";
             dataGridView1.Rows.Clear();
             int contadorError = 0;
 
@@ -101,21 +102,43 @@ namespace IntCompiladores
                     }
                     String aux = EstadoInicial[0] + "";
                     Console.Out.WriteLine(aux);
+                    dataGridView1.ColumnCount = 4;
+                    dataGridView1.Columns[0].Name = "Token";
+                    dataGridView1.Columns[1].Name = "Lexema";
+                    dataGridView1.Columns[2].Name = "Linea";
+                    dataGridView1.Columns[3].Name = "Error";
+                    dataGridView1.Columns[0].Width = 110;
+                    dataGridView1.Columns[1].Width = 150;
+                    dataGridView1.Columns[2].Width = 50;
+                    dataGridView1.Columns[3].Width = 550;
+
+                    dataGridView2.ColumnCount = 5;
+                    dataGridView2.Columns[0].Name = "Nombre";
+                    dataGridView2.Columns[1].Name = "Tipo";
+                    dataGridView2.Columns[2].Name = "Valor";
+                    dataGridView2.Columns[3].Name = "Linea";
+                    dataGridView2.Columns[4].Name = "Alcance";
+                    dataGridView2.Columns[0].Width = 150;
+                    dataGridView2.Columns[1].Width = 150;
+                    dataGridView2.Columns[2].Width = 150;
+                    dataGridView2.Columns[3].Width = 50;
+                    dataGridView2.Columns[4].Width = 150;
                     var MEFD = new Lexico(Q, Alfabeto, Transiciones, aux, EstadoFinal, Nombres, PalabrasR, Editor.Text.TrimEnd());
-
-
-                    ProyectoSintactico ps = new ProyectoSintactico(MEFD, this);
+                    var ExpLex = new AnalizaExpresion(Q, Alfabeto, Transiciones, aux, EstadoFinal, Nombres, PalabrasR);
+                    ProyectoSintactico ps = new ProyectoSintactico(MEFD, ExpLex, this);
                     ps.PROGRAMA();
 
                     Consola.Text += "consola> Tabla de Símbolos: \n";
 
-                    foreach (KeyValuePair < string, Simbolo> fila in ps.ps.TablaSimbolos)
+                    foreach (KeyValuePair <string, Simbolo> fila in ps.ps.TablaSimbolos)
                     {
-                        Consola.Text += "consola> Nombre: " + fila.Value.Nombre + " | Tipo: " + fila.Value.Tipo +
+                        /*Consola.Text += "consola> Nombre: " + fila.Value.Nombre + " | Tipo: " + fila.Value.Tipo +
                             " | Valor: " + fila.Value.Valor + " | Alcance: " + fila.Value.Alcance +
-                            " | Línea: " + fila.Value.Linea + " \n";
+                            " | Línea: " + fila.Value.Linea + " \n";*/
+                        Consola.Text += "consola>"+ fila.Key + " \n";
+                        dataGridView2.Rows.Add(fila.Value.Nombre, fila.Value.Tipo, fila.Value.Valor, fila.Value.Linea, fila.Value.Alcance);
                     }
-
+                      
 
                 }
                 else
@@ -146,6 +169,7 @@ namespace IntCompiladores
             nombre = "";
             Stream Flujo;
             OpenFileDialog DialogoAbrirArchivo = new OpenFileDialog();
+            DialogoAbrirArchivo.InitialDirectory = @"C:\Users\romulo\Desktop\Proyecto";
             DialogoAbrirArchivo.Filter = "(*.lt2)|*.lt2";
             if (DialogoAbrirArchivo.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
@@ -514,6 +538,7 @@ namespace IntCompiladores
             Stream Flujo;
             OpenFileDialog DialogoAbrirArchivo = new OpenFileDialog();
             DialogoAbrirArchivo.Filter = "(*.txt)|*.txt";
+            DialogoAbrirArchivo.InitialDirectory = @"C:\Users\romulo\Desktop\Proyecto";
             if (DialogoAbrirArchivo.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 if ((Flujo = DialogoAbrirArchivo.OpenFile()) != null)
@@ -534,6 +559,11 @@ namespace IntCompiladores
             {
                 Consola.Text += "consola> Error al abrir archivo \n"; 
             }
+        }
+
+        private void tabPage4_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace IntCompiladores
 {
-    class Lexico
+    class AnalizaExpresion
     {
         private List<string> conjuntoEstados;
         private List<char> alfabeto;
@@ -16,7 +16,7 @@ namespace IntCompiladores
         private List<string> estadosFinales;
         private List<string> nombresTokens;
         private List<string> palabrasReservadas;
-        private string input;
+        public string input;
         Token token;
         RespuestaLexico res;
         public int linea = 1;
@@ -32,7 +32,7 @@ namespace IntCompiladores
         public int apuntador2;
         public int cuentaEspacios = 0;
 
-        public Lexico(List<string> conjuntoEstados, List<char> alfabeto, List<Transicion> transiciones, string estadoInicial, List<string> estadosFinales, List<string> nombresTokens, List<string> palabrasReservadas, string input)
+        public AnalizaExpresion(List<string> conjuntoEstados, List<char> alfabeto, List<Transicion> transiciones, string estadoInicial, List<string> estadosFinales, List<string> nombresTokens, List<string> palabrasReservadas)
         {
             this.ConjuntoEstados = conjuntoEstados;
             this.Alfabeto = alfabeto;
@@ -41,7 +41,6 @@ namespace IntCompiladores
             this.EstadosFinales = estadosFinales;
             this.NombresTokens = nombresTokens;
             this.PalabrasReservadas = palabrasReservadas;
-            this.Input = input;
             estadoActual = estadoInicial;
         }
 
@@ -54,134 +53,7 @@ namespace IntCompiladores
         public string Input { get => input; set => input = value; }
         internal List<Transicion> Transiciones { get => transiciones; set => transiciones = value; }
 
-        public RespuestaLexico Analiza()
-        {
-            for(int i = apuntador; i < this.input.Length; i++)
-            {
-                caracter = this.input[i];
-                if (esLetra.IsMatch(caracter.ToString()))  //checa si es letra 
-                {
-                    caracter = 'l';
-                }
-                if (esNumero.IsMatch(caracter.ToString()))  // checa si es numero
-                {
-                    caracter = 'd';
-                }
-                if (caracter.ToString() == ",") // checa si es coma
-                {
-                    caracter = 'c';
-                }
-                Transicion normal = Transiciones.Find(t => t.EstadoInicial == estadoActual
-                                            && t.Simbolo == caracter);  // busca si existe una transicion con el estado actual y el simbolo
-                Transicion retroceso = Transiciones.Find(t => t.EstadoInicial == estadoActual
-                                            && t.Simbolo == 'o');  // busca si existe un caracter de retroceso
-
-                if (normal != null) //si existe una transicion
-                {
-                    lexema = lexema + this.input[i];   //acumula los caracteres hasta encontrar un estado final o retroceso
-
-                    if (EstadosFinales.Contains(normal.EstadoFinal))
-                    {
-                        if(PalabrasReservadas.Contains(lexema))
-                        {
-                            if (lexema == "MOD")
-                            {
-                                tipo = "OP_MODULO";
-                            }
-                            else
-                            {
-                                tipo = "PR_" + lexema;
-                            }
-                        }
-                        else
-                        {
-                            tipo = TipoToken(Convert.ToInt32(normal.EstadoFinal));
-                        }
-                        error = 0;
-                        apuntador = i + 1;
-                        break;
-                    }
-                    else if ((i + 1) >= input.Length)
-                    {
-                        Transicion retroceso2 = Transiciones.Find(t => t.EstadoInicial == normal.EstadoFinal
-                                            && t.Simbolo == 'o');
-                        if (PalabrasReservadas.Contains(lexema))
-                        {
-                            if (lexema == "MOD")
-                            {
-                                tipo = "OP_MODULO";
-                            }
-                            else
-                            {
-                                tipo = "PR_"+lexema;
-                            }
-
-                        }
-                        else
-                        {
-                            tipo = TipoToken(Convert.ToInt32(retroceso2.EstadoFinal));
-                        }
-                        error = 0;
-                        apuntador = i + 1;
-                        break;
-                    }
-                    else
-                    {
-                        estadoActual = normal.EstadoFinal;
-                    }
-                }
-                else if (retroceso != null) // si existe caracater de retroceso
-                {
-                    if (PalabrasReservadas.Contains(lexema))
-                    {
-                        if (lexema == "MOD")
-                        {
-                            tipo = "OP_MODULO";
-                        }
-                        else
-                        {
-                            tipo = "PR_" + lexema;
-                        }
-
-                    }
-                    else
-                    {
-                        tipo = TipoToken(Convert.ToInt32(retroceso.EstadoFinal));
-                    }
-                    error = 0;
-                    apuntador = i;
-                    break;
-                }
-                else // no pertenece al alfabeto o no hay transicion
-                {
-                    if (this.input[i] != '\n' && this.input[i] != '\t' && this.input[i] != ' ') //ignora espacios y tabulaciones como errores
-                    {
-                        if (Alfabeto.Contains(caracter))
-                        {
-                            tipo = "ERROR";
-                            error = 1;
-                            apuntador = i + 1;
-                        }
-                        else
-                        {
-                            tipo = "ERROR";
-                            error = 2;
-                            apuntador = i + 1;
-                        }
-                        break;
-                    }
-                }
-                if (this.input[i] == '\n') //contador de lineas
-                {
-                    linea++;
-                }
-            }
-            estadoActual = estadoInicial;
-            token = new Token(lexema, linea, tipo, error);
-            res = new RespuestaLexico(linea, apuntador, token);
-            return res;
-        } 
-
+        
         public RespuestaLexico AnalizaRecursivo()
         {
             if (apuntador < input.Length)
@@ -200,7 +72,7 @@ namespace IntCompiladores
                 {
                     lexema = lexema + input[apuntador];   //acumula los caracteres hasta encontrar un estado final o retroceso
                     lexema2 = lexema;
-                   // System.Console.Out.WriteLine(lexema);
+                    // System.Console.Out.WriteLine(lexema);
                     if (EstadosFinales.Contains(normal.EstadoFinal))
                     {
                         if (PalabrasReservadas.Contains(lexema))
@@ -304,11 +176,10 @@ namespace IntCompiladores
                         AnalizaRecursivo();
 
                     }
-                    
+
                 }
             }
             estadoActual = estadoInicial;
-            System.Console.WriteLine(apuntador2);
             token = new Token(lexema2, linea, tipo, error);
             token.Apuntador = apuntador2;
             res = new RespuestaLexico(linea, apuntador2, token);
@@ -316,7 +187,7 @@ namespace IntCompiladores
             return res;
         }
 
-        
+
         public String devuelveLetra(int index)
         {
             return this.input[index].ToString();
@@ -356,4 +227,3 @@ namespace IntCompiladores
         }
     }
 }
-

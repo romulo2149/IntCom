@@ -30,6 +30,7 @@ namespace IntCompiladores
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.TabControl tabControl1;
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.archivoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nuevoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,21 +54,27 @@ namespace IntCompiladores
             this.ayudaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.Editor = new System.Windows.Forms.RichTextBox();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.Consola = new System.Windows.Forms.RichTextBox();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.Datos = new System.Windows.Forms.RichTextBox();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.Consola = new System.Windows.Forms.RichTextBox();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.Errores = new System.Windows.Forms.RichTextBox();
+            this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            tabControl1 = new System.Windows.Forms.TabControl();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            this.tabControl1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.tabPage4.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            this.groupBox2.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            tabControl1.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -106,7 +113,7 @@ namespace IntCompiladores
             this.lenguajeToolStripMenuItem,
             this.lenguajeToolStripMenuItem1});
             this.nuevoToolStripMenuItem.Name = "nuevoToolStripMenuItem";
-            this.nuevoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.nuevoToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.nuevoToolStripMenuItem.Text = "Nuevo";
             // 
             // códigoToolStripMenuItem1
@@ -135,56 +142,56 @@ namespace IntCompiladores
             this.lenguajeToolStripMenuItem2,
             this.autómataToolStripMenuItem});
             this.abrirToolStripMenuItem.Name = "abrirToolStripMenuItem";
-            this.abrirToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.abrirToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.abrirToolStripMenuItem.Text = "Abrir";
             // 
             // códigoToolStripMenuItem
             // 
             this.códigoToolStripMenuItem.Name = "códigoToolStripMenuItem";
-            this.códigoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.códigoToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.códigoToolStripMenuItem.Text = "Código";
             this.códigoToolStripMenuItem.Click += new System.EventHandler(this.códigoToolStripMenuItem_Click);
             // 
             // lenguajeToolStripMenuItem2
             // 
             this.lenguajeToolStripMenuItem2.Name = "lenguajeToolStripMenuItem2";
-            this.lenguajeToolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+            this.lenguajeToolStripMenuItem2.Size = new System.Drawing.Size(127, 22);
             this.lenguajeToolStripMenuItem2.Text = "Lenguaje";
             this.lenguajeToolStripMenuItem2.Click += new System.EventHandler(this.lenguajeToolStripMenuItem2_Click);
             // 
             // autómataToolStripMenuItem
             // 
             this.autómataToolStripMenuItem.Name = "autómataToolStripMenuItem";
-            this.autómataToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.autómataToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.autómataToolStripMenuItem.Text = "Autómata";
             this.autómataToolStripMenuItem.Click += new System.EventHandler(this.autómataToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(156, 6);
             // 
             // guardarToolStripMenuItem
             // 
             this.guardarToolStripMenuItem.Name = "guardarToolStripMenuItem";
-            this.guardarToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.guardarToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.guardarToolStripMenuItem.Text = "Guardar";
             // 
             // guardarComoToolStripMenuItem
             // 
             this.guardarComoToolStripMenuItem.Name = "guardarComoToolStripMenuItem";
-            this.guardarComoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.guardarComoToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.guardarComoToolStripMenuItem.Text = "Guardar como...";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(156, 6);
             // 
             // salirToolStripMenuItem
             // 
             this.salirToolStripMenuItem.Name = "salirToolStripMenuItem";
-            this.salirToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.salirToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.salirToolStripMenuItem.Text = "Salir";
             // 
             // ejecuciónToolStripMenuItem
@@ -248,39 +255,35 @@ namespace IntCompiladores
             this.Editor.TabIndex = 0;
             this.Editor.Text = "";
             // 
-            // tabControl1
+            // groupBox2
             // 
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Location = new System.Drawing.Point(13, 344);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1076, 243);
-            this.tabControl1.TabIndex = 2;
+            this.groupBox2.Controls.Add(this.Datos);
+            this.groupBox2.Location = new System.Drawing.Point(824, 48);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(261, 279);
+            this.groupBox2.TabIndex = 3;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Datos";
             // 
-            // tabPage2
+            // Datos
             // 
-            this.tabPage2.Controls.Add(this.Consola);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1068, 217);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Consola";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.Datos.Location = new System.Drawing.Point(7, 20);
+            this.Datos.Name = "Datos";
+            this.Datos.Size = new System.Drawing.Size(248, 253);
+            this.Datos.TabIndex = 0;
+            this.Datos.Text = "";
             // 
-            // Consola
+            // tabPage4
             // 
-            this.Consola.BackColor = System.Drawing.SystemColors.MenuText;
-            this.Consola.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Consola.ForeColor = System.Drawing.SystemColors.Info;
-            this.Consola.Location = new System.Drawing.Point(0, 0);
-            this.Consola.Name = "Consola";
-            this.Consola.ReadOnly = true;
-            this.Consola.Size = new System.Drawing.Size(1068, 217);
-            this.Consola.TabIndex = 0;
-            this.Consola.Text = "";
+            this.tabPage4.Controls.Add(this.dataGridView2);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(1068, 217);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Tabla Símbolos";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            this.tabPage4.Click += new System.EventHandler(this.tabPage4_Click);
             // 
             // tabPage1
             // 
@@ -306,32 +309,77 @@ namespace IntCompiladores
             this.dataGridView1.Size = new System.Drawing.Size(1064, 217);
             this.dataGridView1.TabIndex = 0;
             // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.Consola);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(1068, 217);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Consola";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // Consola
+            // 
+            this.Consola.BackColor = System.Drawing.SystemColors.MenuText;
+            this.Consola.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Consola.ForeColor = System.Drawing.SystemColors.Info;
+            this.Consola.Location = new System.Drawing.Point(0, 0);
+            this.Consola.Name = "Consola";
+            this.Consola.ReadOnly = true;
+            this.Consola.Size = new System.Drawing.Size(1068, 217);
+            this.Consola.TabIndex = 0;
+            this.Consola.Text = "";
+            // 
+            // tabControl1
+            // 
+            tabControl1.Controls.Add(this.tabPage2);
+            tabControl1.Controls.Add(this.tabPage1);
+            tabControl1.Controls.Add(this.tabPage4);
+            tabControl1.Controls.Add(this.tabPage3);
+            tabControl1.Location = new System.Drawing.Point(13, 344);
+            tabControl1.Multiline = true;
+            tabControl1.Name = "tabControl1";
+            tabControl1.SelectedIndex = 0;
+            tabControl1.Size = new System.Drawing.Size(1076, 243);
+            tabControl1.TabIndex = 2;
+            // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.Errores);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage3.Size = new System.Drawing.Size(1068, 217);
-            this.tabPage3.TabIndex = 2;
+            this.tabPage3.TabIndex = 4;
             this.tabPage3.Text = "Errores";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // groupBox2
+            // Errores
             // 
-            this.groupBox2.Controls.Add(this.Datos);
-            this.groupBox2.Location = new System.Drawing.Point(824, 48);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(261, 279);
-            this.groupBox2.TabIndex = 3;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Datos";
+            this.Errores.BackColor = System.Drawing.SystemColors.MenuText;
+            this.Errores.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Errores.ForeColor = System.Drawing.SystemColors.Info;
+            this.Errores.Location = new System.Drawing.Point(-4, 0);
+            this.Errores.Name = "Errores";
+            this.Errores.ReadOnly = true;
+            this.Errores.Size = new System.Drawing.Size(1080, 225);
+            this.Errores.TabIndex = 1;
+            this.Errores.Text = "";
             // 
-            // Datos
+            // dataGridView2
             // 
-            this.Datos.Location = new System.Drawing.Point(7, 20);
-            this.Datos.Name = "Datos";
-            this.Datos.Size = new System.Drawing.Size(248, 253);
-            this.Datos.TabIndex = 0;
-            this.Datos.Text = "";
+            this.dataGridView2.AllowUserToAddRows = false;
+            this.dataGridView2.AllowUserToDeleteRows = false;
+            this.dataGridView2.AllowUserToResizeColumns = false;
+            this.dataGridView2.AllowUserToResizeRows = false;
+            this.dataGridView2.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView2.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView2.Name = "dataGridView2";
+            this.dataGridView2.Size = new System.Drawing.Size(1066, 217);
+            this.dataGridView2.TabIndex = 1;
             // 
             // Form1
             // 
@@ -339,7 +387,7 @@ namespace IntCompiladores
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1101, 599);
             this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(tabControl1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -349,11 +397,14 @@ namespace IntCompiladores
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
-            this.tabControl1.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.tabPage4.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            this.groupBox2.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            tabControl1.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -383,17 +434,20 @@ namespace IntCompiladores
         private System.Windows.Forms.ToolStripMenuItem ejecutarAnalizadorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ejecutarConAutómataToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.RichTextBox Editor;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.RichTextBox Datos;
-        private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.RichTextBox Consola;
+        private TabPage tabPage4;
+        private TabPage tabPage1;
+        private DataGridView dataGridView1;
+        private TabPage tabPage2;
+        private RichTextBox Consola;
+        private DataGridView dataGridView2;
+        private TabPage tabPage3;
+        private RichTextBox Errores;
 
         public RichTextBox Consola1 { get => Consola; set => Consola = value; }
+        public DataGridView DataGridView1 { get => dataGridView1; set => dataGridView1 = value; }
     }
 }
 

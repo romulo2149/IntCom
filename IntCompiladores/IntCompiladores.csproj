@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnalizaExpresion.cs" />
     <Compile Include="AutomataFD.cs" />
     <Compile Include="Error.cs" />
     <Compile Include="Form1.cs">

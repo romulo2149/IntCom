@@ -9,6 +9,7 @@ namespace IntCompiladores
     class ProyectoSintactico
     {
         private Lexico lex;
+        private AnalizaExpresion aex;
         public string preanalisis;
         Token toke;
         string lexema;
@@ -16,19 +17,25 @@ namespace IntCompiladores
         Error error = new Error();
         string valor, tipo, id, alcance, cadena = "";
         public List<Simbolo> sim = new List<Simbolo>();
+        public List<Token> t;
+        public Token to;
         public ProyectoSemantico ps;
-        Simbolo s;
+        public string exp;
+        public string estruct;
 
-        public ProyectoSintactico(Lexico lex, Form1 f)
+
+        public ProyectoSintactico(Lexico lex, AnalizaExpresion aex, Form1 f)
         {
             this.lex = lex;
             toke = lex.AnalizaRecursivo().Token;
             preanalisis = toke.Tipo;
             lexema = toke.Lexema;
             form1 = f;
-            ps = new ProyectoSemantico(f);
+            ps = new ProyectoSemantico(f, aex);
+            Aex = aex;
         }
 
+        internal AnalizaExpresion Aex { get => aex; set => aex = value; }
         public void PROGRAMA() 
         /*
          * PROGRAMA -> PR_PROGRAMA ID CONSTANTES() ESTRUCTURAS() PR_INICIO INSTRUCCIONES() PR_FIN { PR_PROGRAMA }
@@ -132,7 +139,7 @@ namespace IntCompiladores
             switch (preanalisis)
             {
                 case "ENTERO":
-                    ps.nuevoSimbolo(id2, preanalisis, valor, "CONSTANTES", id2.Length, toke.Linea);
+                    ps.nuevoSimbolo(id2, preanalisis, lexema, "CONSTANTES", id2.Length, toke.Linea);
                     Emparejar("ENTERO");
                     break;
 
@@ -161,6 +168,7 @@ namespace IntCompiladores
                     Emparejar("PR_ESTRUCTURAS");
                     if(preanalisis == "ID")
                     {
+                        estruct = lexema;
                         ps.nuevoSimbolo(lexema, "ESTRUCTURA", "", lexema, lexema.Length, toke.Linea);
                     }
                     Emparejar("ID");
@@ -190,7 +198,7 @@ namespace IntCompiladores
                 TIPO();
                 if(preanalisis == "ID")
                 {
-                    ps.nuevoSimbolo(lexema, tipo, "", alcance, lexema.Length, toke.Linea);
+                    ps.nuevoSimbolo(lexema, tipo, "", estruct, lexema.Length, toke.Linea);
                 }
                 Emparejar("ID");
                 SEP(tipo);
@@ -248,7 +256,7 @@ namespace IntCompiladores
                     Emparejar("S_COMA");
                     if(preanalisis == "ID")
                     {
-                        ps.nuevoSimbolo(lexema, tipoSEP, "", alcance, lexema.Length, toke.Linea);
+                        ps.nuevoSimbolo(lexema, tipoSEP, "", estruct, lexema.Length, toke.Linea);
                     }
                     Emparejar("ID");
                     SEP2(tipoSEP);
@@ -271,7 +279,7 @@ namespace IntCompiladores
                 TIPO();
                 if(preanalisis == "ID")
                 {
-                    ps.nuevoSimbolo(lexema, tipo, "", alcance, lexema.Length, toke.Linea);
+                    ps.nuevoSimbolo(lexema, tipo, "", estruct, lexema.Length, toke.Linea);
                 }
                 Emparejar("ID");
                 SEP3(tipo);
@@ -303,7 +311,7 @@ namespace IntCompiladores
                     Emparejar("S_COMA");
                     if (preanalisis == "ID")
                     {
-                        ps.nuevoSimbolo(lexema, tipoSEP2, "", alcance, lexema.Length, toke.Linea);
+                        ps.nuevoSimbolo(lexema, tipoSEP2, "", estruct, lexema.Length, toke.Linea);
                     }
                     Emparejar("ID");
                     Emparejar("S_PUNTOCOMA");
@@ -332,7 +340,7 @@ namespace IntCompiladores
                     Emparejar("S_COMA");
                     if (preanalisis == "ID")
                     {
-                        ps.nuevoSimbolo(lexema, tipoSEP3, "", alcance, lexema.Length, toke.Linea);
+                        ps.nuevoSimbolo(lexema, tipoSEP3, "", estruct, lexema.Length, toke.Linea);
                     }
                     Emparejar("ID");
                     Emparejar("S_PUNTOCOMA");
@@ -355,7 +363,7 @@ namespace IntCompiladores
                 TIPO();
                 if(preanalisis == "ID")
                 {
-                    ps.nuevoSimbolo(lexema, tipo, "", alcance, lexema.Length, toke.Linea);
+                    ps.nuevoSimbolo(lexema, tipo, "", estruct, lexema.Length, toke.Linea);
                 }
                 Emparejar("ID");
                 Emparejar("S_PUNTOCOMA");
@@ -400,6 +408,7 @@ namespace IntCompiladores
             {
                 id = lexema;
                 alcance = lexema;
+                estruct = lexema;
                 Emparejar("ID");
                 VARSTR(id);
             }
@@ -686,22 +695,37 @@ namespace IntCompiladores
             switch(preanalisis)
             {
                 case "OP_SUMA":
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("OP_SUMA");
                     break;
 
                 case "OP_RESTA":
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("OP_RESTA");
                     break;
 
                 case "OP_MULTIPLICACION":
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("OP_MULTIPLICACION");
                     break;
 
                 case "OP_DIVISION":
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("OP_DIVISION");
                     break;
 
                 case "OP_MODULO":
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("OP_MODULO");
                     break;
             }
@@ -757,20 +781,38 @@ namespace IntCompiladores
             switch(preanalisis)
             {
                 case "ENTERO":
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("ENTERO");
                     break;
 
                 case "ID":
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("ID");
                     break;
 
                 case "S_COMILLA":
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("S_COMILLA");
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("ID");
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("S_COMILLA");
                     break;
 
                 case "PR_NULL":
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("PR_NULL");
                     break;
             }
@@ -817,6 +859,9 @@ namespace IntCompiladores
         {
             if(preanalisis == "ID")
             {
+                exp = exp + lexema + " ";
+                to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                t.Add(to);
                 Emparejar("ID");
                 TEXTSTR();
             }
@@ -830,7 +875,13 @@ namespace IntCompiladores
         {
             if(preanalisis == "S_PUNTO")
             {
+                exp = exp + lexema + " ";
+                to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                t.Add(to);
                 Emparejar("S_PUNTO");
+                exp = exp + lexema + " ";
+                to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                t.Add(to);
                 Emparejar("ID");
             }
             else if(preanalisis == "PA_DER")
@@ -892,8 +943,13 @@ namespace IntCompiladores
          * EXPRESION -> ID TEXTSTR2() { ID }
          */
         {
+            exp = "";
+            t = new List<Token>();
             if(preanalisis == "ID")
             {
+                exp = exp + lexema + " ";
+                to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                t.Add(to);
                 Emparejar("ID");
                 TEXTSTR2();
             }
@@ -939,18 +995,46 @@ namespace IntCompiladores
             switch (preanalisis)
             {
                 case "S_PUNTO":
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("S_PUNTO");
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("ID");
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("OP_ASIGNACION");
                     OPERANDON();
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("S_PUNTOCOMA");
+                    if(ps.expresionValida(t) == false)
+                    {
+                        error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
+                    }
+                    System.Console.Out.WriteLine("Expresión: " + exp);
                     break;
 
                 case "OP_ASIGNACION":
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("OP_ASIGNACION");
                     O1();
                     O2();
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("S_PUNTOCOMA");
+                    if (ps.expresionValida(t) == false)
+                    {
+                        error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
+                    }
+                    System.Console.Out.WriteLine("Expresión: " + exp);
                     break;
             }
         }
@@ -965,6 +1049,9 @@ namespace IntCompiladores
             switch (preanalisis)
             {
                 case "ENTERO":
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("ENTERO");
                     break;
 
@@ -973,12 +1060,24 @@ namespace IntCompiladores
                     break;
 
                 case "S_COMILLA":
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("S_COMILLA");
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("ID");
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("S_COMILLA");
                     break;
 
                 case "PR_NULL":
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("PR_NULL");
                     break;
             }
@@ -1003,7 +1102,7 @@ namespace IntCompiladores
 
         public void Emparejar(string token)
         {
-            
+            form1.DataGridView1.Rows.Add(toke.Tipo, toke.Lexema, toke.Linea, toke.Error);
             System.Console.Out.WriteLine("dentro de emparejar el token esperado es:" + token);
             System.Console.Out.WriteLine("dentro de emparejar el preanalisis es:" + preanalisis);
             if (token == preanalisis)

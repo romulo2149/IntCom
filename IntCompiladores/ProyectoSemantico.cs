@@ -9,59 +9,171 @@ namespace IntCompiladores
     class ProyectoSemantico
     {
         private Dictionary<string, Simbolo> tablaSimbolos;
+        private Dictionary<string, VariableEstructura> estructuraSimbolos;
         private Simbolo simbolo;
+        private Estructura estructura1, estructura2;
+        private VariableEstructura variableEstructura;
+        private Campo campo;
         private Form1 form;
+        private int contadorEstructuras = 0;
         private AnalizaExpresion aex;
 
         
         public ProyectoSemantico(Form1 form, AnalizaExpresion aex)
         {
             TablaSimbolos = new Dictionary<string, Simbolo>();
+            EstructuraSimbolos = new Dictionary<string, VariableEstructura>();
             Form = form;
             Aex = aex;
+            estructura1 = new Estructura();
+            estructura2 = new Estructura();
         }
 
         public void nuevoSimbolo(string nombreSimbolo, string tipoSimbolo, string valorSimbolo, string alcanceSimbolo,
                                     int longitudSimbolo, int lineaSimbolo)
         {
-            if (esCampo(alcanceSimbolo))
+            if (alcanceSimbolo == estructura1.NombreEstructura || alcanceSimbolo == estructura2.NombreEstructura)
             {
                 System.Console.Out.WriteLine("Se agrego la variable: " + nombreSimbolo);
-                simbolo = new Simbolo(tipoSimbolo, nombreSimbolo, valorSimbolo, alcanceSimbolo, lineaSimbolo);
-                TablaSimbolos.Add(nombreSimbolo + "_" + alcanceSimbolo, simbolo);
+                campo = new Campo(nombreSimbolo, valorSimbolo, tipoSimbolo, alcanceSimbolo);
+                if(alcanceSimbolo == estructura1.NombreEstructura)
+                {
+                    estructura1.ListaCampos.Add(campo);
+                }
+                else if(alcanceSimbolo == estructura2.NombreEstructura)
+                {
+                    estructura2.ListaCampos.Add(campo);
+                }
             }
             else
             {
-                if (existeSimbolo(nombreSimbolo) == false)
+                if(esVar(tipoSimbolo))
                 {
-                    System.Console.Out.WriteLine("Se agrego la variable: " + nombreSimbolo);
-                    simbolo = new Simbolo(tipoSimbolo, nombreSimbolo, valorSimbolo, alcanceSimbolo, lineaSimbolo);
-                    TablaSimbolos.Add(nombreSimbolo, simbolo);
+                    if(existeVar(nombreSimbolo) == false)
+                    {
+                        System.Console.Out.WriteLine("Se agrego la variable tipo estructura: " + nombreSimbolo);
+                        variableEstructura = new VariableEstructura(tipoSimbolo, nombreSimbolo, valorSimbolo, lineaSimbolo, alcanceSimbolo);
+                        if(estructura1.NombreEstructura == tipoSimbolo)
+                        {
+                            int cuenta = estructura1.ListaCampos.Count;
+                            if(cuenta == 1)
+                            {
+                                variableEstructura.Campo1 = estructura1.ListaCampos[0];
+                                variableEstructura.Campo1.EstructuraPadre = nombreSimbolo;
+                            }
+                            if (cuenta == 2)
+                            {
+                                variableEstructura.Campo1 = estructura1.ListaCampos[0];
+                                variableEstructura.Campo2 = estructura1.ListaCampos[1];
+                                variableEstructura.Campo1.EstructuraPadre = nombreSimbolo;
+                                variableEstructura.Campo2.EstructuraPadre = nombreSimbolo;
+                            }
+                            if (cuenta == 3)
+                            {
+                                variableEstructura.Campo1 = estructura1.ListaCampos[0];
+                                variableEstructura.Campo2 = estructura1.ListaCampos[1];
+                                variableEstructura.Campo3 = estructura1.ListaCampos[2];
+                                variableEstructura.Campo1.EstructuraPadre = nombreSimbolo;
+                                variableEstructura.Campo2.EstructuraPadre = nombreSimbolo;
+                                variableEstructura.Campo3.EstructuraPadre = nombreSimbolo;
+                            }
+                        }
+                        else if(estructura2.NombreEstructura == tipoSimbolo)
+                        {
+                            int cuenta = estructura2.ListaCampos.Count;
+                            if (cuenta == 1)
+                            {
+                                variableEstructura.Campo1 = estructura2.ListaCampos[0];
+                                variableEstructura.Campo1.EstructuraPadre = nombreSimbolo;
+                            }
+                            if (cuenta == 2)
+                            {
+                                variableEstructura.Campo1 = estructura2.ListaCampos[0];
+                                variableEstructura.Campo2 = estructura2.ListaCampos[1];
+                                variableEstructura.Campo1.EstructuraPadre = nombreSimbolo;
+                                variableEstructura.Campo2.EstructuraPadre = nombreSimbolo;
+                            }
+                            if (cuenta == 3)
+                            {
+                                variableEstructura.Campo1 = estructura2.ListaCampos[0];
+                                variableEstructura.Campo2 = estructura2.ListaCampos[1];
+                                variableEstructura.Campo3 = estructura2.ListaCampos[2];
+                                variableEstructura.Campo1.EstructuraPadre = nombreSimbolo;
+                                variableEstructura.Campo2.EstructuraPadre = nombreSimbolo;
+                                variableEstructura.Campo3.EstructuraPadre = nombreSimbolo;
+                            }
+                        }
+                        EstructuraSimbolos.Add(nombreSimbolo, variableEstructura);
+                    }
+                }
+                else if(tipoValido(tipoSimbolo))
+                {
+                    if (existeSimbolo(nombreSimbolo) == false)
+                    {
+                        if (tipoSimbolo == "ESTRUCTURA")
+                        {
+                            if (contadorEstructuras == 0)
+                            {
+                                estructura1.NombreEstructura = nombreSimbolo;
+                                contadorEstructuras++;
+                            }
+                            else if (contadorEstructuras == 1)
+                            {
+                                estructura2.NombreEstructura = nombreSimbolo;
+                            }
+                        }
+                        System.Console.Out.WriteLine("Se agrego la variable: " + nombreSimbolo);
+                        simbolo = new Simbolo(tipoSimbolo, nombreSimbolo, valorSimbolo, alcanceSimbolo, lineaSimbolo);
+                        TablaSimbolos.Add(nombreSimbolo, simbolo);
+                    }
+                    else
+                    {
+                        form.Consola1.Text += "consola> Error semántico, la variable " + nombreSimbolo + " (línea " + lineaSimbolo + ") ya fue declarada anteriormente \n";
+                    }
                 }
                 else
                 {
-                    form.Consola1.Text += "consola> Error semántico, la variable " + nombreSimbolo + " (línea " + lineaSimbolo + ") ya fue declarada anteriormente \n";
+                    form.Consola1.Text += "consola> Error semántico, el tipo de la variable " + nombreSimbolo + " (línea " + lineaSimbolo + ") no es una estructura \n";
                 }
             }
         }
 
-        public bool esCampo(string alcance)
+        public bool esVar(string tipo)
         {
             bool bandera = false;
-            if (tablaSimbolos.ContainsKey(alcance))
+            if (tipo == estructura1.NombreEstructura ||tipo == estructura2.NombreEstructura)
             {
-                var obj = tablaSimbolos[alcance];
-                if (obj.Tipo == "ESTRUCTURA")
-                {
-                    bandera = true;
-                }
+                bandera = true;
             }
+            return bandera;
+        }
+
+        public bool tipoValido(string tipo)
+        {
+            bool bandera = false;
+            if(tipo == "ESTRUCTURA" || tipo == "ENTERO" || tipo == "APUNTADOR" || tipo == "CHAR" || tipo == "ID")
+            {
+                bandera = true;
+            }
+
             return bandera;
         }
 
         public bool existeSimbolo(string nombreSimbolo)
         {
             if(TablaSimbolos.ContainsKey(nombreSimbolo))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool existeVar(string nombreSimbolo)
+        {
+            if (EstructuraSimbolos.ContainsKey(nombreSimbolo))
             {
                 return true;
             }
@@ -78,7 +190,7 @@ namespace IntCompiladores
                 System.Console.Out.WriteLine("Lexema " + t[i].Lexema);
             }
             analizaExpresion(t, tipoExpresion(t));
-            if(tipoExpresion(t) > 9)
+            if(tipoExpresion(t) > 12)
             {
                 System.Console.Out.WriteLine("Expresión mal formada");
                 return false;
@@ -188,78 +300,63 @@ namespace IntCompiladores
         public int tipoExpresion(List<Token> res)
         {
             int respuesta = 40;
-            switch(res.Count - 1)
-            {
-                case 3:
-                    if (res[0].Tipo == "ID" && res[1].Tipo == "OP_ASIGNACION" && esEnteroID(res[2].Tipo))
-                    {
-                        respuesta = 0;
-                    }
-                    else if (res[0].Tipo == "ID" && res[1].Tipo == "OP_ASIGNACION" && res[2].Tipo == "PR_NULL")
-                    {
-                        respuesta = 3;
-                    }
-                    else
-                    {
-                        respuesta = 100;
-                    }
-                    break;
-                case 4:
-                    if (res[0].Tipo == "ID" && res[1].Tipo == "OP_ASIGNACION" && res[2].Tipo == "OP_RESTA" && res[3].Tipo == "ENTERO")
-                    {
-                        respuesta = 9;
-                    }
-                    else
-                    {
-                        respuesta = 100;
-                    }
-                    break;
-                case 5:
-                    if (res[0].Tipo == "ID" && res[1].Tipo == "OP_ASIGNACION" && esEnteroID(res[2].Tipo) && esOperador(res[3].Tipo) == true && esEnteroID(res[4].Tipo))
-                    {
-                        respuesta = 1; // x = x + x
-                    }
-                    else if (res[0].Tipo == "ID" && res[1].Tipo == "OP_ASIGNACION" && res[2].Tipo == "ID" && res[3].Tipo == "S_PUNTO" && res[4].Tipo == "ID")
-                    {
-                        respuesta = 2;
-                    }
-                    else if (res[0].Tipo == "ID" && res[1].Tipo == "S_PUNTO" && res[2].Tipo == "ID" && res[3].Tipo == "OP_ASIGNACION" && esEnteroID(res[4].Tipo))
-                    {
-                        respuesta = 4;
-                    }
-                    else if (res[0].Tipo == "ID" && res[1].Tipo == "S_PUNTO" && res[2].Tipo == "ID" && res[3].Tipo == "OP_ASIGNACION" && res[4].Tipo == "PR_NULL")
-                    {
-                        respuesta = 7;
-                    }
-                    else if (res[0].Tipo == "ID" && res[1].Tipo == "OP_ASIGNACION" && res[2].Tipo == "S_COMILLA" && res[3].Tipo == "ID" && res[4].Tipo == "S_COMILLA")
-                    {
-                        respuesta = 8;
-                    }
-                    else
-                    {
-                        respuesta = 100;
-                    }
-                    break;
-                case 7:
-                    if (res[0].Tipo == "ID" && res[1].Tipo == "S_PUNTO" && res[2].Tipo == "ID" && res[3].Tipo == "OP_ASIGNACION" && esEnteroID(res[4].Tipo) && esOperador(res[5].Tipo) && esEnteroID(res[6].Tipo))
-                    {
-                        respuesta = 5;
-                    }
-                    else if (res[0].Tipo == "ID" && res[1].Tipo == "S_PUNTO" && res[2].Tipo == "ID" && res[3].Tipo == "OP_ASIGNACION" && res[4].Tipo == "ID" && res[5].Tipo == "S_PUNTO" && res[6].Tipo == "ID")
-                    {
-                        respuesta = 6;
-                    }
-                    else
-                    {
-                        respuesta = 100;
-                    }
-                    break;
-                default:
-                    respuesta = 100;
-                    break;
-
-            }
             
+            if (res[0].Tipo == "ID" && res[1].Tipo == "OP_ASIGNACION" && esEnteroID(res[2].Tipo) && res[3].Tipo == "S_PUNTOCOMA")
+            {
+                respuesta = 0;
+            }
+            else if (res[0].Tipo == "ID" && res[1].Tipo == "OP_ASIGNACION" && res[2].Tipo == "PR_NULL" && res[3].Tipo == "S_PUNTOCOMA")
+            {
+                respuesta = 3;
+            }
+            else if (res[0].Tipo == "ID" && res[1].Tipo == "OP_ASIGNACION" && res[2].Tipo == "OP_RESTA" && res[3].Tipo == "ENTERO" && res[4].Tipo == "S_PUNTOCOMA")
+            {
+                respuesta = 9;
+            } 
+            else if (res[0].Tipo == "ID" && res[1].Tipo == "OP_ASIGNACION" && esEnteroID(res[2].Tipo) && esOperador(res[3].Tipo) == true && esEnteroID(res[4].Tipo) && res[5].Tipo == "S_PUNTOCOMA")
+            {
+                respuesta = 1; // x = x + x
+            }
+            else if (res[0].Tipo == "ID" && res[1].Tipo == "OP_ASIGNACION" && res[2].Tipo == "ID" && res[3].Tipo == "S_PUNTO" && res[4].Tipo == "ID" && res[5].Tipo == "S_PUNTOCOMA")
+            {
+                respuesta = 2;
+            }
+            else if (res[0].Tipo == "ID" && res[1].Tipo == "S_PUNTO" && res[2].Tipo == "ID" && res[3].Tipo == "OP_ASIGNACION" && esEnteroID(res[4].Tipo) && res[5].Tipo == "S_PUNTOCOMA")
+            {
+                respuesta = 4;
+            }
+            else if (res[0].Tipo == "ID" && res[1].Tipo == "S_PUNTO" && res[2].Tipo == "ID" && res[3].Tipo == "OP_ASIGNACION" && res[4].Tipo == "PR_NULL" && res[5].Tipo == "S_PUNTOCOMA")
+            {
+                respuesta = 7;
+            }
+            else if (res[0].Tipo == "ID" && res[1].Tipo == "OP_ASIGNACION" && res[2].Tipo == "S_COMILLA" && res[3].Tipo == "ID" && res[4].Tipo == "S_COMILLA" && res[5].Tipo == "S_PUNTOCOMA")
+            {
+                respuesta = 8;
+            }
+            else if (res[0].Tipo == "ID" && res[1].Tipo == "S_PUNTO" && res[2].Tipo == "ID" && res[3].Tipo == "OP_ASIGNACION" && esEnteroID(res[4].Tipo) && esOperador(res[5].Tipo) && esEnteroID(res[6].Tipo) && res[7].Tipo == "S_PUNTOCOMA")
+            {
+                respuesta = 5;
+            }
+            else if (res[0].Tipo == "ID" && res[1].Tipo == "S_PUNTO" && res[2].Tipo == "ID" && res[3].Tipo == "OP_ASIGNACION" && res[4].Tipo == "ID" && res[5].Tipo == "S_PUNTO" && res[6].Tipo == "ID" && res[7].Tipo == "S_PUNTOCOMA")
+            {
+                respuesta = 6;
+            }
+            else if (res[0].Tipo == "ID" && res[1].Tipo == "S_PUNTO" && res[2].Tipo == "ID" && res[3].Tipo == "OP_ASIGNACION" && res[4].Tipo == "ID" && res[5].Tipo == "S_PUNTO" 
+            && res[6].Tipo == "ID" && esOperador(res[7].Tipo) == true && res[8].Tipo == "ID" && res[9].Tipo == "S_PUNTO" && res[10].Tipo == "ID" && res[11].Tipo == "S_PUNTOCOMA")
+            {  // x.x = x.x + x.x
+                respuesta = 10;
+            }
+            else if (res[0].Tipo == "ID" && res[1].Tipo == "S_PUNTO" && res[2].Tipo == "ID" && res[3].Tipo == "OP_ASIGNACION" && res[4].Tipo == "ID" && res[5].Tipo == "S_PUNTO"
+            && res[6].Tipo == "ID" && esOperador(res[7].Tipo) == true && res[8].Tipo == "ID" && res[9].Tipo == "S_PUNTOCOMA")
+            {  // x.x = x.x + x
+                respuesta = 11;
+            }
+            else if (res[0].Tipo == "ID" && res[1].Tipo == "S_PUNTO" && res[2].Tipo == "ID" && res[3].Tipo == "OP_ASIGNACION" && res[4].Tipo == "ID"
+                && esOperador(res[5].Tipo) == true && res[6].Tipo == "ID" && res[7].Tipo == "S_PUNTO" && res[8].Tipo == "ID" && res[9].Tipo == "S_PUNTOCOMA")
+            {  // x.x = x + x.x
+                respuesta = 12;
+            }
+
             return respuesta;
         }
 
@@ -380,5 +477,6 @@ namespace IntCompiladores
         public Form1 Form { get => form; set => form = value; }
         internal Dictionary<string, Simbolo> TablaSimbolos { get => tablaSimbolos; set => tablaSimbolos = value; }
         internal AnalizaExpresion Aex { get => aex; set => aex = value; }
+        internal Dictionary<string, VariableEstructura> EstructuraSimbolos { get => estructuraSimbolos; set => estructuraSimbolos = value; }
     }
 }

@@ -138,7 +138,18 @@ namespace IntCompiladores
                         Consola.Text += "consola>"+ fila.Key + " \n";
                         dataGridView2.Rows.Add(fila.Value.Nombre, fila.Value.Tipo, fila.Value.Valor, fila.Value.Linea, fila.Value.Alcance);
                     }
-                      
+                    foreach (KeyValuePair<string, VariableEstructura> fila in ps.ps.EstructuraSimbolos)
+                    {
+                        /*Consola.Text += "consola> Nombre: " + fila.Value.Nombre + " | Tipo: " + fila.Value.Tipo +
+                            " | Valor: " + fila.Value.Valor + " | Alcance: " + fila.Value.Alcance +
+                            " | Línea: " + fila.Value.Linea + " \n";*/
+                        Consola.Text += "consola>" + fila.Key + " \n";
+                        dataGridView2.Rows.Add(fila.Value.NombreVarEstructura, fila.Value.TipoVarEstructura, fila.Value.ValorVarEstructura, fila.Value.LineaVarEstructura, fila.Value.AlcanceVarEstructura);
+                        dataGridView2.Rows.Add(fila.Value.Campo1.NombreCampo, fila.Value.Campo1.TipoCampo, fila.Value.Campo1.ValorCampo, fila.Value.LineaVarEstructura, fila.Value.NombreVarEstructura);
+                        dataGridView2.Rows.Add(fila.Value.Campo2.NombreCampo, fila.Value.Campo2.TipoCampo, fila.Value.Campo2.ValorCampo, fila.Value.LineaVarEstructura, fila.Value.NombreVarEstructura);
+                        dataGridView2.Rows.Add(fila.Value.Campo3.NombreCampo, fila.Value.Campo3.TipoCampo, fila.Value.Campo3.ValorCampo, fila.Value.LineaVarEstructura, fila.Value.NombreVarEstructura);
+                    }
+
 
                 }
                 else

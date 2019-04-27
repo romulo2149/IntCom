@@ -986,6 +986,24 @@ namespace IntCompiladores
             }
         }
 
+        public void O3()
+        /*
+         * O2 -> OPERADOR() OPERANDO() { OP_SUMA, OP_RESTA, OP_MULTIPLICACION, OP_DIVISION, PR_MOD }
+         * O2 -> ε { S_PUNTOCOMA }
+         */
+        {
+            if (preanalisis == "OP_SUMA" || preanalisis == "OP_RESTA" || preanalisis == "OP_MULTIPLICACION"
+                || preanalisis == "OP_DIVISION" || preanalisis == "OP_MODULO")
+            {
+                OPERADOR();
+                OPERANDON();
+            }
+            else if (preanalisis == "S_PUNTOCOMA")
+            {
+
+            }
+        }
+
         public void TEXTSTR2()
         /*
          * TEXTSTR2 -> S_PUNTO ID OP_ASIGNACION OPERANDON() S_PUNTOCOMA { S_PUNTO }
@@ -1008,6 +1026,7 @@ namespace IntCompiladores
                     t.Add(to);
                     Emparejar("OP_ASIGNACION");
                     OPERANDON();
+                    O3();
                     exp = exp + lexema + " ";
                     to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
                     t.Add(to);

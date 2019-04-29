@@ -1219,6 +1219,35 @@ namespace IntCompiladores
             return bandera;
         }
 
+        public bool esOperadorCondicion(string operador)
+        { //11:OP_IGUAL,13:OP_MENOR,14:OP_MENORIGUAL,16:OP_MAYOR,17:OP_MAYORIGUAL,19:OP_DIFERENTE
+            bool bandera = false;
+            switch (operador)
+            {
+                case "OP_IGUAL":
+                    bandera = true;
+                    break;
+                case "OP_MENOR":
+                    bandera = true;
+                    break;
+                case "OP_MENORIGUAL":
+                    bandera = true;
+                    break;
+                case "OP_MAYOR":
+                    bandera = true;
+                    break;
+                case "OP_MAYORIGUAL":
+                    bandera = true;
+                    break;
+                case "OP_DIFERENTE":
+                    bandera = true;
+                    break;
+                default:
+                    break;
+            }
+            return bandera;
+        }
+
         public bool esEnteroID(string tipo)
         {
             if (tipo == "ENTERO")
@@ -1362,9 +1391,44 @@ namespace IntCompiladores
             }
         }
 
-        public void checarCondicion(List<Token> t)
+        public bool checarCondicion(List<Token> t)
         {
+            for (int i = 0; i < t.Count; i++)
+            {
+                System.Console.Out.WriteLine("Lexema " + t[i].Lexema);
+            }
+            if (tipoCondicion(t) > 16)
+            {
+                System.Console.Out.WriteLine("Condicion mal formada");
+                return false;
+            }
+            else
+            {
+                System.Console.Out.WriteLine("Bien formada, es una condicion de tipo: " + tipoCondicion(t));
+                return true;
+            }
+        }
 
+        public int tipoCondicion(List<Token> t)
+        {
+            int respuesta = 30;
+            if(esEnteroID(t[0].Tipo) && esOperadorCondicion(t[1].Tipo) && esEnteroID(t[2].Tipo))
+            {
+                respuesta = 0;
+            }
+            else if (t[0].Tipo == "ID" && t[1].Tipo == "S_PUNTO" && t[2].Tipo == "ID" && esOperadorCondicion(t[3].Tipo) && t[4].Tipo == "ID" && t[5].Tipo == "S_PUNTO" && t[6].Tipo == "ID")
+            {
+                respuesta = 1;
+            }
+            else if (t[0].Tipo == "ID" && t[1].Tipo == "S_PUNTO" && t[2].Tipo == "ID" && esOperadorCondicion(t[3].Tipo) && esEnteroID(t[4].Tipo))
+            { 
+                respuesta = 2;
+            }
+            else if (t[0].Tipo == "ID" && t[1].Tipo == "S_PUNTO" && t[2].Tipo == "ID" && esOperadorCondicion(t[3].Tipo) && t[4].Tipo == "S_COMILLA" && t[5].Tipo == "ID" && t[6].Tipo == "S_COMILLA" )
+            {
+                respuesta = 3;
+            }
+            return respuesta;
         }
 
         public Form1 Form { get => form; set => form = value; }

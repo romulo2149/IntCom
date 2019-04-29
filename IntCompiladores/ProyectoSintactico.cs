@@ -680,6 +680,11 @@ namespace IntCompiladores
                 OPERANDON();
                 OPERADOR_CONDICION();
                 OPERANDON();
+                if (ps.checarCondicion(t) == false)
+                {
+                    error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
+                }
+                System.Console.Out.WriteLine("Expresión: " + exp);
             }
         }
 

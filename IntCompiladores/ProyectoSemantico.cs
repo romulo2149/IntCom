@@ -1477,6 +1477,74 @@ namespace IntCompiladores
             }
             return bandera;
         }
+
+        public bool analizaCondicion(List<Token> t,int tipoCondicion)
+        {
+            switch (tipoCondicion)
+            {
+                case 0:
+                    // esEnteroID esOperadorCondicion esEnteroID
+                    if (t[0].Tipo == "ID")
+                    {
+                        if (existeSimbolo(t[0].Lexema))
+                        {
+                            if (t[2].Tipo == "ID")
+                            {
+                                if (existeSimbolo(t[2].Lexema))
+                                {
+                                    if (t[0].Tipo == "ENTERO" && t[2].Tipo == "ENTERO")
+                                    {
+                                        //Exito
+                                    }
+                                    else
+                                    {
+                                        // Los tipos de datos no coinciden
+                                    }
+                                }
+                                else
+                                {
+                                    // t[2] no es de tipo ID
+                                }
+                            }
+                            else if (t[2].Tipo == "ENTERO")
+                            {
+                                //Exito
+                            }
+                        }
+                        else
+                        {
+                            //No Existe t[0]
+                        }
+                    }
+                    else if (t[0].Tipo == "ENTERO")
+                    {
+                        if (t[2].Tipo == "ID")
+                        {
+                            if (existeSimbolo(t[2].Lexema))
+                            {
+                                if (t[0].Tipo == "ENTERO" && t[2].Tipo == "ENTERO")
+                                {
+                                    //Exito
+                                }
+                                else
+                                {
+                                    // Los tipos de datos no coinciden
+                                }
+                            }
+                            else
+                            {
+                                // t[2] no es de tipo ID
+                            }
+                        }
+                        else if (t[2].Tipo == "ENTERO")
+                        {
+                            // exito
+                        }
+                    }
+                    break;
+            }
+        }
+
         public Form1 Form { get => form; set => form = value; }
         internal Dictionary<string, Simbolo> TablaSimbolos { get => tablaSimbolos; set => tablaSimbolos = value; }
         internal AnalizaExpresion Aex { get => aex; set => aex = value; }

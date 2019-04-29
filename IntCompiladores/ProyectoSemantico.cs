@@ -508,7 +508,7 @@ namespace IntCompiladores
                 case 10:
                     /*
                      * (res[0].Tipo == "ID" && res[1].Tipo == "S_PUNTO" && res[2].Tipo == "ID" && res[3].Tipo == "OP_ASIGNACION" && res[4].Tipo == "ID" && res[5].Tipo == "S_PUNTO" 
-            && res[6].Tipo == "ID" && esOperador(res[7].Tipo) == true && res[8].Tipo == "ID" && res[9].Tipo == "S_PUNTO" && res[10].Tipo == "ID" && res[11].Tipo == "S_PUNTOCOMA")
+                         && res[6].Tipo == "ID" && esOperador(res[7].Tipo) == true && res[8].Tipo == "ID" && res[9].Tipo == "S_PUNTO" && res[10].Tipo == "ID" && res[11].Tipo == "S_PUNTOCOMA")
                      */
                     if (existeVar(t[0].Lexema))
                     {

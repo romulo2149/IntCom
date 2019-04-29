@@ -23,7 +23,7 @@ namespace IntCompiladores
         public int apuntador = 0;
         public string lexema = "";
         public char caracter;
-        Regex esLetra = new Regex("[a-zA-Z]");
+        Regex esLetra = new Regex("[a-zA-Z_]");
         Regex esNumero = new Regex("[0-9]");
         public string tipo = "f";
         int error = 0;

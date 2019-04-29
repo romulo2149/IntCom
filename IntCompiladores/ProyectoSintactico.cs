@@ -676,9 +676,10 @@ namespace IntCompiladores
         {
             if(preanalisis == "ID" || preanalisis == "ENTERO" || preanalisis == "S_COMILLA")
             {
-                OPERANDO();
+                t = new List<Token>();
+                OPERANDON();
                 OPERADOR_CONDICION();
-                OPERANDO();
+                OPERANDON();
             }
         }
 

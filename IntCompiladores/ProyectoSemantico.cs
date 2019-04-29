@@ -20,7 +20,7 @@ namespace IntCompiladores
         private AnalizaExpresion aex;
         private Grafico graf;
 
-        
+
         public ProyectoSemantico(Form1 form, AnalizaExpresion aex)
         {
             TablaSimbolos = new Dictionary<string, Simbolo>();
@@ -41,7 +41,7 @@ namespace IntCompiladores
             if (alcanceSimbolo == estructura1.NombreEstructura || alcanceSimbolo == estructura2.NombreEstructura)
             {
                 System.Console.Out.WriteLine("Se agrego la variable: " + nombreSimbolo);
-                if(tipoSimbolo == "ENTERO")
+                if (tipoSimbolo == "ENTERO")
                 {
                     valorSimbolo = "0";
                 }
@@ -54,27 +54,27 @@ namespace IntCompiladores
                     valorSimbolo = "NULL";
                 }
                 campo = new Campo(nombreSimbolo, valorSimbolo, tipoSimbolo, alcanceSimbolo);
-                if(alcanceSimbolo == estructura1.NombreEstructura)
+                if (alcanceSimbolo == estructura1.NombreEstructura)
                 {
                     estructura1.ListaCampos.Add(campo);
                 }
-                else if(alcanceSimbolo == estructura2.NombreEstructura)
+                else if (alcanceSimbolo == estructura2.NombreEstructura)
                 {
                     estructura2.ListaCampos.Add(campo);
                 }
             }
             else
             {
-                if(esVar(tipoSimbolo))
+                if (esVar(tipoSimbolo))
                 {
-                    if(existeVar(nombreSimbolo) == false)
+                    if (existeVar(nombreSimbolo) == false)
                     {
                         System.Console.Out.WriteLine("Se agrego la variable tipo estructura: " + nombreSimbolo);
                         variableEstructura = new VariableEstructura(tipoSimbolo, nombreSimbolo, valorSimbolo, lineaSimbolo, alcanceSimbolo);
-                        if(estructura1.NombreEstructura == tipoSimbolo)
+                        if (estructura1.NombreEstructura == tipoSimbolo)
                         {
                             int cuenta = estructura1.ListaCampos.Count;
-                            if(cuenta == 1)
+                            if (cuenta == 1)
                             {
                                 campo = new Campo(estructura1.ListaCampos[0].NombreCampo, estructura1.ListaCampos[0].ValorCampo, estructura1.ListaCampos[0].TipoCampo, nombreSimbolo);
                                 variableEstructura.Campo1 = campo;
@@ -96,7 +96,7 @@ namespace IntCompiladores
                                 variableEstructura.Campo3 = campo;
                             }
                         }
-                        else if(estructura2.NombreEstructura == tipoSimbolo)
+                        else if (estructura2.NombreEstructura == tipoSimbolo)
                         {
                             int cuenta = estructura1.ListaCampos.Count;
                             if (cuenta == 1)
@@ -132,7 +132,7 @@ namespace IntCompiladores
                         }
                     }
                 }
-                else if(tipoValido(tipoSimbolo))
+                else if (tipoValido(tipoSimbolo))
                 {
                     if (existeSimbolo(nombreSimbolo) == false)
                     {
@@ -148,9 +148,9 @@ namespace IntCompiladores
                                 estructura2.NombreEstructura = nombreSimbolo;
                             }
                         }
-                        if(tipoSimbolo == "ID")
+                        if (tipoSimbolo == "ID")
                         {
-                            if(valorSimbolo.Length == 1)
+                            if (valorSimbolo.Length == 1)
                             {
                                 valorSimbolo = "'" + valorSimbolo + "'";
                                 System.Console.Out.WriteLine("Se agrego la variable: " + nombreSimbolo);
@@ -184,7 +184,7 @@ namespace IntCompiladores
         public bool esVar(string tipo)
         {
             bool bandera = false;
-            if (tipo == estructura1.NombreEstructura ||tipo == estructura2.NombreEstructura)
+            if (tipo == estructura1.NombreEstructura || tipo == estructura2.NombreEstructura)
             {
                 bandera = true;
             }
@@ -194,7 +194,7 @@ namespace IntCompiladores
         public bool tipoValido(string tipo)
         {
             bool bandera = false;
-            if(tipo == "ESTRUCTURA" || tipo == "ENTERO" || tipo == "APUNTADOR" || tipo == "CHAR" || tipo == "ID")
+            if (tipo == "ESTRUCTURA" || tipo == "ENTERO" || tipo == "APUNTADOR" || tipo == "CHAR" || tipo == "ID")
             {
                 bandera = true;
             }
@@ -204,7 +204,7 @@ namespace IntCompiladores
 
         public bool existeSimbolo(string nombreSimbolo)
         {
-            if(TablaSimbolos.ContainsKey(nombreSimbolo))
+            if (TablaSimbolos.ContainsKey(nombreSimbolo))
             {
                 return true;
             }
@@ -228,12 +228,12 @@ namespace IntCompiladores
 
         public bool expresionValida(List<Token> t)
         {
-            for(int i = 0; i < t.Count; i++)
+            for (int i = 0; i < t.Count; i++)
             {
                 System.Console.Out.WriteLine("Lexema " + t[i].Lexema);
             }
             analizaExpresion(t, tipoExpresion(t));
-            if(tipoExpresion(t) > 16)
+            if (tipoExpresion(t) > 16)
             {
                 System.Console.Out.WriteLine("Expresión mal formada");
                 return false;
@@ -243,7 +243,7 @@ namespace IntCompiladores
                 System.Console.Out.WriteLine("Bien formada, es una expresion de tipo: " + tipoExpresion(t));
                 return true;
             }
-            
+
         }
 
         public void analizaExpresion(List<Token> t, int tipoExpresion)
@@ -276,17 +276,22 @@ namespace IntCompiladores
                             }
                         }
                     }
-                    else if (variableExiste(t[0].Lexema) == false)
+                    else if (variableExiste(t[0].Lexema) == false && existeVar(t[0].Lexema) == false)
+
                     {
                         if (esEntero(t[2].Lexema, t[2].Tipo))
                         {
-                                simbolo = new Simbolo("ENTERO", t[0].Lexema, getValor(t[2]), "INSTRUCCION", t[0].Linea);
-                                TablaSimbolos.Add(t[0].Lexema, simbolo);
+                            simbolo = new Simbolo("ENTERO", t[0].Lexema, getValor(t[2]), "INSTRUCCION", t[0].Linea);
+                            TablaSimbolos.Add(t[0].Lexema, simbolo);
                         }
                         else
                         {
                             form.Consola1.Text += "consola> Error semántico en expresión, " + t[2].Lexema + " (línea " + t[2].Linea + ") no es un número o una variable de tipo entero. \n";
                         }
+                    }
+                    else
+                    {
+                        form.Consola1.Text += "consola> Error semántico en expresión, " + t[0].Lexema + " (línea " + t[0].Linea + ") la variable ya existe. \n";
                     }
                     break;
                 case 1:
@@ -344,11 +349,11 @@ namespace IntCompiladores
                 case 3:
                     break;
                 case 4:
-                    if(existeVar(t[0].Lexema))
+                    if (existeVar(t[0].Lexema))
                     {
-                        if(esCampo(t[0],t[2].Lexema))
+                        if (esCampo(t[0], t[2].Lexema))
                         {
-                            if(tablaSimbolos.ContainsKey(t[4].Lexema))
+                            if (tablaSimbolos.ContainsKey(t[4].Lexema))
                             {
                                 if (getTipoCampo(t[0], t[2].Lexema) == getTipo(t[4].Lexema))
                                 {
@@ -360,7 +365,7 @@ namespace IntCompiladores
                                     form.Consola1.Text += "consola> Error semántico en expresión, " + t[4].Lexema + " (línea " + t[4].Linea + "), el tipo no coincide con el tipo del campo. \n";
                                 }
                             }
-                            else if(esNumeroEntero(t[4]))
+                            else if (esNumeroEntero(t[4]))
                             {
                                 if (getTipoCampo(t[0], t[2].Lexema) == getTipoToken(t[4]))
                                 {
@@ -378,7 +383,7 @@ namespace IntCompiladores
                         }
                         else
                         {
-                            form.Consola1.Text += "consola> Error semántico en expresión, " + t[2].Lexema + " (línea " + t[2].Linea + "), no es un campo de la variable "+ t[0].Lexema +". \n";
+                            form.Consola1.Text += "consola> Error semántico en expresión, " + t[2].Lexema + " (línea " + t[2].Linea + "), no es un campo de la variable " + t[0].Lexema + ". \n";
                         }
                     }
                     else
@@ -407,6 +412,59 @@ namespace IntCompiladores
                             else
                             {
                                 form.Consola1.Text += "consola> Error semántico en expresión, " + t[4].Lexema + " (línea " + t[4].Linea + ") no es un número o una variable de tipo entero. \n";
+                            }
+                        }
+                        else
+                        {
+                            form.Consola1.Text += "consola> Error semántico en expresión, " + t[2].Lexema + " (línea " + t[2].Linea + "), no es un campo de la variable " + t[0].Lexema + ". \n";
+                        }
+                    }
+                    else
+                    {
+                        form.Consola1.Text += "consola> Error semántico en expresión, " + t[0].Lexema + " (línea " + t[0].Linea + "), no es una variable de tipo estructura. \n";
+                    }
+                    break;
+                case 6:
+                    //res[0].Tipo == "ID" && res[1].Tipo == "S_PUNTO" && res[2].Tipo == "ID" && res[3].Tipo == "OP_ASIGNACION" && res[4].Tipo == "ID" && res[5].Tipo == "S_PUNTO" && res[6].Tipo == "ID" && res[7].Tipo == "S_PUNTOCOMA"
+                    //"ID" "S_PUNTO" "ID" "OP_ASIGNACION" "ID" "S_PUNTO" "ID" "S_PUNTOCOMA"
+                    //hola.f = d.d;
+                    if (existeVar(t[0].Lexema))
+                    {
+                        if (esCampo(t[0], t[2].Lexema))
+                        {
+                            if (existeVar(t[4].Lexema))
+                            {
+                                if (esCampo(t[4], t[6].Lexema))
+                                {
+
+                                    if (getTipoCampo(t[0], t[2].Lexema) == "ENTERO" && getTipoCampo(t[4], t[6].Lexema) == "ENTERO")
+                                    {
+                                        cambiarValorCampoOperacion(t[0], t[2].Lexema, getValorCampo(t[4], t[6].Lexema));
+                                    }
+                                    else if (getTipoCampo(t[0], t[2].Lexema) == "APUNTADOR")
+                                    {
+                                        if (getTipoCampo(t[4], t[6].Lexema) == "APUNTADOR")
+                                        {
+                                            cambiarValorCampoOperacion(t[0], t[2].Lexema, getValorCampo(t[4], t[6].Lexema));
+                                        }
+                                        else
+                                        {
+                                            cambiarValorCampoOperacion(t[0], t[2].Lexema, t[4].Lexema + t[5].Lexema + t[6].Lexema);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        form.Consola1.Text += "consola> Error semántico en expresión, " + t[6].Lexema + " (línea " + t[6].Linea + "), los tipos de dato no coinciden" + t[0].Lexema + ". \n";
+                                    }
+                                }
+                                else
+                                {
+                                    form.Consola1.Text += "consola> Error semántico en expresión, " + t[6].Lexema + " (línea " + t[6].Linea + "), no es un campo de la variable " + t[4].Lexema + ". \n";
+                                }
+                            }
+                            else
+                            {
+                                form.Consola1.Text += "consola> Error semántico en expresión, " + t[4].Lexema + " (línea " + t[4].Linea + "), no es una variable de tipo estructura. \n";
                             }
                         }
                         else
@@ -466,9 +524,9 @@ namespace IntCompiladores
                         }
                         else
                         {
-                            if(t[2].Tipo == "S_COMILLA" && t[4].Tipo == "S_COMILLA")
+                            if (t[2].Tipo == "S_COMILLA" && t[4].Tipo == "S_COMILLA")
                             {
-                                if(t[3].Lexema.Length == 1)
+                                if (t[3].Lexema.Length == 1)
                                 {
                                     obj = TablaSimbolos[t[0].Lexema];
                                     obj.Valor = t[2].Lexema + t[3].Lexema + t[4].Lexema;
@@ -480,7 +538,7 @@ namespace IntCompiladores
                             }
                             else
                             {
-                                
+
                             }
                         }
                     }
@@ -514,7 +572,7 @@ namespace IntCompiladores
                     {
                         if (esCampo(t[0], t[2].Lexema))
                         {
-                            if(getTipoCampo(t[0], t[2].Lexema) == "ENTERO")
+                            if (getTipoCampo(t[0], t[2].Lexema) == "ENTERO")
                             {
                                 if (existeVar(t[4].Lexema))
                                 {
@@ -531,7 +589,7 @@ namespace IntCompiladores
                                                     string res = hacerOperacion(Convert.ToInt32(izq), t[7], Convert.ToInt32(der));
                                                     cambiarValorCampoOperacion(t[0], t[2].Lexema, res);
                                                 }
-                                        }
+                                            }
                                             else
                                             {
                                                 form.Consola1.Text += "consola> Error semántico en expresión, " + t[10].Lexema + " (línea " + t[10].Linea + "), no es un campo de la variable " + t[8].Lexema + ". \n";
@@ -567,8 +625,153 @@ namespace IntCompiladores
                         form.Consola1.Text += "consola> Error semántico en expresión, " + t[0].Lexema + " (línea " + t[0].Linea + "), no es una variable de tipo estructura. \n";
                     }
                     break;
+                case 11:
+                    // res[0].Tipo == "ID" && res[1].Tipo == "S_PUNTO" && res[2].Tipo == "ID" && res[3].Tipo == "OP_ASIGNACION" && res[4].Tipo == "ID" && res[5].Tipo == "S_PUNTO" && res[6].Tipo == "ID" && esOperador(res[7].Tipo) == true && esEnteroID(res[8].Tipo) && res[9].Tipo == "S_PUNTOCOMA")
+                    // "ID" "S_PUNTO" "ID" "OP_ASIGNACION" "ID" "S_PUNTO" "ID" esOperador esEnteroID "S_PUNTOCOMA"
+                    // x.x = x.x + x
+                    if (existeVar(t[0].Lexema))
+                    {
+                        if (esCampo(t[0], t[2].Lexema))
+                        {
+                            if (getTipoCampo(t[0], t[2].Lexema) == "ENTERO")
+                            {
+                                if (existeVar(t[4].Lexema))
+                                {
+                                    if (esCampo(t[4], t[6].Lexema))
+                                    {
+                                        if (getTipoCampo(t[4], t[6].Lexema) == "ENTERO")
+                                        {
+
+
+                                            if (tablaSimbolos.ContainsKey(t[8].Lexema))
+                                            {
+
+                                                if (getTipo(t[8].Lexema) == "ENTERO")
+                                                {
+                                                    // x.x = x.x + x
+                                                    string izq = getValorCampo(t[4], t[6].Lexema);
+                                                    string der = getValor(t[8]);
+                                                    string respuesta = hacerOperacion(Convert.ToInt32(izq), t[7], Convert.ToInt32(der));
+
+                                                    cambiarValorCampoOperacion(t[0], t[2].Lexema, respuesta);
+                                                }
+                                                else
+                                                {
+                                                    form.Consola1.Text += "consola> Error semántico en expresión, " + t[6].Lexema + " (línea " + t[6].Linea + "), el campo no es de tipo entero " + t[4].Lexema + ". \n";
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                form.Consola1.Text += "consola> Error semántico en expresión, " + t[8].Lexema + " (línea " + t[8].Linea + "), la variable no existe. \n";
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            form.Consola1.Text += "consola> Error semántico en expresión, " + t[6].Lexema + " (línea " + t[6].Linea + "), el campo no es de tipo entero " + t[4].Lexema + ". \n";
+                                        }
+                                    }
+                                    else
+                                    {
+                                        form.Consola1.Text += "consola> Error semántico en expresión, " + t[6].Lexema + " (línea " + t[6].Linea + "), no es un campo de la variable " + t[4].Lexema + ". \n";
+                                    }
+                                }
+                                else
+                                {
+                                    form.Consola1.Text += "consola> Error semántico en expresión, " + t[4].Lexema + " (línea " + t[4].Linea + "), no es una variable de tipo estructura. \n";
+                                }
+                            }
+                            else
+                            {
+                                form.Consola1.Text += "consola> Error semántico en expresión, " + t[2].Lexema + " (línea " + t[2].Linea + "), el campo no es de tipo entero " + t[0].Lexema + ". \n";
+                            }
+                        }
+                        else
+                        {
+                            form.Consola1.Text += "consola> Error semántico en expresión, " + t[2].Lexema + " (línea " + t[2].Linea + "), no es un campo de la variable " + t[0].Lexema + ". \n";
+                        }
+                    }
+                    else
+                    {
+                        form.Consola1.Text += "consola> Error semántico en expresión, " + t[0].Lexema + " (línea " + t[0].Linea + "), no es una variable de tipo estructura. \n";
+                    }
+                    break;
+                case 12:
+                    // x.x = x + x.x
+                    if (existeVar(t[0].Lexema))
+                    {
+                        if (esCampo(t[0], t[2].Lexema))
+                        {
+                            if (getTipoCampo(t[0], t[2].Lexema) == "ENTERO")
+                            {
+                                if (tablaSimbolos.ContainsKey(t[4].Lexema))
+                                {
+                                    if (getTipo(t[4].Lexema) == "ENTERO")
+                                    {
+
+
+                                        if (existeVar(t[6].Lexema))
+                                        {
+                                            if (esCampo(t[6], t[8].Lexema))
+                                            {
+                                                if (getTipoCampo(t[6], t[8].Lexema) == "ENTERO")
+                                                {
+                                                    string izq = getValorCampo(t[6], t[8].Lexema);
+                                                    string der = getValor(t[4]);
+                                                    string respuesta = hacerOperacion(Convert.ToInt32(izq), t[5], Convert.ToInt32(der));
+
+                                                    cambiarValorCampoOperacion(t[0], t[2].Lexema, respuesta);
+                                                }
+                                                else
+                                                {
+                                                    form.Consola1.Text += "consola> Error semántico en expresión, " + t[8].Lexema + " (línea " + t[2].Linea + "), el campo no es de tipo entero " + t[8].Lexema + ". \n";
+                                                }
+                                            }
+                                            else
+                                            {
+                                                form.Consola1.Text += "consola> Error semántico en expresión, " + t[2].Lexema + " (línea " + t[6].Linea + "), no es un campo de la variable " + t[8].Lexema + ". \n";
+                                            }
+                                        }
+                                        else
+                                        {
+                                            form.Consola1.Text += "consola> Error semántico en expresión, " + t[6].Lexema + " (línea " + t[6].Linea + "), no es una variable de tipo estructura. \n";
+                                        }
+
+
+
+
+                                    }
+                                    else
+                                    {
+                                        form.Consola1.Text += "consola> Error semántico en expresión, " + t[6].Lexema + " (línea " + t[6].Linea + "), el campo no es de tipo entero " + t[4].Lexema + ". \n";
+                                    }
+
+                                }
+                                else
+                                {
+                                    form.Consola1.Text += "consola> Error semántico en expresión, " + t[4].Lexema + " (línea " + t[4].Linea + "), la variable no existe. \n";
+                                }
+
+                            }
+                            else
+                            {
+                                form.Consola1.Text += "consola> Error semántico en expresión, " + t[2].Lexema + " (línea " + t[2].Linea + "), el campo no es de tipo entero " + t[0].Lexema + ". \n";
+                            }
+                        }
+                        else
+                        {
+                            form.Consola1.Text += "consola> Error semántico en expresión, " + t[2].Lexema + " (línea " + t[2].Linea + "), no es un campo de la variable " + t[0].Lexema + ". \n";
+                        }
+                    }
+                    else
+                    {
+                        form.Consola1.Text += "consola> Error semántico en expresión, " + t[0].Lexema + " (línea " + t[0].Linea + "), no es una variable de tipo estructura. \n";
+                    }
+
+                    break;
                 case 13:
-                    if(TablaSimbolos.ContainsKey(t[0].Lexema))
+                    if (TablaSimbolos.ContainsKey(t[0].Lexema))
                     {
                         if (esCampo(t[2], t[4].Lexema))
                         {
@@ -605,15 +808,19 @@ namespace IntCompiladores
                             form.Consola1.Text += "consola> Error semántico en expresión, " + t[4].Lexema + " (línea " + t[2].Linea + "), no es un campo de la estructura. \n";
                         }
                     }
+                    else if (existeVar(t[0].Lexema))
+                    {
+                        form.Consola1.Text += "consola> Error semántico en expresión, " + t[0].Lexema + " (línea " + t[0].Linea + "), es una variable de tipo estructura, no se puede accesar de ese modo. \n";
+                    }
                     else
                     {
-                        if(existeVar(t[2].Lexema))
+                        if (existeVar(t[2].Lexema))
                         {
-                            if(esCampo(t[2], t[4].Lexema))
+                            if (esCampo(t[2], t[4].Lexema))
                             {
                                 if (existeVar(t[6].Lexema))
                                 {
-                                    if(esCampo(t[6], t[8].Lexema))
+                                    if (esCampo(t[6], t[8].Lexema))
                                     {
                                         if (getTipoCampo(t[2], t[4].Lexema) == "ENTERO" && getTipoCampo(t[6], t[8].Lexema) == "ENTERO")
                                         {
@@ -678,6 +885,10 @@ namespace IntCompiladores
                         {
                             form.Consola1.Text += "consola> Error semántico en expresión, " + t[4].Lexema + " (línea " + t[2].Linea + "), no es un campo de la estructura. \n";
                         }
+                    }
+                    else if (existeVar(t[0].Lexema))
+                    {
+                        form.Consola1.Text += "consola> Error semántico en expresión, " + t[0].Lexema + " (línea " + t[0].Linea + "), es una variable de tipo estructura, no se puede accesar de ese modo. \n";
                     }
                     else
                     {
@@ -748,6 +959,10 @@ namespace IntCompiladores
                             form.Consola1.Text += "consola> Error semántico en expresión, " + t[4].Lexema + " (línea " + t[0].Linea + "), no está declarada. \n";
                         }
                     }
+                    else if (existeVar(t[0].Lexema))
+                    {
+                        form.Consola1.Text += "consola> Error semántico en expresión, " + t[0].Lexema + " (línea " + t[0].Linea + "), es una variable de tipo estructura, no se puede accesar de ese modo. \n";
+                    }
                     else
                     {
                         if (TablaSimbolos.ContainsKey(t[2].Lexema))
@@ -785,7 +1000,7 @@ namespace IntCompiladores
 
         public bool esNumeroEntero(Token t)
         {
-            if(t.Tipo == "ENTERO")
+            if (t.Tipo == "ENTERO")
             {
                 return true;
             }
@@ -797,7 +1012,7 @@ namespace IntCompiladores
 
         public bool variableExiste(string variable)
         {
-            if(tablaSimbolos.ContainsKey(variable))
+            if (tablaSimbolos.ContainsKey(variable))
             {
                 return true;
             }
@@ -810,11 +1025,11 @@ namespace IntCompiladores
         public string getTipo(string variable)
         {
             var obj = tablaSimbolos[variable];
-            if(obj.Tipo == "ENTERO")
+            if (obj.Tipo == "ENTERO")
             {
                 return "ENTERO";
             }
-            else if(obj.Tipo == "CHAR")
+            else if (obj.Tipo == "CHAR")
             {
                 return "CHAR";
             }
@@ -843,7 +1058,7 @@ namespace IntCompiladores
         public int tipoExpresion(List<Token> res)
         {
             int respuesta = 40;
-            
+
             if (res[0].Tipo == "ID" && res[1].Tipo == "OP_ASIGNACION" && esEnteroID(res[2].Tipo) && res[3].Tipo == "S_PUNTOCOMA")
             {
                 respuesta = 0;
@@ -855,7 +1070,7 @@ namespace IntCompiladores
             else if (res[0].Tipo == "ID" && res[1].Tipo == "OP_ASIGNACION" && res[2].Tipo == "OP_RESTA" && res[3].Tipo == "ENTERO" && res[4].Tipo == "S_PUNTOCOMA")
             {
                 respuesta = 9;
-            } 
+            }
             else if (res[0].Tipo == "ID" && res[1].Tipo == "OP_ASIGNACION" && esEnteroID(res[2].Tipo) && esOperador(res[3].Tipo) == true && esEnteroID(res[4].Tipo) && res[5].Tipo == "S_PUNTOCOMA")
             {
                 respuesta = 1; // x = x + x
@@ -884,7 +1099,7 @@ namespace IntCompiladores
             {
                 respuesta = 6;
             }
-            else if (res[0].Tipo == "ID" && res[1].Tipo == "S_PUNTO" && res[2].Tipo == "ID" && res[3].Tipo == "OP_ASIGNACION" && res[4].Tipo == "ID" && res[5].Tipo == "S_PUNTO" 
+            else if (res[0].Tipo == "ID" && res[1].Tipo == "S_PUNTO" && res[2].Tipo == "ID" && res[3].Tipo == "OP_ASIGNACION" && res[4].Tipo == "ID" && res[5].Tipo == "S_PUNTO"
             && res[6].Tipo == "ID" && esOperador(res[7].Tipo) == true && res[8].Tipo == "ID" && res[9].Tipo == "S_PUNTO" && res[10].Tipo == "ID" && res[11].Tipo == "S_PUNTOCOMA")
             {  // x.x = x.x + x.x
                 respuesta = 10;
@@ -909,11 +1124,11 @@ namespace IntCompiladores
             { // x = x.x + x
                 respuesta = 14;
             }
-            else if(res[0].Tipo == "ID" && res[1].Tipo == "OP_ASIGNACION" && res[2].Tipo == "ID" && esOperador(res[3].Tipo) == true && res[4].Tipo == "ID" && res[5].Tipo == "S_PUNTO" && res[6].Tipo == "ID" && res[7].Tipo == "S_PUNTOCOMA")
+            else if (res[0].Tipo == "ID" && res[1].Tipo == "OP_ASIGNACION" && res[2].Tipo == "ID" && esOperador(res[3].Tipo) == true && res[4].Tipo == "ID" && res[5].Tipo == "S_PUNTO" && res[6].Tipo == "ID" && res[7].Tipo == "S_PUNTOCOMA")
             {// x = x + x.x
                 respuesta = 15;
             }
-                return respuesta;
+            return respuesta;
         }
 
         public string getTipoCampo(Token var, String campo)
@@ -923,7 +1138,7 @@ namespace IntCompiladores
             if (existeVar(var.Lexema))
             {
                 var obj = EstructuraSimbolos[var.Lexema];
-               
+
                 if (obj.Campo1.NombreCampo == campo)
                 {
                     respuesta = obj.Campo1.TipoCampo;
@@ -967,10 +1182,10 @@ namespace IntCompiladores
         public bool esCampo(Token var, String campo)
         {
             bool bandera = false;
-            if(existeVar(var.Lexema))
+            if (existeVar(var.Lexema))
             {
                 var obj = EstructuraSimbolos[var.Lexema];
-                if(obj.Campo1.NombreCampo == campo || obj.Campo2.NombreCampo == campo || obj.Campo3.NombreCampo == campo)
+                if (obj.Campo1.NombreCampo == campo || obj.Campo2.NombreCampo == campo || obj.Campo3.NombreCampo == campo)
                 {
                     bandera = true;
                 }
@@ -981,7 +1196,7 @@ namespace IntCompiladores
         public bool esOperador(string operador)
         {
             bool bandera = false;
-            switch(operador)
+            switch (operador)
             {
                 case "OP_SUMA":
                     bandera = true;
@@ -1006,11 +1221,11 @@ namespace IntCompiladores
 
         public bool esEnteroID(string tipo)
         {
-            if(tipo == "ENTERO")
+            if (tipo == "ENTERO")
             {
                 return true;
             }
-            else if(tipo == "ID")
+            else if (tipo == "ID")
             {
                 return true;
             }
@@ -1029,10 +1244,10 @@ namespace IntCompiladores
             }
             else if (tipo == "ID")
             {
-                if(tablaSimbolos.ContainsKey(lexema))
+                if (tablaSimbolos.ContainsKey(lexema))
                 {
                     var obj = tablaSimbolos[lexema];
-                    if(obj.Tipo == "ENTERO")
+                    if (obj.Tipo == "ENTERO")
                     {
                         bandera = true;
                     }
@@ -1048,7 +1263,7 @@ namespace IntCompiladores
         public string hacerOperacion(int izq, Token operador, int der)
         {
             int res = 0;
-            switch(operador.Tipo)
+            switch (operador.Tipo)
             {
                 case "OP_SUMA":
                     res = izq + der;
@@ -1060,7 +1275,7 @@ namespace IntCompiladores
                     res = izq * der;
                     break;
                 case "OP_DIVISION":
-                    double d = Math.Round(Convert.ToDouble(izq)/ Convert.ToDouble(der));
+                    double d = Math.Round(Convert.ToDouble(izq) / Convert.ToDouble(der));
                     res = Convert.ToInt32(d);
                     break;
                 case "OP_MOD":
@@ -1145,6 +1360,11 @@ namespace IntCompiladores
                     EstructuraSimbolos[var.Lexema].Campo3 = editaCampo;
                 }
             }
+        }
+
+        public void checarCondicion(List<Token> t)
+        {
+
         }
 
         public Form1 Form { get => form; set => form = value; }

@@ -1431,6 +1431,52 @@ namespace IntCompiladores
             return respuesta;
         }
 
+        public bool operacionCondicion(string izq, Token t, string der)
+        {
+            bool bandera = false;
+            switch(t.Tipo)
+            {
+                case "OP_IGUAL":
+                    if(izq == der)
+                    {
+                        bandera = true;
+                    }
+                    break;
+                case "OP_MENOR":
+                    if (Convert.ToInt32(izq) < Convert.ToInt32(izq))
+                    {
+                        bandera = true;
+                    }
+                    break;
+                case "OP_MENORIGUAL":
+                    if (Convert.ToInt32(izq) <= Convert.ToInt32(izq))
+                    {
+                        bandera = true;
+                    }
+                    break;
+                case "OP_MAYOR":
+                    if (Convert.ToInt32(izq) > Convert.ToInt32(izq))
+                    {
+                        bandera = true;
+                    }
+                    break;
+                case "OP_MAYORIGUAL":
+                    if (Convert.ToInt32(izq) >= Convert.ToInt32(izq))
+                    {
+                        bandera = true;
+                    }
+                    break;
+                case "OP_DIFERENTE":
+                    if (izq != der)
+                    {
+                        bandera = true;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            return bandera;
+        }
         public Form1 Form { get => form; set => form = value; }
         internal Dictionary<string, Simbolo> TablaSimbolos { get => tablaSimbolos; set => tablaSimbolos = value; }
         internal AnalizaExpresion Aex { get => aex; set => aex = value; }

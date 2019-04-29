@@ -41,6 +41,18 @@ namespace IntCompiladores
             if (alcanceSimbolo == estructura1.NombreEstructura || alcanceSimbolo == estructura2.NombreEstructura)
             {
                 System.Console.Out.WriteLine("Se agrego la variable: " + nombreSimbolo);
+                if(tipoSimbolo == "ENTERO")
+                {
+                    valorSimbolo = "0";
+                }
+                if (tipoSimbolo == "CHAR")
+                {
+                    valorSimbolo = "' '";
+                }
+                if (tipoSimbolo == "APUNTADOR")
+                {
+                    valorSimbolo = "NULL";
+                }
                 campo = new Campo(nombreSimbolo, valorSimbolo, tipoSimbolo, alcanceSimbolo);
                 if(alcanceSimbolo == estructura1.NombreEstructura)
                 {

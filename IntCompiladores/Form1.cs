@@ -27,6 +27,7 @@ namespace IntCompiladores
         List<string> PalabrasR;
         public Form1()
         {
+            
             InitializeComponent();
         }
 
@@ -44,6 +45,7 @@ namespace IntCompiladores
         {
             Consola.Text = "";
             dataGridView1.Rows.Clear();
+            dataGridView2.Rows.Clear();
             int contadorError = 0;
 
             if (Editor.Text == "")
@@ -145,9 +147,9 @@ namespace IntCompiladores
                             " | Línea: " + fila.Value.Linea + " \n";*/
                         Consola.Text += "consola>" + fila.Key + " \n";
                         dataGridView2.Rows.Add(fila.Value.NombreVarEstructura, fila.Value.TipoVarEstructura, fila.Value.ValorVarEstructura, fila.Value.LineaVarEstructura, fila.Value.AlcanceVarEstructura);
-                        dataGridView2.Rows.Add(fila.Value.Campo1.NombreCampo, fila.Value.Campo1.TipoCampo, fila.Value.Campo1.ValorCampo, fila.Value.LineaVarEstructura, fila.Value.NombreVarEstructura);
-                        dataGridView2.Rows.Add(fila.Value.Campo2.NombreCampo, fila.Value.Campo2.TipoCampo, fila.Value.Campo2.ValorCampo, fila.Value.LineaVarEstructura, fila.Value.NombreVarEstructura);
-                        dataGridView2.Rows.Add(fila.Value.Campo3.NombreCampo, fila.Value.Campo3.TipoCampo, fila.Value.Campo3.ValorCampo, fila.Value.LineaVarEstructura, fila.Value.NombreVarEstructura);
+                        dataGridView2.Rows.Add(fila.Value.Campo1.NombreCampo, fila.Value.Campo1.TipoCampo, fila.Value.Campo1.ValorCampo, fila.Value.LineaVarEstructura, fila.Value.Campo1.EstructuraPadre);
+                        dataGridView2.Rows.Add(fila.Value.Campo2.NombreCampo, fila.Value.Campo2.TipoCampo, fila.Value.Campo2.ValorCampo, fila.Value.LineaVarEstructura, fila.Value.Campo2.EstructuraPadre);
+                        dataGridView2.Rows.Add(fila.Value.Campo3.NombreCampo, fila.Value.Campo3.TipoCampo, fila.Value.Campo3.ValorCampo, fila.Value.LineaVarEstructura, fila.Value.Campo3.EstructuraPadre);
                     }
 
 
@@ -460,7 +462,7 @@ namespace IntCompiladores
                         transicionesinfo = transicionesinfo + Transiciones[i] + "\n";
                     }
                     String showData = Qinfo + "\n" + AlfabetoInfo + "\n" + q0info + "\n" + Finfo + "\n" + transicionesinfo;
-                    Datos.Text = showData;
+                    //Datos.Text = showData;
                     
                     Form1.ActiveForm.Text = nombre + " - " + nombreInterprete;
                 }
@@ -576,5 +578,17 @@ namespace IntCompiladores
         {
 
         }
+
+        private void groupBox2_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+            
+        }
+
+        
     }
 }

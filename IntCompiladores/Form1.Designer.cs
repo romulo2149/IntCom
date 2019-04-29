@@ -31,6 +31,14 @@ namespace IntCompiladores
         private void InitializeComponent()
         {
             System.Windows.Forms.TabControl tabControl1;
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.Consola = new System.Windows.Forms.RichTextBox();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.Errores = new System.Windows.Forms.RichTextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.archivoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nuevoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,27 +63,127 @@ namespace IntCompiladores
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.Editor = new System.Windows.Forms.RichTextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.Datos = new System.Windows.Forms.RichTextBox();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.Consola = new System.Windows.Forms.RichTextBox();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.Errores = new System.Windows.Forms.RichTextBox();
-            this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.panel1 = new System.Windows.Forms.Panel();
             tabControl1 = new System.Windows.Forms.TabControl();
+            tabControl1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.tabPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
+            this.tabPage3.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.tabPage4.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            this.tabPage2.SuspendLayout();
-            tabControl1.SuspendLayout();
-            this.tabPage3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.SuspendLayout();
+            // 
+            // tabControl1
+            // 
+            tabControl1.Controls.Add(this.tabPage2);
+            tabControl1.Controls.Add(this.tabPage1);
+            tabControl1.Controls.Add(this.tabPage4);
+            tabControl1.Controls.Add(this.tabPage3);
+            tabControl1.Location = new System.Drawing.Point(12, 469);
+            tabControl1.Multiline = true;
+            tabControl1.Name = "tabControl1";
+            tabControl1.SelectedIndex = 0;
+            tabControl1.Size = new System.Drawing.Size(1345, 243);
+            tabControl1.TabIndex = 2;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.Consola);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(1337, 217);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Consola";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // Consola
+            // 
+            this.Consola.BackColor = System.Drawing.SystemColors.MenuText;
+            this.Consola.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Consola.ForeColor = System.Drawing.SystemColors.Info;
+            this.Consola.Location = new System.Drawing.Point(0, 0);
+            this.Consola.Name = "Consola";
+            this.Consola.ReadOnly = true;
+            this.Consola.Size = new System.Drawing.Size(1341, 217);
+            this.Consola.TabIndex = 0;
+            this.Consola.Text = "";
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.dataGridView1);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(1337, 217);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Salida";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.AllowUserToResizeColumns = false;
+            this.dataGridView1.AllowUserToResizeRows = false;
+            this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(1, 0);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(1333, 217);
+            this.dataGridView1.TabIndex = 0;
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.dataGridView2);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(1337, 217);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Tabla Símbolos";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            this.tabPage4.Click += new System.EventHandler(this.tabPage4_Click);
+            // 
+            // dataGridView2
+            // 
+            this.dataGridView2.AllowUserToAddRows = false;
+            this.dataGridView2.AllowUserToDeleteRows = false;
+            this.dataGridView2.AllowUserToResizeColumns = false;
+            this.dataGridView2.AllowUserToResizeRows = false;
+            this.dataGridView2.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView2.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView2.Name = "dataGridView2";
+            this.dataGridView2.Size = new System.Drawing.Size(1337, 217);
+            this.dataGridView2.TabIndex = 1;
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.Errores);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(1337, 217);
+            this.tabPage3.TabIndex = 4;
+            this.tabPage3.Text = "Errores";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // Errores
+            // 
+            this.Errores.BackColor = System.Drawing.SystemColors.MenuText;
+            this.Errores.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Errores.ForeColor = System.Drawing.SystemColors.Info;
+            this.Errores.Location = new System.Drawing.Point(-4, 0);
+            this.Errores.Name = "Errores";
+            this.Errores.ReadOnly = true;
+            this.Errores.Size = new System.Drawing.Size(1341, 225);
+            this.Errores.TabIndex = 1;
+            this.Errores.Text = "";
             // 
             // menuStrip1
             // 
@@ -87,7 +195,7 @@ namespace IntCompiladores
             this.ayudaToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1101, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1370, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
@@ -240,7 +348,7 @@ namespace IntCompiladores
             this.groupBox1.Controls.Add(this.Editor);
             this.groupBox1.Location = new System.Drawing.Point(12, 48);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(774, 279);
+            this.groupBox1.Size = new System.Drawing.Size(511, 415);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Editor";
@@ -251,141 +359,35 @@ namespace IntCompiladores
             this.Editor.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Editor.Location = new System.Drawing.Point(6, 19);
             this.Editor.Name = "Editor";
-            this.Editor.Size = new System.Drawing.Size(762, 254);
+            this.Editor.Size = new System.Drawing.Size(500, 393);
             this.Editor.TabIndex = 0;
             this.Editor.Text = "";
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.Datos);
-            this.groupBox2.Location = new System.Drawing.Point(824, 48);
+            this.groupBox2.Controls.Add(this.panel1);
+            this.groupBox2.Location = new System.Drawing.Point(529, 48);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(261, 279);
+            this.groupBox2.Size = new System.Drawing.Size(829, 415);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Datos";
+            this.groupBox2.Text = "Pantalla";
+            this.groupBox2.Enter += new System.EventHandler(this.groupBox2_Enter);
             // 
-            // Datos
+            // panel1
             // 
-            this.Datos.Location = new System.Drawing.Point(7, 20);
-            this.Datos.Name = "Datos";
-            this.Datos.Size = new System.Drawing.Size(248, 253);
-            this.Datos.TabIndex = 0;
-            this.Datos.Text = "";
-            // 
-            // tabPage4
-            // 
-            this.tabPage4.Controls.Add(this.dataGridView2);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(1068, 217);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Tabla Símbolos";
-            this.tabPage4.UseVisualStyleBackColor = true;
-            this.tabPage4.Click += new System.EventHandler(this.tabPage4_Click);
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.dataGridView1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1068, 217);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Salida";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // dataGridView1
-            // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.AllowUserToResizeColumns = false;
-            this.dataGridView1.AllowUserToResizeRows = false;
-            this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(1, 0);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(1064, 217);
-            this.dataGridView1.TabIndex = 0;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.Consola);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1068, 217);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Consola";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // Consola
-            // 
-            this.Consola.BackColor = System.Drawing.SystemColors.MenuText;
-            this.Consola.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Consola.ForeColor = System.Drawing.SystemColors.Info;
-            this.Consola.Location = new System.Drawing.Point(0, 0);
-            this.Consola.Name = "Consola";
-            this.Consola.ReadOnly = true;
-            this.Consola.Size = new System.Drawing.Size(1068, 217);
-            this.Consola.TabIndex = 0;
-            this.Consola.Text = "";
-            // 
-            // tabControl1
-            // 
-            tabControl1.Controls.Add(this.tabPage2);
-            tabControl1.Controls.Add(this.tabPage1);
-            tabControl1.Controls.Add(this.tabPage4);
-            tabControl1.Controls.Add(this.tabPage3);
-            tabControl1.Location = new System.Drawing.Point(13, 344);
-            tabControl1.Multiline = true;
-            tabControl1.Name = "tabControl1";
-            tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new System.Drawing.Size(1076, 243);
-            tabControl1.TabIndex = 2;
-            // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add(this.Errores);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(1068, 217);
-            this.tabPage3.TabIndex = 4;
-            this.tabPage3.Text = "Errores";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // Errores
-            // 
-            this.Errores.BackColor = System.Drawing.SystemColors.MenuText;
-            this.Errores.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Errores.ForeColor = System.Drawing.SystemColors.Info;
-            this.Errores.Location = new System.Drawing.Point(-4, 0);
-            this.Errores.Name = "Errores";
-            this.Errores.ReadOnly = true;
-            this.Errores.Size = new System.Drawing.Size(1080, 225);
-            this.Errores.TabIndex = 1;
-            this.Errores.Text = "";
-            // 
-            // dataGridView2
-            // 
-            this.dataGridView2.AllowUserToAddRows = false;
-            this.dataGridView2.AllowUserToDeleteRows = false;
-            this.dataGridView2.AllowUserToResizeColumns = false;
-            this.dataGridView2.AllowUserToResizeRows = false;
-            this.dataGridView2.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Location = new System.Drawing.Point(0, 0);
-            this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.Size = new System.Drawing.Size(1066, 217);
-            this.dataGridView2.TabIndex = 1;
+            this.panel1.AutoScroll = true;
+            this.panel1.Location = new System.Drawing.Point(7, 19);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(816, 384);
+            this.panel1.TabIndex = 0;
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1101, 599);
+            this.ClientSize = new System.Drawing.Size(1370, 749);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(tabControl1);
             this.Controls.Add(this.groupBox1);
@@ -393,18 +395,19 @@ namespace IntCompiladores
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Form1";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Form1_Load);
+            tabControl1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.tabPage4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
+            this.tabPage3.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
-            this.tabPage4.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            this.tabPage2.ResumeLayout(false);
-            tabControl1.ResumeLayout(false);
-            this.tabPage3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -436,7 +439,6 @@ namespace IntCompiladores
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RichTextBox Editor;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.RichTextBox Datos;
         private TabPage tabPage4;
         private TabPage tabPage1;
         private DataGridView dataGridView1;
@@ -445,9 +447,11 @@ namespace IntCompiladores
         private DataGridView dataGridView2;
         private TabPage tabPage3;
         private RichTextBox Errores;
+        private Panel panel1;
 
         public RichTextBox Consola1 { get => Consola; set => Consola = value; }
         public DataGridView DataGridView1 { get => dataGridView1; set => dataGridView1 = value; }
+        public Panel Panel1 { get => panel1; set => panel1 = value; }
     }
 }
 

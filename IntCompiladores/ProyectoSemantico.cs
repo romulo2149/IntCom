@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace IntCompiladores
         private Form1 form;
         private int contadorEstructuras = 0;
         private AnalizaExpresion aex;
+        private Grafico graf;
 
         
         public ProyectoSemantico(Form1 form, AnalizaExpresion aex)
@@ -27,6 +29,10 @@ namespace IntCompiladores
             Aex = aex;
             estructura1 = new Estructura();
             estructura2 = new Estructura();
+            graf = new Grafico();
+            SolidBrush s = new SolidBrush(Color.White);
+            Graphics g = form.Panel1.CreateGraphics();
+            g.FillRectangle(s, new Rectangle(0, 0, 816, 384));
         }
 
         public void nuevoSimbolo(string nombreSimbolo, string tipoSimbolo, string valorSimbolo, string alcanceSimbolo,
@@ -58,52 +64,60 @@ namespace IntCompiladores
                             int cuenta = estructura1.ListaCampos.Count;
                             if(cuenta == 1)
                             {
-                                variableEstructura.Campo1 = estructura1.ListaCampos[0];
-                                variableEstructura.Campo1.EstructuraPadre = nombreSimbolo;
+                                campo = new Campo(estructura1.ListaCampos[0].NombreCampo, estructura1.ListaCampos[0].ValorCampo, estructura1.ListaCampos[0].TipoCampo, nombreSimbolo);
+                                variableEstructura.Campo1 = campo;
                             }
                             if (cuenta == 2)
                             {
-                                variableEstructura.Campo1 = estructura1.ListaCampos[0];
-                                variableEstructura.Campo2 = estructura1.ListaCampos[1];
-                                variableEstructura.Campo1.EstructuraPadre = nombreSimbolo;
-                                variableEstructura.Campo2.EstructuraPadre = nombreSimbolo;
+                                campo = new Campo(estructura1.ListaCampos[0].NombreCampo, estructura1.ListaCampos[0].ValorCampo, estructura1.ListaCampos[0].TipoCampo, nombreSimbolo);
+                                variableEstructura.Campo1 = campo;
+                                campo = new Campo(estructura1.ListaCampos[1].NombreCampo, estructura1.ListaCampos[0].ValorCampo, estructura1.ListaCampos[0].TipoCampo, nombreSimbolo);
+                                variableEstructura.Campo2 = campo;
                             }
                             if (cuenta == 3)
                             {
-                                variableEstructura.Campo1 = estructura1.ListaCampos[0];
-                                variableEstructura.Campo2 = estructura1.ListaCampos[1];
-                                variableEstructura.Campo3 = estructura1.ListaCampos[2];
-                                variableEstructura.Campo1.EstructuraPadre = nombreSimbolo;
-                                variableEstructura.Campo2.EstructuraPadre = nombreSimbolo;
-                                variableEstructura.Campo3.EstructuraPadre = nombreSimbolo;
+                                campo = new Campo(estructura1.ListaCampos[0].NombreCampo, estructura1.ListaCampos[0].ValorCampo, estructura1.ListaCampos[0].TipoCampo, nombreSimbolo);
+                                variableEstructura.Campo1 = campo;
+                                campo = new Campo(estructura1.ListaCampos[1].NombreCampo, estructura1.ListaCampos[1].ValorCampo, estructura1.ListaCampos[1].TipoCampo, nombreSimbolo);
+                                variableEstructura.Campo2 = campo;
+                                campo = new Campo(estructura1.ListaCampos[2].NombreCampo, estructura1.ListaCampos[2].ValorCampo, estructura1.ListaCampos[2].TipoCampo, nombreSimbolo);
+                                variableEstructura.Campo3 = campo;
                             }
                         }
                         else if(estructura2.NombreEstructura == tipoSimbolo)
                         {
-                            int cuenta = estructura2.ListaCampos.Count;
+                            int cuenta = estructura1.ListaCampos.Count;
                             if (cuenta == 1)
                             {
-                                variableEstructura.Campo1 = estructura2.ListaCampos[0];
-                                variableEstructura.Campo1.EstructuraPadre = nombreSimbolo;
+                                campo = new Campo(estructura2.ListaCampos[0].NombreCampo, estructura2.ListaCampos[0].ValorCampo, estructura2.ListaCampos[0].TipoCampo, nombreSimbolo);
+                                variableEstructura.Campo1 = campo;
                             }
                             if (cuenta == 2)
                             {
-                                variableEstructura.Campo1 = estructura2.ListaCampos[0];
-                                variableEstructura.Campo2 = estructura2.ListaCampos[1];
-                                variableEstructura.Campo1.EstructuraPadre = nombreSimbolo;
-                                variableEstructura.Campo2.EstructuraPadre = nombreSimbolo;
+                                campo = new Campo(estructura2.ListaCampos[0].NombreCampo, estructura2.ListaCampos[0].ValorCampo, estructura2.ListaCampos[0].TipoCampo, nombreSimbolo);
+                                variableEstructura.Campo1 = campo;
+                                campo = new Campo(estructura2.ListaCampos[1].NombreCampo, estructura2.ListaCampos[0].ValorCampo, estructura2.ListaCampos[0].TipoCampo, nombreSimbolo);
+                                variableEstructura.Campo2 = campo;
                             }
                             if (cuenta == 3)
                             {
-                                variableEstructura.Campo1 = estructura2.ListaCampos[0];
-                                variableEstructura.Campo2 = estructura2.ListaCampos[1];
-                                variableEstructura.Campo3 = estructura2.ListaCampos[2];
-                                variableEstructura.Campo1.EstructuraPadre = nombreSimbolo;
-                                variableEstructura.Campo2.EstructuraPadre = nombreSimbolo;
-                                variableEstructura.Campo3.EstructuraPadre = nombreSimbolo;
+                                campo = new Campo(estructura2.ListaCampos[0].NombreCampo, estructura2.ListaCampos[0].ValorCampo, estructura2.ListaCampos[0].TipoCampo, nombreSimbolo);
+                                variableEstructura.Campo1 = campo;
+                                campo = new Campo(estructura2.ListaCampos[1].NombreCampo, estructura2.ListaCampos[1].ValorCampo, estructura2.ListaCampos[1].TipoCampo, nombreSimbolo);
+                                variableEstructura.Campo2 = campo;
+                                campo = new Campo(estructura2.ListaCampos[2].NombreCampo, estructura2.ListaCampos[2].ValorCampo, estructura2.ListaCampos[2].TipoCampo, nombreSimbolo);
+                                variableEstructura.Campo3 = campo;
                             }
                         }
                         EstructuraSimbolos.Add(nombreSimbolo, variableEstructura);
+                        if (estructura1.NombreEstructura == tipoSimbolo)
+                        {
+                            graf.pintarEstructura(variableEstructura, form, 1);
+                        }
+                        else if (estructura2.NombreEstructura == tipoSimbolo)
+                        {
+                            graf.pintarEstructura(variableEstructura, form, 2);
+                        }
                     }
                 }
                 else if(tipoValido(tipoSimbolo))
@@ -234,23 +248,42 @@ namespace IntCompiladores
                     }
                     break;
                 case 1:
-                    if(tablaSimbolos.ContainsKey(t[0].Lexema))
+                    if (tablaSimbolos.ContainsKey(t[0].Lexema))
                     {
                         var obj = tablaSimbolos[t[0].Lexema];
-                        if(obj.Alcance == "CONSTANTES")
+                        if (obj.Alcance == "CONSTANTES")
                         {
                             form.Consola1.Text += "consola> Error semántico, la variable " + t[0].Lexema + " (línea " + t[0].Linea + ") es una constante, su valor no puede cambiar \n";
                         }
-                        else if(tablaSimbolos.ContainsKey(obj.Tipo))
+                        else if (tablaSimbolos.ContainsKey(obj.Tipo))
                         {
                             form.Consola1.Text += "consola> Error semántico, la variable " + t[0].Lexema + " (línea " + t[0].Linea + ") es una variable de tipo estructura, no se le puede asignar un valor directo \n";
+                        }
+                        else
+                        {
+                            if (esEntero(t[2].Lexema, t[2].Tipo))
+                            {
+                                if (esEntero(t[4].Lexema, t[4].Tipo))
+                                {
+                                    var objt = TablaSimbolos[t[0].Lexema];
+                                    objt.Valor = hacerOperacion(Convert.ToInt32(getValor(t[2])), t[3], Convert.ToInt32(getValor(t[4])));
+                                }
+                                else
+                                {
+                                    form.Consola1.Text += "consola> Error semántico en expresión, " + t[4].Lexema + " (línea " + t[4].Linea + ") no es un número o una variable de tipo entero. \n";
+                                }
+                            }
+                            else
+                            {
+                                form.Consola1.Text += "consola> Error semántico en expresión, " + t[2].Lexema + " (línea " + t[2].Linea + ") no es un número o una variable de tipo entero. \n";
+                            }
                         }
                     }
                     else if (variableExiste(t[0].Lexema) == false)
                     {
                         if (esEntero(t[2].Lexema, t[2].Tipo))
                         {
-                            if(esEntero(t[4].Lexema, t[4].Tipo))
+                            if (esEntero(t[4].Lexema, t[4].Tipo))
                             {
                                 simbolo = new Simbolo("ENTERO", t[0].Lexema, hacerOperacion(Convert.ToInt32(getValor(t[2])), t[3], Convert.ToInt32(getValor(t[4]))), "INSTRUCCION", t[0].Linea);
                                 TablaSimbolos.Add(t[0].Lexema, simbolo);
@@ -268,7 +301,95 @@ namespace IntCompiladores
                     break;
                 case 3:
                     break;
+                case 4:
+                    if(existeVar(t[0].Lexema))
+                    {
+                        if(esCampo(t[0],t[2].Lexema))
+                        {
+                            if(tablaSimbolos.ContainsKey(t[4].Lexema))
+                            {
+                                if (getTipoCampo(t[0], t[2].Lexema) == getTipo(t[4].Lexema))
+                                {
 
+                                    cambiarValorCampo(t[0], t[2].Lexema, t[4]);
+                                }
+                                else
+                                {
+                                    form.Consola1.Text += "consola> Error semántico en expresión, " + t[4].Lexema + " (línea " + t[4].Linea + "), el tipo no coincide con el tipo del campo. \n";
+                                }
+                            }
+                            else if(esNumeroEntero(t[4]))
+                            {
+                                if (getTipoCampo(t[0], t[2].Lexema) == getTipoToken(t[4]))
+                                {
+                                    cambiarValorCampo(t[0], t[2].Lexema, t[4]);
+                                }
+                                else
+                                {
+                                    form.Consola1.Text += "consola> Error semántico en expresión, " + t[4].Lexema + " (línea " + t[4].Linea + "), el tipo no coincide con el tipo del campo. \n";
+                                }
+                            }
+                            else
+                            {
+                                form.Consola1.Text += "consola> Error semántico en expresión, " + t[4].Lexema + " (línea " + t[4].Linea + "), no está declarada. \n";
+                            }
+                        }
+                        else
+                        {
+                            form.Consola1.Text += "consola> Error semántico en expresión, " + t[2].Lexema + " (línea " + t[2].Linea + "), no es un campo de la variable "+ t[0].Lexema +". \n";
+                        }
+                    }
+                    else
+                    {
+                        form.Consola1.Text += "consola> Error semántico en expresión, " + t[0].Lexema + " (línea " + t[0].Linea + "), no es una variable de tipo estructura. \n";
+                    }
+                    break;
+                case 5:
+                    //res[0].Tipo == "ID" && res[1].Tipo == "S_PUNTO" && res[2].Tipo == "ID" && res[3].Tipo == "OP_ASIGNACION" && esEnteroID(res[4].Tipo) && esOperador(res[5].Tipo) && esEnteroID(res[6].Tipo) && res[7].Tipo == "S_PUNTOCOMA"
+                    if (existeVar(t[0].Lexema))
+                    {
+                        if (esCampo(t[0], t[2].Lexema))
+                        {
+                            if (esEntero(t[4].Lexema, t[4].Tipo))
+                            {
+                                if (esEntero(t[6].Lexema, t[6].Tipo))
+                                {
+                                    string valor = hacerOperacion(Convert.ToInt32(getValor(t[4])), t[5], Convert.ToInt32(getValor(t[6])));
+                                    cambiarValorCampoOperacion(t[0], t[2].Lexema, valor);
+                                }
+                                else
+                                {
+                                    form.Consola1.Text += "consola> Error semántico en expresión, " + t[6].Lexema + " (línea " + t[6].Linea + ") no es un número o una variable de tipo entero. \n";
+                                }
+                            }
+                            else
+                            {
+                                form.Consola1.Text += "consola> Error semántico en expresión, " + t[4].Lexema + " (línea " + t[4].Linea + ") no es un número o una variable de tipo entero. \n";
+                            }
+                        }
+                        else
+                        {
+                            form.Consola1.Text += "consola> Error semántico en expresión, " + t[2].Lexema + " (línea " + t[2].Linea + "), no es un campo de la variable " + t[0].Lexema + ". \n";
+                        }
+                    }
+                    else
+                    {
+                        form.Consola1.Text += "consola> Error semántico en expresión, " + t[0].Lexema + " (línea " + t[0].Linea + "), no es una variable de tipo estructura. \n";
+                    }
+                    break;
+
+            }
+        }
+
+        public bool esNumeroEntero(Token t)
+        {
+            if(t.Tipo == "ENTERO")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -291,9 +412,29 @@ namespace IntCompiladores
             {
                 return "ENTERO";
             }
-            else
+            else if(obj.Tipo == "CHAR")
             {
                 return "CHAR";
+            }
+            else
+            {
+                return "APUNTADOR";
+            }
+        }
+
+        public string getTipoToken(Token t)
+        {
+            if (t.Tipo == "ENTERO")
+            {
+                return "ENTERO";
+            }
+            else if (t.Tipo == "CHAR")
+            {
+                return "CHAR";
+            }
+            else
+            {
+                return "APUNTADOR";
             }
         }
 
@@ -347,17 +488,55 @@ namespace IntCompiladores
                 respuesta = 10;
             }
             else if (res[0].Tipo == "ID" && res[1].Tipo == "S_PUNTO" && res[2].Tipo == "ID" && res[3].Tipo == "OP_ASIGNACION" && res[4].Tipo == "ID" && res[5].Tipo == "S_PUNTO"
-            && res[6].Tipo == "ID" && esOperador(res[7].Tipo) == true && res[8].Tipo == "ID" && res[9].Tipo == "S_PUNTOCOMA")
+            && res[6].Tipo == "ID" && esOperador(res[7].Tipo) == true && esEnteroID(res[8].Tipo) && res[9].Tipo == "S_PUNTOCOMA")
             {  // x.x = x.x + x
                 respuesta = 11;
             }
-            else if (res[0].Tipo == "ID" && res[1].Tipo == "S_PUNTO" && res[2].Tipo == "ID" && res[3].Tipo == "OP_ASIGNACION" && res[4].Tipo == "ID"
+            else if (res[0].Tipo == "ID" && res[1].Tipo == "S_PUNTO" && res[2].Tipo == "ID" && res[3].Tipo == "OP_ASIGNACION" && esEnteroID(res[4].Tipo)
                 && esOperador(res[5].Tipo) == true && res[6].Tipo == "ID" && res[7].Tipo == "S_PUNTO" && res[8].Tipo == "ID" && res[9].Tipo == "S_PUNTOCOMA")
             {  // x.x = x + x.x
                 respuesta = 12;
             }
 
             return respuesta;
+        }
+
+        public string getTipoCampo(Token var, String campo)
+        {
+
+            string respuesta = "";
+            if (existeVar(var.Lexema))
+            {
+                var obj = EstructuraSimbolos[var.Lexema];
+               
+                if (obj.Campo1.NombreCampo == campo)
+                {
+                    respuesta = obj.Campo1.TipoCampo;
+                }
+                else if (obj.Campo2.NombreCampo == campo)
+                {
+                    respuesta = obj.Campo2.TipoCampo;
+                }
+                else if (obj.Campo3.NombreCampo == campo)
+                {
+                    respuesta = obj.Campo3.TipoCampo;
+                }
+            }
+            return respuesta;
+        }
+
+        public bool esCampo(Token var, String campo)
+        {
+            bool bandera = false;
+            if(existeVar(var.Lexema))
+            {
+                var obj = EstructuraSimbolos[var.Lexema];
+                if(obj.Campo1.NombreCampo == campo || obj.Campo2.NombreCampo == campo || obj.Campo3.NombreCampo == campo)
+                {
+                    bandera = true;
+                }
+            }
+            return bandera;
         }
 
         public bool esOperador(string operador)
@@ -472,6 +651,61 @@ namespace IntCompiladores
                 }
             }
             return valor;
+        }
+
+        public void cambiarValorCampo(Token var, string campo, Token nuevo)
+        {
+            string nuevoValor = getValor(nuevo);
+            if (existeVar(var.Lexema))
+            {
+                var obj = EstructuraSimbolos[var.Lexema];
+
+                if (obj.Campo1.NombreCampo == campo)
+                {
+                    Campo editaCampo = obj.Campo1;
+                    editaCampo.ValorCampo = nuevoValor;
+                    EstructuraSimbolos[var.Lexema].Campo1 = editaCampo;
+                }
+                else if (obj.Campo2.NombreCampo == campo)
+                {
+                    Campo editaCampo = obj.Campo2;
+                    editaCampo.ValorCampo = nuevoValor;
+                    EstructuraSimbolos[var.Lexema].Campo2 = editaCampo;
+                }
+                else if (obj.Campo3.NombreCampo == campo)
+                {
+                    Campo editaCampo = obj.Campo3;
+                    editaCampo.ValorCampo = nuevoValor;
+                    EstructuraSimbolos[var.Lexema].Campo3 = editaCampo;
+                }
+            }
+        }
+
+        public void cambiarValorCampoOperacion(Token var, string campo, string nuevoValor)
+        {
+            if (existeVar(var.Lexema))
+            {
+                var obj = EstructuraSimbolos[var.Lexema];
+
+                if (obj.Campo1.NombreCampo == campo)
+                {
+                    Campo editaCampo = obj.Campo1;
+                    editaCampo.ValorCampo = nuevoValor;
+                    EstructuraSimbolos[var.Lexema].Campo1 = editaCampo;
+                }
+                else if (obj.Campo2.NombreCampo == campo)
+                {
+                    Campo editaCampo = obj.Campo2;
+                    editaCampo.ValorCampo = nuevoValor;
+                    EstructuraSimbolos[var.Lexema].Campo2 = editaCampo;
+                }
+                else if (obj.Campo3.NombreCampo == campo)
+                {
+                    Campo editaCampo = obj.Campo3;
+                    editaCampo.ValorCampo = nuevoValor;
+                    EstructuraSimbolos[var.Lexema].Campo3 = editaCampo;
+                }
+            }
         }
 
         public Form1 Form { get => form; set => form = value; }

@@ -1006,7 +1006,7 @@ namespace IntCompiladores
 
         public void TEXTSTR2()
         /*
-         * TEXTSTR2 -> S_PUNTO ID OP_ASIGNACION OPERANDON() S_PUNTOCOMA { S_PUNTO }
+         * TEXTSTR2 -> S_PUNTO ID OP_ASIGNACION OPERANDON() O3() S_PUNTOCOMA { S_PUNTO }
          * TEXTSTR2 -> OP_ASIGNACION O1() O2() S_PUNTOCOMA { OP_ASIGNACION }
          */
         {
@@ -1043,8 +1043,8 @@ namespace IntCompiladores
                     to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
                     t.Add(to);
                     Emparejar("OP_ASIGNACION");
-                    O1();
-                    O2();
+                    OPERANDON();
+                    O3();
                     exp = exp + lexema + " ";
                     to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
                     t.Add(to);

@@ -18,10 +18,16 @@ namespace IntCompiladores
         string valor, tipo, id, alcance, cadena = "";
         public List<Simbolo> sim = new List<Simbolo>();
         public List<Token> t;
+        public List<Token> condicion;
+        public List<List<Token>> cond;
         public Token to;
         public ProyectoSemantico ps;
         public string exp;
         public string estruct;
+        public bool esCondicion = false;
+        public bool condicionVerdadera = false;
+        public string parteCondicion = "";
+        public List<string> cadenas;
 
 
         public ProyectoSintactico(Lexico lex, AnalizaExpresion aex, Form1 f)
@@ -570,7 +576,8 @@ namespace IntCompiladores
             }
             else if(preanalisis == "PR_FIN" || preanalisis == "PR_SINO")
             {
-
+                esCondicion = false;
+                condicionVerdadera = false;
             }
             else
             {
@@ -624,6 +631,9 @@ namespace IntCompiladores
             {
                 SIP1();
                 SIP2();
+                parteCondicion = "";
+                esCondicion = false;
+                condicionVerdadera = false;
                 Emparejar("PR_FIN");
             }
             else
@@ -639,6 +649,9 @@ namespace IntCompiladores
         {
             if(preanalisis == "PR_SI")
             {
+                esCondicion = true;
+                parteCondicion = "SI";
+                System.Console.Out.WriteLine("--------------------------------------ENTRÓ A SI");
                 Emparejar("PR_SI");
                 Emparejar("PA_IZQ");
                 CONDICION();
@@ -660,6 +673,9 @@ namespace IntCompiladores
         {
             if(preanalisis == "PR_SINO")
             {
+                parteCondicion = "SINO";
+                esCondicion = true;
+                System.Console.Out.WriteLine("--------------------------------------ENTRÓ A SINO");
                 Emparejar("PR_SINO");
                 INSTRUCCIONES();
             }
@@ -676,14 +692,28 @@ namespace IntCompiladores
         {
             if(preanalisis == "ID" || preanalisis == "ENTERO" || preanalisis == "S_COMILLA")
             {
+                exp = "";
                 t = new List<Token>();
                 OPERANDON();
                 OPERADOR_CONDICION();
                 OPERANDON();
-                if (ps.checarCondicion(t) == false)
+                if(parteCondicion == "WHILE")
                 {
-                    error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
+                    condicion = new List<Token>();
+                    condicion = t;
                 }
+                int con = ps.tipoCondicion(t);
+                if (ps.analizaCondicion(t, con))
+                {
+                    System.Console.Out.WriteLine("--------------------------------------ANALIZÓ LA CONDICION");
+                    condicionVerdadera = true;
+                }
+                else
+                {
+                    System.Console.Out.WriteLine("--------------------------------------CONDICION FALSA");
+                    condicionVerdadera = false;
+                }
+
                 System.Console.Out.WriteLine("Expresión: " + exp);
             }
         }
@@ -751,26 +781,44 @@ namespace IntCompiladores
             switch(preanalisis)
             {
                 case "OP_MENOR":
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("OP_MENOR");
                     break;
 
                 case "OP_MAYOR":
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("OP_MAYOR");
                     break;
 
                 case "OP_MENORIGUAL":
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("OP_MENORIGUAL");
                     break;
 
                 case "OP_MAYORIGUAL":
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("OP_MAYORIGUAL");
                     break;
 
                 case "OP_IGUAL":
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("OP_IGUAL");
                     break;
 
                 case "OP_DIFERENTE":
+                    exp = exp + lexema + " ";
+                    to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                    t.Add(to);
                     Emparejar("OP_DIFERENTE");
                     break;
             }
@@ -835,10 +883,32 @@ namespace IntCompiladores
             {
                 Emparejar("PR_MIENTRAS");
                 Emparejar("PA_IZQ");
+                esCondicion = true;
+                parteCondicion = "WHILE";
+                cond = new List<List<Token>>();
+                cadenas = new List<string>();
                 CONDICION();
                 Emparejar("PA_DER");
                 Emparejar("PR_HACER");
                 INSTRUCCIONES();
+                int con = ps.tipoCondicion(condicion);
+                while (ps.analizaCondicion(condicion, con))
+                {
+                    for(int i = 0; i < cond.Count; i++)
+                    {
+                        if (ps.expresionValida(cond[i]) == false)
+                        {
+                            error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
+                        }
+                    }
+                    for (int i = 0; i < cadenas.Count; i++)
+                    {
+                        form1.Consola1.Text += "consola> " + cadenas[i] + "\n";
+                    }
+                }
+                esCondicion = false;
+                parteCondicion = "";
+                condicionVerdadera = false;
                 Emparejar("PR_FIN");
             }
         }
@@ -936,6 +1006,7 @@ namespace IntCompiladores
                     EmparejarCadena();
                     lex.cuentaEspacios = 0;
                 }
+                cadenas.Add(cadena);
                 Emparejar("S_COMILLA");
             }
             else if (preanalisis == "ID")
@@ -1037,9 +1108,41 @@ namespace IntCompiladores
                     to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
                     t.Add(to);
                     Emparejar("S_PUNTOCOMA");
-                    if(ps.expresionValida(t) == false)
+                    if(parteCondicion == "WHILE")
                     {
-                        error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
+                        cond.Add(t);
+                    }
+                    if(esCondicion == true && condicionVerdadera == true && parteCondicion == "SI")
+                    {
+                        System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
+                        if (ps.expresionValida(t) == false)
+                        {
+                            error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
+                        }
+                    }
+                    else if (esCondicion == true && condicionVerdadera == false && parteCondicion == "SINO")
+                    {
+                        System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
+                        if (ps.expresionValida(t) == false)
+                        {
+                            error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
+                        }
+                    }
+                    else if (esCondicion == true && condicionVerdadera == true && parteCondicion == "WHILE")
+                    {
+                        System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
+                        if (ps.expresionValida(t) == false)
+                        {
+                            error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
+                        }
+                    }
+                    else if (esCondicion == false && condicionVerdadera == false && parteCondicion == "")
+                    {
+                        System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
+                        if (ps.expresionValida(t) == false)
+                        {
+                            error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
+                        }
                     }
                     System.Console.Out.WriteLine("Expresión: " + exp);
                     break;
@@ -1055,9 +1158,41 @@ namespace IntCompiladores
                     to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
                     t.Add(to);
                     Emparejar("S_PUNTOCOMA");
-                    if (ps.expresionValida(t) == false)
+                    if (parteCondicion == "WHILE")
                     {
-                        error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
+                        cond.Add(t);
+                    }
+                    if (esCondicion == true && condicionVerdadera == true && parteCondicion == "SI")
+                    {
+                        System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
+                        if (ps.expresionValida(t) == false)
+                        {
+                            error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
+                        }
+                    }
+                    else if (esCondicion == true && condicionVerdadera == false && parteCondicion == "SINO")
+                    {
+                        System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
+                        if (ps.expresionValida(t) == false)
+                        {
+                            error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
+                        }
+                    }
+                    else if (esCondicion == true && condicionVerdadera == true && parteCondicion == "WHILE")
+                    {
+                        System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
+                        if (ps.expresionValida(t) == false)
+                        {
+                            error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
+                        }
+                    }
+                    else if (esCondicion == false && condicionVerdadera == false && parteCondicion == "")
+                    {
+                        System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
+                        if (ps.expresionValida(t) == false)
+                        {
+                            error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
+                        }
                     }
                     System.Console.Out.WriteLine("Expresión: " + exp);
                     break;

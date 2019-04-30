@@ -28,6 +28,8 @@ namespace IntCompiladores
         public bool condicionVerdadera = false;
         public string parteCondicion = "";
         public List<string> cadenas;
+        public List<Cadena> cad;
+        public Cadena c;
 
 
         public ProyectoSintactico(Lexico lex, AnalizaExpresion aex, Form1 f)
@@ -39,6 +41,8 @@ namespace IntCompiladores
             form1 = f;
             ps = new ProyectoSemantico(f, aex);
             Aex = aex;
+            cadenas = new List<string>();
+            cad = new List<Cadena>();
         }
 
         internal AnalizaExpresion Aex { get => aex; set => aex = value; }
@@ -53,10 +57,17 @@ namespace IntCompiladores
                 Emparejar("ID");
                 CONSTANTES();
                 ESTRUCTURAS();
+                if(ps.contadorEstructuras == 2)
+                {
+                    if (ps.estruc1 == false || ps.estruc2 == false)
+                    {
+                        form1.Consola1.Text += "consola> Error semántico, no se declararon variables de tipo estructura para ambas estructuras \n";
+                    }
+                }
                 Emparejar("PR_INICIO");
                 INSTRUCCIONES();
                 Emparejar("PR_FIN");
-                form1.Consola1.Text += "consola> No se encontraron errores \n";
+                
             }
             else
             {
@@ -887,6 +898,8 @@ namespace IntCompiladores
                 parteCondicion = "WHILE";
                 cond = new List<List<Token>>();
                 cadenas = new List<string>();
+                cad = new List<Cadena>();
+                
                 CONDICION();
                 Emparejar("PA_DER");
                 Emparejar("PR_HACER");
@@ -901,9 +914,17 @@ namespace IntCompiladores
                             error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
                         }
                     }
-                    for (int i = 0; i < cadenas.Count; i++)
+                    for (int i = 0; i < cad.Count; i++)
                     {
-                        form1.Consola1.Text += "consola> " + cadenas[i] + "\n";
+                        if(ps.existeSimbolo(cad[i].id))
+                        {
+                            form1.Consola1.Text += "consola> " + ps.getValor(cad[i].to) + "\n";
+                        }
+                        else
+                        {
+                            form1.Consola1.Text += "consola> " + cad[i].cadena + "\n";
+                        }
+                        
                     }
                 }
                 esCondicion = false;
@@ -1006,11 +1027,31 @@ namespace IntCompiladores
                     EmparejarCadena();
                     lex.cuentaEspacios = 0;
                 }
+                c = new Cadena();
                 cadenas.Add(cadena);
+                c.esVar = true;
+                c.cadena = cadena;
+                c.to = toke;
+                c.id = toke.Lexema;
+                cad.Add(c);
                 Emparejar("S_COMILLA");
             }
             else if (preanalisis == "ID")
             {
+                if(ps.existeSimbolo(toke.Lexema))
+                {
+                    c = new Cadena();
+                    cadena = ps.getValor(toke);
+                    c.esVar = true;
+                    c.cadena = ps.getValor(toke);
+                    c.id = toke.Lexema;
+                    c.to = toke;
+                    cad.Add(c);
+                }
+                else
+                {
+                    form1.Consola1.Text += "consola> Error semántico en " + lexema + " no es una variable \n";
+                }
                 Emparejar("ID");
             }
         }

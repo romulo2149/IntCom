@@ -12,13 +12,14 @@ namespace IntCompiladores
         private Dictionary<string, Simbolo> tablaSimbolos;
         private Dictionary<string, VariableEstructura> estructuraSimbolos;
         private Simbolo simbolo;
-        private Estructura estructura1, estructura2;
+        public Estructura estructura1, estructura2;
         private VariableEstructura variableEstructura;
         private Campo campo;
         private Form1 form;
-        private int contadorEstructuras = 0;
+        public int contadorEstructuras = 0;
         private AnalizaExpresion aex;
         private Grafico graf;
+        public bool estruc1, estruc2;
 
 
         public ProyectoSemantico(Form1 form, AnalizaExpresion aex)
@@ -33,6 +34,8 @@ namespace IntCompiladores
             SolidBrush s = new SolidBrush(Color.White);
             Graphics g = form.Panel1.CreateGraphics();
             g.FillRectangle(s, new Rectangle(0, 0, 816, 384));
+            estruc1 = false;
+            estruc2 = false;
         }
 
         public void nuevoSimbolo(string nombreSimbolo, string tipoSimbolo, string valorSimbolo, string alcanceSimbolo,
@@ -73,6 +76,7 @@ namespace IntCompiladores
                         variableEstructura = new VariableEstructura(tipoSimbolo, nombreSimbolo, valorSimbolo, lineaSimbolo, alcanceSimbolo);
                         if (estructura1.NombreEstructura == tipoSimbolo)
                         {
+                            estruc1 = true;
                             int cuenta = estructura1.ListaCampos.Count;
                             if (cuenta == 1)
                             {
@@ -83,7 +87,7 @@ namespace IntCompiladores
                             {
                                 campo = new Campo(estructura1.ListaCampos[0].NombreCampo, estructura1.ListaCampos[0].ValorCampo, estructura1.ListaCampos[0].TipoCampo, nombreSimbolo);
                                 variableEstructura.Campo1 = campo;
-                                campo = new Campo(estructura1.ListaCampos[1].NombreCampo, estructura1.ListaCampos[0].ValorCampo, estructura1.ListaCampos[0].TipoCampo, nombreSimbolo);
+                                campo = new Campo(estructura1.ListaCampos[1].NombreCampo, estructura1.ListaCampos[1].ValorCampo, estructura1.ListaCampos[1].TipoCampo, nombreSimbolo);
                                 variableEstructura.Campo2 = campo;
                             }
                             if (cuenta == 3)
@@ -98,6 +102,7 @@ namespace IntCompiladores
                         }
                         else if (estructura2.NombreEstructura == tipoSimbolo)
                         {
+                            estruc2 = true;
                             int cuenta = estructura1.ListaCampos.Count;
                             if (cuenta == 1)
                             {
@@ -108,7 +113,7 @@ namespace IntCompiladores
                             {
                                 campo = new Campo(estructura2.ListaCampos[0].NombreCampo, estructura2.ListaCampos[0].ValorCampo, estructura2.ListaCampos[0].TipoCampo, nombreSimbolo);
                                 variableEstructura.Campo1 = campo;
-                                campo = new Campo(estructura2.ListaCampos[1].NombreCampo, estructura2.ListaCampos[0].ValorCampo, estructura2.ListaCampos[0].TipoCampo, nombreSimbolo);
+                                campo = new Campo(estructura2.ListaCampos[1].NombreCampo, estructura2.ListaCampos[1].ValorCampo, estructura2.ListaCampos[1].TipoCampo, nombreSimbolo);
                                 variableEstructura.Campo2 = campo;
                             }
                             if (cuenta == 3)
@@ -146,6 +151,7 @@ namespace IntCompiladores
                             else if (contadorEstructuras == 1)
                             {
                                 estructura2.NombreEstructura = nombreSimbolo;
+                                contadorEstructuras++;
                             }
                         }
                         if (tipoSimbolo == "ID")

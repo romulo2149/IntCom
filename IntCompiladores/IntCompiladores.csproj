@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="AnalizaExpresion.cs" />
     <Compile Include="AutomataFD.cs" />
+    <Compile Include="Cadena.cs" />
     <Compile Include="Campo.cs" />
     <Compile Include="Error.cs" />
     <Compile Include="Estructura.cs" />

@@ -130,14 +130,14 @@ namespace IntCompiladores
                     ProyectoSintactico ps = new ProyectoSintactico(MEFD, ExpLex, this);
                     ps.PROGRAMA();
 
-                    Consola.Text += "consola> Tabla de Símbolos: \n";
+//                    Consola.Text += "consola> Tabla de Símbolos: \n";
 
                     foreach (KeyValuePair <string, Simbolo> fila in ps.ps.TablaSimbolos)
                     {
                         /*Consola.Text += "consola> Nombre: " + fila.Value.Nombre + " | Tipo: " + fila.Value.Tipo +
                             " | Valor: " + fila.Value.Valor + " | Alcance: " + fila.Value.Alcance +
                             " | Línea: " + fila.Value.Linea + " \n";*/
-                        Consola.Text += "consola>"+ fila.Key + " \n";
+                       // Consola.Text += "consola>"+ fila.Key + " \n";
                         dataGridView2.Rows.Add(fila.Value.Nombre, fila.Value.Tipo, fila.Value.Valor, fila.Value.Linea, fila.Value.Alcance);
                     }
                     foreach (KeyValuePair<string, VariableEstructura> fila in ps.ps.EstructuraSimbolos)
@@ -145,7 +145,7 @@ namespace IntCompiladores
                         /*Consola.Text += "consola> Nombre: " + fila.Value.Nombre + " | Tipo: " + fila.Value.Tipo +
                             " | Valor: " + fila.Value.Valor + " | Alcance: " + fila.Value.Alcance +
                             " | Línea: " + fila.Value.Linea + " \n";*/
-                        Consola.Text += "consola>" + fila.Key + " \n";
+                      //  Consola.Text += "consola>" + fila.Key + " \n";
                         dataGridView2.Rows.Add(fila.Value.NombreVarEstructura, fila.Value.TipoVarEstructura, fila.Value.ValorVarEstructura, fila.Value.LineaVarEstructura, fila.Value.AlcanceVarEstructura);
                         if(fila.Value.Campo1 != null)
                         {

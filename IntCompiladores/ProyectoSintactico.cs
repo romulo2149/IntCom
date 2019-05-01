@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace IntCompiladores
 {
@@ -30,7 +32,11 @@ namespace IntCompiladores
         public List<string> cadenas;
         public List<Cadena> cad;
         public Cadena c;
-
+        public Stack<bool> pilaSi;
+        public List<Token> leer;
+        public bool textoEntrada;
+        public AutoResetEvent autoEvent = new AutoResetEvent(false);
+        public ManualResetEvent man = new ManualResetEvent(false);
 
         public ProyectoSintactico(Lexico lex, AnalizaExpresion aex, Form1 f)
         {
@@ -43,6 +49,7 @@ namespace IntCompiladores
             Aex = aex;
             cadenas = new List<string>();
             cad = new List<Cadena>();
+            pilaSi = new Stack<bool>();
         }
 
         internal AnalizaExpresion Aex { get => aex; set => aex = value; }
@@ -587,8 +594,7 @@ namespace IntCompiladores
             }
             else if(preanalisis == "PR_FIN" || preanalisis == "PR_SINO")
             {
-                esCondicion = false;
-                condicionVerdadera = false;
+                
             }
             else
             {
@@ -642,10 +648,9 @@ namespace IntCompiladores
             {
                 SIP1();
                 SIP2();
-                parteCondicion = "";
-                esCondicion = false;
-                condicionVerdadera = false;
                 Emparejar("PR_FIN");
+                parteCondicion = "";
+                pilaSi.Pop();
             }
             else
             {
@@ -660,10 +665,8 @@ namespace IntCompiladores
         {
             if(preanalisis == "PR_SI")
             {
-                esCondicion = true;
-                parteCondicion = "SI";
-                System.Console.Out.WriteLine("--------------------------------------ENTRÓ A SI");
                 Emparejar("PR_SI");
+                parteCondicion = "SI";
                 Emparejar("PA_IZQ");
                 CONDICION();
                 Emparejar("PA_DER");
@@ -684,10 +687,8 @@ namespace IntCompiladores
         {
             if(preanalisis == "PR_SINO")
             {
-                parteCondicion = "SINO";
-                esCondicion = true;
-                System.Console.Out.WriteLine("--------------------------------------ENTRÓ A SINO");
                 Emparejar("PR_SINO");
+                parteCondicion = "SINO";
                 INSTRUCCIONES();
             }
             else if(preanalisis == "PR_FIN")
@@ -716,13 +717,11 @@ namespace IntCompiladores
                 int con = ps.tipoCondicion(t);
                 if (ps.analizaCondicion(t, con))
                 {
-                    System.Console.Out.WriteLine("--------------------------------------ANALIZÓ LA CONDICION");
-                    condicionVerdadera = true;
+                    pilaSi.Push(true);
                 }
                 else
                 {
-                    System.Console.Out.WriteLine("--------------------------------------CONDICION FALSA");
-                    condicionVerdadera = false;
+                    pilaSi.Push(false);
                 }
 
                 System.Console.Out.WriteLine("Expresión: " + exp);
@@ -894,12 +893,10 @@ namespace IntCompiladores
             {
                 Emparejar("PR_MIENTRAS");
                 Emparejar("PA_IZQ");
-                esCondicion = true;
                 parteCondicion = "WHILE";
                 cond = new List<List<Token>>();
                 cadenas = new List<string>();
                 cad = new List<Cadena>();
-                
                 CONDICION();
                 Emparejar("PA_DER");
                 Emparejar("PR_HACER");
@@ -927,10 +924,9 @@ namespace IntCompiladores
                         
                     }
                 }
-                esCondicion = false;
                 parteCondicion = "";
-                condicionVerdadera = false;
                 Emparejar("PR_FIN");
+                pilaSi.Pop();
             }
         }
 
@@ -943,11 +939,31 @@ namespace IntCompiladores
             {
                 Emparejar("PR_LEE");
                 Emparejar("PA_IZQ");
+                t = new List<Token>();
                 TEXTO();
+                string variable = "";
+                int p = 0;
+                for (int i = 0; i < t.Count; i++)
+                    variable += t[i].Lexema;
+                form1.Consola1.Text += "consola> Ingresa el valor de "+ variable +": ";
+                int init = form1.Consola1.Text.Length;
+                form1.Consola1.ReadOnly = false;
+                while (true)
+                {
+                    p++;
+                    Application.DoEvents();
+                    if (Control.ModifierKeys == Keys.Alt)//it should stop now
+                        break;
+                }
+                form1.Consola1.ReadOnly = true;
+                int fin = form1.Consola1.Text.Length;
+                string f = form1.Consola1.Text;
+                form1.Consola1.Text += "\n consola> Se leyó: " + f.Substring(init) + " \n";
                 Emparejar("PA_DER");
                 Emparejar("S_PUNTOCOMA");
             }
         }
+        
 
         public void TEXTO()
         /*
@@ -998,7 +1014,15 @@ namespace IntCompiladores
                 Emparejar("PA_IZQ");
                 CADENA();
                 Emparejar("PA_DER");
-                if(preanalisis == "S_PUNTOCOMA")
+                if(parteCondicion == "SI" && pilaSi.Peek() == true)
+                {
+                    form1.Consola1.Text += "consola> " + cadena + "\n";
+                }
+                else if (parteCondicion == "SINO" && pilaSi.Peek() == false)
+                {
+                    form1.Consola1.Text += "consola> " + cadena + "\n";
+                }
+                else if (parteCondicion == "")
                 {
                     form1.Consola1.Text += "consola> " + cadena + "\n";
                 }
@@ -1016,41 +1040,202 @@ namespace IntCompiladores
             if (preanalisis == "S_COMILLA")
             {
                 Emparejar("S_COMILLA");
-                while(preanalisis != "S_COMILLA")
+
+                if (parteCondicion == "")
                 {
-                    System.Console.Out.WriteLine("Espacios: " + lex.cuentaEspacios);
-                    cadena = cadena + lexema;
-                    for (int i = 0; i < lex.cuentaEspacios; i++)
+                    while (preanalisis != "S_COMILLA")
                     {
-                        cadena = cadena + " ";
+                        if (preanalisis == "$")
+                        {
+                            form1.Consola1.Text += "consola> Error semántico en escribir, se llegó al final del fichero y no se encontró la comila que cierra \n";
+                            break;
+                        }
+                        System.Console.Out.WriteLine("Espacios: " + lex.cuentaEspacios);
+                        cadena = cadena + lexema;
+                        for (int i = 0; i < lex.cuentaEspacios; i++)
+                        {
+                            cadena = cadena + " ";
+                        }
+                        EmparejarCadena();
+                        lex.cuentaEspacios = 0;
                     }
-                    EmparejarCadena();
-                    lex.cuentaEspacios = 0;
+                    cadenas.Add(cadena);
                 }
-                c = new Cadena();
-                cadenas.Add(cadena);
-                c.esVar = true;
-                c.cadena = cadena;
-                c.to = toke;
-                c.id = toke.Lexema;
-                cad.Add(c);
+                else if (pilaSi.Peek() == true && parteCondicion == "SI")
+                {
+                    System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
+                    System.Console.Out.WriteLine("res: " + pilaSi.Peek().ToString());
+                    while (preanalisis != "S_COMILLA")
+                    {
+                        if (preanalisis == "$")
+                        {
+                            form1.Consola1.Text += "consola> Error semántico en escribir, se llegó al final del fichero y no se encontró la comila que cierra \n";
+                            break;
+                        }
+                        System.Console.Out.WriteLine("Espacios: " + lex.cuentaEspacios);
+                        cadena = cadena + lexema;
+                        for (int i = 0; i < lex.cuentaEspacios; i++)
+                        {
+                            cadena = cadena + " ";
+                        }
+                        EmparejarCadena();
+                        lex.cuentaEspacios = 0;
+                    }
+                    cadenas.Add(cadena);
+                }
+                else if (pilaSi.Peek() == false && parteCondicion == "SINO")
+                {
+                    System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
+                    System.Console.Out.WriteLine("res: " + pilaSi.Peek().ToString());
+                    while (preanalisis != "S_COMILLA")
+                    {
+                        if (preanalisis == "$")
+                        {
+                            form1.Consola1.Text += "consola> Error semántico en escribir, se llegó al final del fichero y no se encontró la comila que cierra \n";
+                            break;
+                        }
+                        System.Console.Out.WriteLine("Espacios: " + lex.cuentaEspacios);
+                        cadena = cadena + lexema;
+                        for (int i = 0; i < lex.cuentaEspacios; i++)
+                        {
+                            cadena = cadena + " ";
+                        }
+                        EmparejarCadena();
+                        lex.cuentaEspacios = 0;
+                    }
+                    cadenas.Add(cadena);
+                }
+                else if(parteCondicion == "WHILE" && pilaSi.Peek() == true)
+                {
+                    while (preanalisis != "S_COMILLA")
+                    {
+                        if (preanalisis == "$")
+                        {
+                            form1.Consola1.Text += "consola> Error semántico en escribir, se llegó al final del fichero y no se encontró la comila que cierra \n";
+                            break;
+                        }
+                        System.Console.Out.WriteLine("Espacios: " + lex.cuentaEspacios);
+                        cadena = cadena + lexema;
+                        for (int i = 0; i < lex.cuentaEspacios; i++)
+                        {
+                            cadena = cadena + " ";
+                        }
+                        EmparejarCadena();
+                        lex.cuentaEspacios = 0;
+                    }
+                    c = new Cadena();
+                    cadenas.Add(cadena);
+                    c.esVar = true;
+                    c.cadena = cadena;
+                    c.to = toke;
+                    c.id = toke.Lexema;
+                    cad.Add(c);
+                }
+                else if (parteCondicion.Length > 0)
+                {
+                    while (preanalisis != "S_COMILLA")
+                    {
+                        if (preanalisis == "$")
+                        {
+                            form1.Consola1.Text += "consola> Error semántico en escribir, se llegó al final del fichero y no se encontró la comila que cierra \n";
+                            break;
+                        }
+                        System.Console.Out.WriteLine("Espacios: " + lex.cuentaEspacios);
+                        cadena = cadena + lexema;
+                        for (int i = 0; i < lex.cuentaEspacios; i++)
+                        {
+                            cadena = cadena + " ";
+                        }
+                        EmparejarCadena();
+                        lex.cuentaEspacios = 0;
+                    }
+                    cadenas.Add(cadena);
+                }
+
                 Emparejar("S_COMILLA");
             }
             else if (preanalisis == "ID")
             {
-                if(ps.existeSimbolo(toke.Lexema))
+               if(parteCondicion == "")
                 {
-                    c = new Cadena();
-                    cadena = ps.getValor(toke);
-                    c.esVar = true;
-                    c.cadena = ps.getValor(toke);
-                    c.id = toke.Lexema;
-                    c.to = toke;
-                    cad.Add(c);
+                    if (ps.existeSimbolo(toke.Lexema))
+                    {
+                        c = new Cadena();
+                        cadena = ps.getValor(toke);
+                        c.esVar = true;
+                        c.cadena = ps.getValor(toke);
+                        c.id = toke.Lexema;
+                        c.to = toke;
+                        cad.Add(c);
+                    }
+                    else
+                    {
+                        form1.Consola1.Text += "consola> Error semántico en " + lexema + " no es una variable \n";
+                    }
                 }
-                else
+                else if (pilaSi.Peek() == true && parteCondicion == "SI")
                 {
-                    form1.Consola1.Text += "consola> Error semántico en " + lexema + " no es una variable \n";
+                    if (ps.existeSimbolo(toke.Lexema))
+                    {
+                        c = new Cadena();
+                        cadena = ps.getValor(toke);
+                        c.esVar = true;
+                        c.cadena = ps.getValor(toke);
+                        c.id = toke.Lexema;
+                        c.to = toke;
+                        cad.Add(c);
+                    }
+                    else
+                    {
+                        form1.Consola1.Text += "consola> Error semántico en " + lexema + " no es una variable \n";
+                    }
+                }
+                else if (pilaSi.Peek() == false && parteCondicion == "SINO")
+                {
+                    if (ps.existeSimbolo(toke.Lexema))
+                    {
+                        c = new Cadena();
+                        cadena = ps.getValor(toke);
+                        c.esVar = true;
+                        c.cadena = ps.getValor(toke);
+                        c.id = toke.Lexema;
+                        c.to = toke;
+                        cad.Add(c);
+                    }
+                    else
+                    {
+                        form1.Consola1.Text += "consola> Error semántico en " + lexema + " no es una variable \n";
+                    }
+                }
+               else if(parteCondicion == "WHILE" && pilaSi.Peek() == true)
+                {
+                    if (ps.existeSimbolo(toke.Lexema))
+                    {
+                        c = new Cadena();
+                        cadena = ps.getValor(toke);
+                        c.esVar = true;
+                        c.cadena = ps.getValor(toke);
+                        c.id = toke.Lexema;
+                        c.to = toke;
+                        cad.Add(c);
+                    }
+                }
+                else if (parteCondicion.Length > 0)
+                {
+                    if (ps.existeSimbolo(toke.Lexema))
+                    {
+                        c = new Cadena();
+                        cadena = ps.getValor(toke);
+                        c.esVar = true;
+                        c.cadena = ps.getValor(toke);
+                        c.id = toke.Lexema;
+                        c.to = toke;
+                        cad.Add(c);
+                    }
+                    else
+                    {
+                        form1.Consola1.Text += "consola> Error semántico en " + lexema + " no es una variable \n";
+                    }
                 }
                 Emparejar("ID");
             }
@@ -1074,35 +1259,7 @@ namespace IntCompiladores
         }
 
 
-        public void O1()
-        /*
-         * O1 -> OPERANDON()
-         */
-        {
-            if (preanalisis == "ENTERO" || preanalisis == "S_COMILLA" || preanalisis == "ID" || preanalisis == "PR_NULL")
-            {
-                OPERANDON();
-            }
-        }
-
-
-        public void O2()
-        /*
-         * O2 -> OPERADOR() OPERANDO() { OP_SUMA, OP_RESTA, OP_MULTIPLICACION, OP_DIVISION, PR_MOD }
-         * O2 -> ε { S_PUNTOCOMA }
-         */
-        {
-            if (preanalisis == "OP_SUMA" || preanalisis == "OP_RESTA" || preanalisis == "OP_MULTIPLICACION"
-                || preanalisis == "OP_DIVISION" || preanalisis == "OP_MODULO")
-            {
-                OPERADOR();
-                OPERANDO();
-            }
-            else if (preanalisis == "S_PUNTOCOMA")
-            {
-
-            }
-        }
+        
 
         public void O3()
         /*
@@ -1149,11 +1306,11 @@ namespace IntCompiladores
                     to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
                     t.Add(to);
                     Emparejar("S_PUNTOCOMA");
-                    if(parteCondicion == "WHILE")
+                    if (parteCondicion == "WHILE")
                     {
                         cond.Add(t);
                     }
-                    if(esCondicion == true && condicionVerdadera == true && parteCondicion == "SI")
+                    if (parteCondicion == "")
                     {
                         System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
                         if (ps.expresionValida(t) == false)
@@ -1161,25 +1318,19 @@ namespace IntCompiladores
                             error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
                         }
                     }
-                    else if (esCondicion == true && condicionVerdadera == false && parteCondicion == "SINO")
+                    else if(pilaSi.Peek() == true && parteCondicion == "SI")
                     {
                         System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
+                        System.Console.Out.WriteLine("res: " + pilaSi.Peek().ToString());
                         if (ps.expresionValida(t) == false)
                         {
                             error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
                         }
                     }
-                    else if (esCondicion == true && condicionVerdadera == true && parteCondicion == "WHILE")
+                    else if(pilaSi.Peek() == false && parteCondicion == "SINO")
                     {
                         System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
-                        if (ps.expresionValida(t) == false)
-                        {
-                            error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
-                        }
-                    }
-                    else if (esCondicion == false && condicionVerdadera == false && parteCondicion == "")
-                    {
-                        System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
+                        System.Console.Out.WriteLine("res: " + pilaSi.Peek().ToString());
                         if (ps.expresionValida(t) == false)
                         {
                             error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
@@ -1203,7 +1354,7 @@ namespace IntCompiladores
                     {
                         cond.Add(t);
                     }
-                    if (esCondicion == true && condicionVerdadera == true && parteCondicion == "SI")
+                    if (parteCondicion == "")
                     {
                         System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
                         if (ps.expresionValida(t) == false)
@@ -1211,25 +1362,19 @@ namespace IntCompiladores
                             error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
                         }
                     }
-                    else if (esCondicion == true && condicionVerdadera == false && parteCondicion == "SINO")
+                    else if (pilaSi.Peek() == true && parteCondicion == "SI")
                     {
                         System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
+                        System.Console.Out.WriteLine("res: " + pilaSi.Peek().ToString());
                         if (ps.expresionValida(t) == false)
                         {
                             error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
                         }
                     }
-                    else if (esCondicion == true && condicionVerdadera == true && parteCondicion == "WHILE")
+                    else if (pilaSi.Peek() == false && parteCondicion == "SINO")
                     {
                         System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
-                        if (ps.expresionValida(t) == false)
-                        {
-                            error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
-                        }
-                    }
-                    else if (esCondicion == false && condicionVerdadera == false && parteCondicion == "")
-                    {
-                        System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
+                        System.Console.Out.WriteLine("res: " + pilaSi.Peek().ToString());
                         if (ps.expresionValida(t) == false)
                         {
                             error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
@@ -1336,13 +1481,299 @@ namespace IntCompiladores
 
         public void EmparejarCadena()
         {
-            toke = lex.AnalizaRecursivo().Token;
-            preanalisis = toke.Tipo;
-            lexema = toke.Lexema;
-            System.Console.Out.WriteLine("dentro de emparejar el nuevo lexema es:" + lexema);
-            System.Console.Out.WriteLine("dentro de emparejar el nuevo preanalisis es:" + preanalisis);
+            if (toke.Apuntador + 1 > lex.Input.Length)
+            {
+                preanalisis = "$";
+                lexema = "$";
+                System.Console.Out.WriteLine("dentro de emparejar el nuevo lexema es:" + lexema);
+                System.Console.Out.WriteLine("dentro de emparejar el nuevo preanalisis es:" + preanalisis);
+                System.Console.Out.WriteLine("dentro de emparejar el ap es:" + toke.Apuntador);
+            }
+            else
+            {
+                toke = lex.AnalizaRecursivo().Token;
+                preanalisis = toke.Tipo;
+                lexema = toke.Lexema;
+                System.Console.Out.WriteLine("dentro de emparejar el nuevo lexema es:" + lexema);
+                System.Console.Out.WriteLine("dentro de emparejar el nuevo preanalisis es:" + preanalisis);
+                System.Console.Out.WriteLine("dentro de emparejar el ap es:" + toke.Apuntador);
+            }
         }
 
 
     }
 }
+/* if(parteCondicion == "WHILE")
+                    {
+                        cond.Add(t);
+                    }
+                    if(esCondicion == true && condicionVerdadera == true && parteCondicion == "SI")
+                    {
+                        System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
+                        if (ps.expresionValida(t) == false)
+                        {
+                            error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
+                        }
+                    }
+                    else if (esCondicion == true && condicionVerdadera == false && parteCondicion == "SINO")
+                    {
+                        System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
+                        if (ps.expresionValida(t) == false)
+                        {
+                            error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
+                        }
+                    }
+                    else if (esCondicion == true && condicionVerdadera == true && parteCondicion == "WHILE")
+                    {
+                        System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
+                        if (ps.expresionValida(t) == false)
+                        {
+                            error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
+                        }
+                    }
+                    else if (esCondicion == false && condicionVerdadera == false && parteCondicion == "")
+                    {
+                        System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
+                        if (ps.expresionValida(t) == false)
+                        {
+                            error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
+                        }
+                    }*/
+/*if (parteCondicion == "WHILE")
+                    {
+                        cond.Add(t);
+                    }
+                    if (esCondicion == true && condicionVerdadera == true && parteCondicion == "SI")
+                    {
+                        System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
+                        if (ps.expresionValida(t) == false)
+                        {
+                            error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
+                        }
+                    }
+                    else if (esCondicion == true && condicionVerdadera == false && parteCondicion == "SINO")
+                    {
+                        System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
+                        if (ps.expresionValida(t) == false)
+                        {
+                            error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
+                        }
+                    }
+                    else if (esCondicion == true && condicionVerdadera == true && parteCondicion == "WHILE")
+                    {
+                        System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
+                        if (ps.expresionValida(t) == false)
+                        {
+                            error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
+                        }
+                    }
+                    else if (esCondicion == false && condicionVerdadera == false && parteCondicion == "")
+                    {
+                        System.Console.Out.WriteLine("partecondicion: " + parteCondicion);
+                        if (ps.expresionValida(t) == false)
+                        {
+                            error.NuevoError(exp, toke.Linea, "Error en la expresión, está mal formada", form1);
+                        }
+                    }*/
+
+/*
+public void CADENA()
+/*
+ * CADENA -> S_COMILLA CADENA S_COMILLA { S_COMILLA }
+ * CADENA -> ID { ID }
+ *
+{
+    if (preanalisis == "S_COMILLA")
+    {
+        Emparejar("S_COMILLA");
+        if (parteCondicion == "SI" && esCondicion == true && condicionVerdadera == true)
+        {
+            while (preanalisis != "S_COMILLA")
+            {
+                if (preanalisis == "$")
+                {
+                    form1.Consola1.Text += "consola> Error semántico en escribir, se llegó al final del fichero y no se encontró la comila que cierra \n";
+                    break;
+                }
+                System.Console.Out.WriteLine("Espacios: " + lex.cuentaEspacios);
+                cadena = cadena + lexema;
+                for (int i = 0; i < lex.cuentaEspacios; i++)
+                {
+                    cadena = cadena + " ";
+                }
+                EmparejarCadena();
+                lex.cuentaEspacios = 0;
+            }
+            c = new Cadena();
+            cadenas.Add(cadena);
+        }
+        else if (parteCondicion == "SINO" && esCondicion == true && condicionVerdadera == false)
+        {
+            while (preanalisis != "S_COMILLA")
+            {
+                if (preanalisis == "$")
+                {
+                    form1.Consola1.Text += "consola> Error semántico en escribir, se llegó al final del fichero y no se encontró la comila que cierra \n";
+                    break;
+                }
+                System.Console.Out.WriteLine("Espacios: " + lex.cuentaEspacios);
+                cadena = cadena + lexema;
+                for (int i = 0; i < lex.cuentaEspacios; i++)
+                {
+                    cadena = cadena + " ";
+                }
+                EmparejarCadena();
+                lex.cuentaEspacios = 0;
+            }
+            c = new Cadena();
+            cadenas.Add(cadena);
+        }
+        else if (parteCondicion == "WHILE" && condicionVerdadera == true)
+        {
+            while (preanalisis != "S_COMILLA")
+            {
+                if (preanalisis == "$")
+                {
+                    form1.Consola1.Text += "consola> Error semántico en escribir, se llegó al final del fichero y no se encontró la comila que cierra \n";
+                    break;
+                }
+                System.Console.Out.WriteLine("Espacios: " + lex.cuentaEspacios);
+                cadena = cadena + lexema;
+                for (int i = 0; i < lex.cuentaEspacios; i++)
+                {
+                    cadena = cadena + " ";
+                }
+                EmparejarCadena();
+                lex.cuentaEspacios = 0;
+            }
+            c = new Cadena();
+            cadenas.Add(cadena);
+            c.esVar = true;
+            c.cadena = cadena;
+            c.to = toke;
+            c.id = toke.Lexema;
+            cad.Add(c);
+        }
+        else if (parteCondicion == "")
+        {
+            while (preanalisis != "S_COMILLA")
+            {
+                if (preanalisis == "$")
+                {
+                    form1.Consola1.Text += "consola> Error semántico en escribir, se llegó al final del fichero y no se encontró la comila que cierra \n";
+                    break;
+                }
+                System.Console.Out.WriteLine("Espacios: " + lex.cuentaEspacios);
+                cadena = cadena + lexema;
+                for (int i = 0; i < lex.cuentaEspacios; i++)
+                {
+                    cadena = cadena + " ";
+                }
+                EmparejarCadena();
+                lex.cuentaEspacios = 0;
+            }
+            c = new Cadena();
+            cadenas.Add(cadena);
+        }
+        else
+        {
+            while (preanalisis != "S_COMILLA")
+            {
+                if (preanalisis == "$")
+                {
+                    form1.Consola1.Text += "consola> Error semántico en escribir, se llegó al final del fichero y no se encontró la comila que cierra \n";
+                    break;
+                }
+                System.Console.Out.WriteLine("Espacios: " + lex.cuentaEspacios);
+
+                EmparejarCadena();
+                lex.cuentaEspacios = 0;
+            }
+        }
+        Emparejar("S_COMILLA");
+    }
+    else if (preanalisis == "ID")
+    {
+        if (parteCondicion == "SI" && esCondicion == true && condicionVerdadera == true)
+        {
+            if (ps.existeSimbolo(toke.Lexema))
+            {
+                c = new Cadena();
+                cadena = ps.getValor(toke);
+                c.esVar = true;
+                c.cadena = ps.getValor(toke);
+                c.id = toke.Lexema;
+                c.to = toke;
+                cad.Add(c);
+            }
+            else
+            {
+                form1.Consola1.Text += "consola> Error semántico en " + lexema + " no es una variable \n";
+            }
+        }
+        else if (parteCondicion == "SINO" && esCondicion == true && condicionVerdadera == false)
+        {
+            if (ps.existeSimbolo(toke.Lexema))
+            {
+                c = new Cadena();
+                cadena = ps.getValor(toke);
+                c.esVar = true;
+                c.cadena = ps.getValor(toke);
+                c.id = toke.Lexema;
+                c.to = toke;
+                cad.Add(c);
+            }
+            else
+            {
+                form1.Consola1.Text += "consola> Error semántico en " + lexema + " no es una variable \n";
+            }
+        }
+        else if (parteCondicion == "WHILE" && condicionVerdadera == true)
+        {
+            if (ps.existeSimbolo(toke.Lexema))
+            {
+                c = new Cadena();
+                cadena = ps.getValor(toke);
+                c.esVar = true;
+                c.cadena = ps.getValor(toke);
+                c.id = toke.Lexema;
+                c.to = toke;
+                cad.Add(c);
+            }
+            else
+            {
+                form1.Consola1.Text += "consola> Error semántico en " + lexema + " no es una variable \n";
+            }
+        }
+        else if (parteCondicion == "")
+        {
+            if (ps.existeSimbolo(toke.Lexema))
+            {
+                c = new Cadena();
+                cadena = ps.getValor(toke);
+            }
+            else
+            {
+                form1.Consola1.Text += "consola> Error semántico en " + lexema + " no es una variable \n";
+            }
+        }
+        else
+        {
+            if (ps.existeSimbolo(toke.Lexema))
+            {
+                c = new Cadena();
+                cadena = ps.getValor(toke);
+                c.esVar = true;
+                c.cadena = ps.getValor(toke);
+                c.id = toke.Lexema;
+                c.to = toke;
+                cad.Add(c);
+            }
+            else
+            {
+                form1.Consola1.Text += "consola> Error semántico en " + lexema + " no es una variable \n";
+            }
+        }
+        Emparejar("ID");
+    }
+}*/

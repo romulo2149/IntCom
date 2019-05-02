@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -943,22 +944,133 @@ namespace IntCompiladores
                 TEXTO();
                 string variable = "";
                 int p = 0;
-                for (int i = 0; i < t.Count; i++)
-                    variable += t[i].Lexema;
-                form1.Consola1.Text += "consola> Ingresa el valor de "+ variable +": ";
-                int init = form1.Consola1.Text.Length;
-                form1.Consola1.ReadOnly = false;
-                while (true)
+                if (t.Count == 1)
                 {
-                    p++;
-                    Application.DoEvents();
-                    if (Control.ModifierKeys == Keys.Alt)//it should stop now
-                        break;
+                    if(ps.TablaSimbolos.ContainsKey(t[0].Lexema) )
+                    {
+                        if(ps.getTipo(t[0].Lexema) == "CONSTANTES")
+                        {
+                            form1.Consola1.Text += "consola> Se intentó leer " + t[0].Lexema + ", pero dicha variable es una constante. \n";
+                        }
+                        else
+                        {
+                            for (int i = 0; i < t.Count; i++)
+                                variable += t[i].Lexema;
+                            form1.Consola1.Text += "consola> Ingresa el valor de " + variable + ": ";
+                            int init = form1.Consola1.Text.Length;
+                            form1.Consola1.ReadOnly = false;
+                            while (true)
+                            {
+                                p++;
+                                Application.DoEvents();
+                                if (Control.ModifierKeys == Keys.Alt)//it should stop now
+                                    break;
+                            }
+                            form1.Consola1.Text += "\n";
+                            form1.Consola1.ReadOnly = true;
+                            int fin = form1.Consola1.Text.Length;
+                            string f = form1.Consola1.Text;
+                            string tipo = ps.getTipo(t[0].Lexema);
+                            Regex esNumero = new Regex("[0-9]");
+                            Regex esLetra = new Regex("[a-zA-Z]");
+                            string final = f.Substring(init);
+                            if (tipo == "ENTERO")
+                            {
+                                if (esNumero.IsMatch(final))
+                                {
+                                    var objt = ps.TablaSimbolos[t[0].Lexema];
+                                    objt.Valor = final;
+                                }
+                                else
+                                {
+                                    form1.Consola1.Text += "consola> Se intentó leer " + t[0].Lexema + ", pero el valor ingresado no coincide con el tipo de dato. \n";
+                                }
+                            }
+                            else if (tipo == "CHAR")
+                            {
+                                
+                                if (final[0].ToString() =="'" && esLetra.IsMatch(final[1].ToString()) && final[2].ToString() == "'")
+                                {
+                                    var objt = ps.TablaSimbolos[t[0].Lexema];
+                                    objt.Valor = final;
+                                }
+                                else
+                                {
+                                    form1.Consola1.Text += "consola> Se intentó leer " + t[0].Lexema + ", pero el valor ingresado no coincide con el tipo de dato. \n";
+                                }
+                            }
+                            
+                        }
+                    }
+                    else
+                    {
+                        form1.Consola1.Text += "consola> Se intentó leer "+ t[0].Lexema + ", pero dicha variable no existe. \n";
+                    }
                 }
-                form1.Consola1.ReadOnly = true;
-                int fin = form1.Consola1.Text.Length;
-                string f = form1.Consola1.Text;
-                form1.Consola1.Text += "\n consola> Se leyó: " + f.Substring(init) + " \n";
+                else if (t.Count == 3)
+                {
+                    if (ps.EstructuraSimbolos.ContainsKey(t[0].Lexema))
+                    {
+                        if(ps.esCampo(t[0], t[2].Lexema))
+                        {
+                            for (int i = 0; i < t.Count; i++)
+                                variable += t[i].Lexema;
+                            form1.Consola1.Text += "consola> Ingresa el valor de " + variable + ": ";
+                            int init = form1.Consola1.Text.Length;
+                            form1.Consola1.ReadOnly = false;
+                            form1.Consola1.Text += "\n";
+                            while (true)
+                            {
+                                p++;
+                                Application.DoEvents();
+                                if (Control.ModifierKeys == Keys.Alt)//it should stop now
+                                    break;
+                            }
+                            form1.Consola1.ReadOnly = true;
+                            int fin = form1.Consola1.Text.Length;
+                            string f = form1.Consola1.Text;
+                            string tipo = ps.getTipoCampo(t[0],t[2].Lexema);
+                            Regex esNumero = new Regex("[0-9]");
+                            Regex esLetra = new Regex("[a-zA-Z]");
+                            string final = f.Substring(init);
+                            if (tipo == "ENTERO")
+                            {
+                                if (esNumero.IsMatch(final))
+                                {
+                                    ps.cambiarValorCampoOperacion(t[0], t[2].Lexema, final);
+                                }
+                                else
+                                {
+                                    form1.Consola1.Text += "consola> Se intentó leer " + t[0].Lexema + ", pero el valor ingresado no coincide con el tipo de dato. \n";
+                                }
+                            }
+                            else if (tipo == "CHAR")
+                            {
+
+                                if (final[0].ToString() == "'" && esLetra.IsMatch(final[1].ToString()) && final[2].ToString() == "'")
+                                {
+                                    ps.cambiarValorCampoOperacion(t[0], t[2].Lexema, final);
+                                }
+                                else
+                                {
+                                    form1.Consola1.Text += "consola> Se intentó leer " + t[0].Lexema + ", pero el valor ingresado no coincide con el tipo de dato. \n";
+                                }
+                            }
+                        }
+                        else
+                        {
+                            form1.Consola1.Text += "consola> Se intentó leer " + t[2].Lexema + ", pero no es un campo válido. \n";
+                        }
+                    }
+                    else
+                    {
+                        form1.Consola1.Text += "consola> Se intentó leer " + t[0].Lexema + ", pero dicha variable no existe. \n";
+                    }
+                }
+                else
+                {
+                    form1.Consola1.Text += "consola> Error semántico dentro de LEER, variable no válida \n";
+                }
                 Emparejar("PA_DER");
                 Emparejar("S_PUNTOCOMA");
             }

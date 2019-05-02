@@ -1103,10 +1103,14 @@ namespace IntCompiladores
                 exp = exp + lexema + " ";
                 to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
                 t.Add(to);
+                to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                leer.Add(to);
                 Emparejar("S_PUNTO");
                 exp = exp + lexema + " ";
                 to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
                 t.Add(to);
+                to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                leer.Add(to);
                 Emparejar("ID");
             }
             else if(preanalisis == "PA_DER")
@@ -1122,6 +1126,7 @@ namespace IntCompiladores
         {
             if(preanalisis == "PR_ESCRIBE")
             {
+                leer = new List<Token>();
                 Emparejar("PR_ESCRIBE");
                 Emparejar("PA_IZQ");
                 CADENA();
@@ -1268,88 +1273,180 @@ namespace IntCompiladores
             }
             else if (preanalisis == "ID")
             {
-               if(parteCondicion == "")
-                {
-                    if (ps.existeSimbolo(toke.Lexema))
-                    {
-                        c = new Cadena();
-                        cadena = ps.getValor(toke);
-                        c.esVar = true;
-                        c.cadena = ps.getValor(toke);
-                        c.id = toke.Lexema;
-                        c.to = toke;
-                        cad.Add(c);
-                    }
-                    else
-                    {
-                        form1.Consola1.Text += "consola> Error semántico en " + lexema + " no es una variable \n";
-                    }
-                }
-                else if (pilaSi.Peek() == true && parteCondicion == "SI")
-                {
-                    if (ps.existeSimbolo(toke.Lexema))
-                    {
-                        c = new Cadena();
-                        cadena = ps.getValor(toke);
-                        c.esVar = true;
-                        c.cadena = ps.getValor(toke);
-                        c.id = toke.Lexema;
-                        c.to = toke;
-                        cad.Add(c);
-                    }
-                    else
-                    {
-                        form1.Consola1.Text += "consola> Error semántico en " + lexema + " no es una variable \n";
-                    }
-                }
-                else if (pilaSi.Peek() == false && parteCondicion == "SINO")
-                {
-                    if (ps.existeSimbolo(toke.Lexema))
-                    {
-                        c = new Cadena();
-                        cadena = ps.getValor(toke);
-                        c.esVar = true;
-                        c.cadena = ps.getValor(toke);
-                        c.id = toke.Lexema;
-                        c.to = toke;
-                        cad.Add(c);
-                    }
-                    else
-                    {
-                        form1.Consola1.Text += "consola> Error semántico en " + lexema + " no es una variable \n";
-                    }
-                }
-               else if(parteCondicion == "WHILE" && pilaSi.Peek() == true)
-                {
-                    if (ps.existeSimbolo(toke.Lexema))
-                    {
-                        c = new Cadena();
-                        cadena = ps.getValor(toke);
-                        c.esVar = true;
-                        c.cadena = ps.getValor(toke);
-                        c.id = toke.Lexema;
-                        c.to = toke;
-                        cad.Add(c);
-                    }
-                }
-                else if (parteCondicion.Length > 0)
-                {
-                    if (ps.existeSimbolo(toke.Lexema))
-                    {
-                        c = new Cadena();
-                        cadena = ps.getValor(toke);
-                        c.esVar = true;
-                        c.cadena = ps.getValor(toke);
-                        c.id = toke.Lexema;
-                        c.to = toke;
-                        cad.Add(c);
-                    }
-                    else
-                    {
-                        form1.Consola1.Text += "consola> Error semántico en " + lexema + " no es una variable \n";
-                    }
-                }
+                to = new Token(toke.Lexema, toke.Linea, toke.Tipo, toke.Error);
+                leer.Add(to);
                 Emparejar("ID");
+
+                TEXTSTR();
+                if (leer.Count == 1)
+                {
+                    if (parteCondicion == "")
+                    {
+                        if (ps.existeSimbolo(leer[0].Lexema))
+                        {
+                            c = new Cadena();
+                            cadena = ps.getValor(leer[0]);
+                            c.esVar = true;
+                            c.cadena = ps.getValor(leer[0]);
+                            c.id = leer[0].Lexema;
+                            c.to = leer[0];
+                            cad.Add(c);
+                        }
+                        else
+                        {
+                            form1.Consola1.Text += "consola> Error semántico en " + lexema + " no es una variable \n";
+                        }
+                    }
+                    else if (pilaSi.Peek() == true && parteCondicion == "SI")
+                    {
+                        if (ps.existeSimbolo(leer[0].Lexema))
+                        {
+                            c = new Cadena();
+                            cadena = ps.getValor(leer[0]);
+                            c.esVar = true;
+                            c.cadena = ps.getValor(leer[0]);
+                            c.id = leer[0].Lexema;
+                            c.to = leer[0];
+                            cad.Add(c);
+                        }
+                        else
+                        {
+                            form1.Consola1.Text += "consola> Error semántico en " + lexema + " no es una variable \n";
+                        }
+                    }
+                    else if (pilaSi.Peek() == false && parteCondicion == "SINO")
+                    {
+                        if (ps.existeSimbolo(leer[0].Lexema))
+                        {
+                            c = new Cadena();
+                            cadena = ps.getValor(leer[0]);
+                            c.esVar = true;
+                            c.cadena = ps.getValor(leer[0]);
+                            c.id = leer[0].Lexema;
+                            c.to = leer[0];
+                            cad.Add(c);
+                        }
+                        else
+                        {
+                            form1.Consola1.Text += "consola> Error semántico en " + lexema + " no es una variable \n";
+                        }
+                    }
+                    else if (parteCondicion == "WHILE" && pilaSi.Peek() == true)
+                    {
+                        if (ps.existeSimbolo(leer[0].Lexema))
+                        {
+                            c = new Cadena();
+                            cadena = ps.getValor(leer[0]);
+                            c.esVar = true;
+                            c.cadena = ps.getValor(leer[0]);
+                            c.id = leer[0].Lexema;
+                            c.to = leer[0];
+                            cad.Add(c);
+                        }
+                    }
+                    else if (parteCondicion.Length > 0)
+                    {
+                        if (ps.existeSimbolo(leer[0].Lexema))
+                        {
+                            c = new Cadena();
+                            cadena = ps.getValor(leer[0]);
+                            c.esVar = true;
+                            c.cadena = ps.getValor(leer[0]);
+                            c.id = leer[0].Lexema;
+                            c.to = leer[0];
+                            cad.Add(c);
+                        }
+                        else
+                        {
+                            form1.Consola1.Text += "consola> Error semántico en " + lexema + " no es una variable \n";
+                        }
+                    }
+
+                }
+                else if(leer.Count == 3)
+                {
+                    if (parteCondicion == "")
+                    {
+                        if (ps.esCampo(leer[0],leer[2].Lexema))
+                        {
+                            c = new Cadena();
+                            cadena = ps.getValorCampo(leer[0], leer[2].Lexema);
+                            c.esVar = true;
+                            c.cadena = ps.getValorCampo(leer[0], leer[2].Lexema);
+                            c.id = leer[2].Lexema;
+                            c.to = leer[2];
+                            cad.Add(c);
+                        }
+                        else
+                        {
+                            form1.Consola1.Text += "consola> Error semántico en " + lexema + " no es una variable \n";
+                        }
+                    }
+                    else if (pilaSi.Peek() == true && parteCondicion == "SI")
+                    {
+                        if (ps.esCampo(leer[0], leer[2].Lexema))
+                        {
+                            c = new Cadena();
+                            cadena = ps.getValorCampo(leer[0], leer[2].Lexema);
+                            c.esVar = true;
+                            c.cadena = ps.getValorCampo(leer[0], leer[2].Lexema);
+                            c.id = leer[2].Lexema;
+                            c.to = leer[2];
+                            cad.Add(c);
+                        }
+                        else
+                        {
+                            form1.Consola1.Text += "consola> Error semántico en " + lexema + " no es una variable \n";
+                        }
+                    }
+                    else if (pilaSi.Peek() == false && parteCondicion == "SINO")
+                    {
+                        if (ps.esCampo(leer[0], leer[2].Lexema))
+                        {
+                            c = new Cadena();
+                            cadena = ps.getValorCampo(leer[0], leer[2].Lexema);
+                            c.esVar = true;
+                            c.cadena = ps.getValorCampo(leer[0], leer[2].Lexema);
+                            c.id = leer[2].Lexema;
+                            c.to = leer[2];
+                            cad.Add(c);
+                        }
+                        else
+                        {
+                            form1.Consola1.Text += "consola> Error semántico en " + lexema + " no es una variable \n";
+                        }
+                    }
+                    else if (parteCondicion == "WHILE" && pilaSi.Peek() == true)
+                    {
+                        if (ps.esCampo(leer[0], leer[2].Lexema))
+                        {
+                            c = new Cadena();
+                            cadena = ps.getValorCampo(leer[0], leer[2].Lexema);
+                            c.esVar = true;
+                            c.cadena = ps.getValorCampo(leer[0], leer[2].Lexema);
+                            c.id = leer[2].Lexema;
+                            c.to = leer[2];
+                            cad.Add(c);
+                        }
+                    }
+                    else if (parteCondicion.Length > 0)
+                    {
+                        if (ps.esCampo(leer[0], leer[2].Lexema))
+                        {
+                            c = new Cadena();
+                            cadena = ps.getValorCampo(leer[0], leer[2].Lexema);
+                            c.esVar = true;
+                            c.cadena = ps.getValorCampo(leer[0], leer[2].Lexema);
+                            c.id = leer[2].Lexema;
+                            c.to = leer[2];
+                            cad.Add(c);
+                        }
+                        else
+                        {
+                            form1.Consola1.Text += "consola> Error semántico en " + lexema + " no es una variable \n";
+                        }
+                    }
+                }
             }
         }
 
